@@ -9,7 +9,6 @@ Usage:
 """
 
 import os
-import re
 import glob
 import sys
 from pathlib import Path
@@ -23,6 +22,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent.parent / '.env')
 
 OUTPUT_DIR = Path(__file__).parent.parent / "diw_factories"
+RAW_DATA_DIR = Path(__file__).parent.parent / "docs" / "project" / "raw_data_for_factory"
 BATCH_SIZE = 1000
 
 # Column name mapping (English header -> DB column)
@@ -45,7 +45,30 @@ COLUMN_MAP = {
     'Workers': 'workers',
     'Horsepower': 'horsepower',
     'TSIC': 'tsic',
-    'Old_Reg_Number': None,  # skip this column
+    'Old_Reg_Number': 'old_reg_number',
+}
+
+# Thai header -> English header mapping (for raw DIW data files)
+THAI_HEADER_MAP = {
+    'เลขทะเบียนโรงงาน': 'Factory_Reg_Number',
+    'ชื่อโรงงาน': 'Factory_Name',
+    'ผู้ประกอบการ': 'Operator',
+    'ประกอบกิจการ': 'Business_Activity',
+    'เลขที่': 'House_Number',
+    'หมู่': 'Village',
+    'ซอย': 'Soi',
+    'ถนน': 'Road',
+    'ตำบล': 'Subdistrict',
+    'อำเภอ': 'District',
+    'จังหวัด': 'Province',
+    'ไปรษณีย์': 'Postal_Code',
+    'โทรศัพท์': 'Phone',
+    'ประเภท': 'Type',
+    'เงินทุน': 'Capital_Baht',
+    'คนงาน': 'Workers',
+    'แรงม้า': 'Horsepower',
+    'TSIC': 'TSIC',
+    'เลขทะเบียนเดิม': 'Old_Reg_Number',
 }
 
 DB_COLUMNS = [v for v in COLUMN_MAP.values() if v is not None]
@@ -64,7 +87,7 @@ def parse_excel(filepath):
         # Get headers from first row
         headers = sheet.row_values(0)
 
-        # Map header indices
+        # Convert Thai headers to English, then map to DB columns
         col_indices = {}
         for i, header in enumerate(headers):
             if isinstance(header, float):
@@ -73,6 +96,11 @@ def parse_excel(filepath):
                 header = header.strip()
             else:
                 header = str(header)
+
+            # Translate Thai header to English if needed
+            if header in THAI_HEADER_MAP:
+                header = THAI_HEADER_MAP[header]
+
             if header in COLUMN_MAP and COLUMN_MAP[header] is not None:
                 col_indices[COLUMN_MAP[header]] = i
 
@@ -153,25 +181,24 @@ def main():
     # Convert Prisma connection string format to psycopg2 format
     # prisma+postgres://... -> postgresql://...
     if db_url.startswith('prisma+postgres://'):
-        # Extract the actual postgres URL from the Prisma format
-        # For now, use a simple local connection
-        db_url = "postgresql://migrant_user:migrant_password@localhost:5432/migrant_review_db"
+        db_url = "postgresql://migrant_user:migrant_password@localhost:5433/migrant_review_db"
 
     print(f"Connecting to database...")
     conn = psycopg2.connect(db_url)
 
-    # Get all Excel files
-    if not OUTPUT_DIR.exists():
-        print(f"Error: {OUTPUT_DIR} directory not found")
-        print("Please run download_diw_factories.py first to fetch factory data")
-        sys.exit(1)
+    # Get all Excel files from both directories
+    files = []
+    if OUTPUT_DIR.exists():
+        files.extend(sorted(glob.glob(str(OUTPUT_DIR / '**' / '*.xls'), recursive=True)))
+    if RAW_DATA_DIR.exists():
+        files.extend(sorted(glob.glob(str(RAW_DATA_DIR / '**' / '*.xls'), recursive=True)))
 
-    files = sorted(glob.glob(str(OUTPUT_DIR / '**' / '*.xls'), recursive=True))
     print(f"Found {len(files)} Excel files\n")
 
     if len(files) == 0:
-        print("No Excel files found. Please download factory data first:")
-        print("  python scripts/download_diw_factories.py")
+        print("No Excel files found.")
+        print(f"  Place .xls files in: {RAW_DATA_DIR}")
+        print(f"  Or run: python scripts/download_diw_factories.py")
         sys.exit(1)
 
     total_imported = 0
