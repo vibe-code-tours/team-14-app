@@ -59,6 +59,7 @@ model Factory {
   workers          Int?
   horsepower       Decimal? @db.Decimal
   tsic             String?  @db.VarChar(50)
+  oldRegNumber     String?  @map("old_reg_number") @db.VarChar(50)
   country          String   @default("Thailand") @db.VarChar(100)
   createdAt        DateTime @default(now()) @map("created_at")
 
