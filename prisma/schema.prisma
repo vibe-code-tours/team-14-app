@@ -1,0 +1,92 @@
+// Migrant Review Platform - Database Schema
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Enums
+enum OrganizationType {
+  factory
+  agency
+}
+
+enum SuggestionStatus {
+  pending
+  approved
+  rejected
+}
+
+// User-submitted organizations (pending admin approval)
+model SuggestedOrganization {
+  id        Int              @id @default(autoincrement())
+  name      String           @db.VarChar(255)
+  type      OrganizationType
+  country   String           @db.VarChar(255)
+  city      String?          @db.VarChar(255)
+  status    SuggestionStatus @default(pending)
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @default(now()) @map("updated_at")
+
+  reviews Review[]
+
+  @@map("suggested_organizations")
+}
+
+// DIW factory data (auto-approved, imported from Excel)
+model Factory {
+  id               Int      @id @default(autoincrement())
+  regNumber        String?  @unique @map("reg_number") @db.VarChar(50)
+  name             String   @db.VarChar(500)
+  operator         String?  @db.VarChar(500)
+  businessActivity String?  @map("business_activity") @db.Text
+  houseNumber      String?  @map("house_number") @db.VarChar(100)
+  village          String?  @db.VarChar(100)
+  soi              String?  @db.VarChar(200)
+  road             String?  @db.VarChar(200)
+  subdistrict      String?  @db.VarChar(200)
+  district         String?  @db.VarChar(200)
+  province         String?  @db.VarChar(200)
+  postalCode       String?  @map("postal_code") @db.VarChar(10)
+  phone            String?  @db.VarChar(50)
+  type             String?  @db.VarChar(100)
+  capitalBaht      Decimal? @map("capital_baht") @db.Decimal
+  workers          Int?
+  horsepower       Decimal? @db.Decimal
+  tsic             String?  @db.VarChar(50)
+  country          String   @default("Thailand") @db.VarChar(100)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  reviews Review[]
+
+  @@index([name])
+  @@index([province])
+  @@index([district])
+  @@map("factories")
+}
+
+// Reviews (linked to either user-submitted org OR DIW factory)
+model Review {
+  id             Int      @id @default(autoincrement())
+  organizationId Int?     @map("organization_id")
+  factoryId      Int?     @map("factory_id")
+  workerRole     String   @map("worker_role") @db.VarChar(255)
+  countryFrom    String   @map("country_from") @db.VarChar(100)
+  ratingSalary   Int      @map("rating_salary")
+  ratingOt       Int      @map("rating_ot")
+  ratingHousing  Int      @map("rating_housing")
+  reviewText     String   @map("review_text") @db.Text
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization SuggestedOrganization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  factory      Factory?              @relation(fields: [factoryId], references: [id], onDelete: Cascade)
+
+  @@index([factoryId])
+  @@index([organizationId])
+  @@map("reviews")
+}

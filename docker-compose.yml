@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: migrant-review-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: migrant_user
+      POSTGRES_PASSWORD: YOUR_DATABASE_PASSWORD
+      POSTGRES_DB: migrant_review_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - migrant_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  migrant_postgres_data:

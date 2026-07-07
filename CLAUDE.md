@@ -78,86 +78,45 @@ Do not implement features outside the MVP unless requested.
 
 ---
 
-# Current Technology Stack
-
-> **Sprint 1 Baseline** — Approved for use. Post-Sprint 1 migration targets documented below.
+# Technology Stack
 
 Frontend
 
-- Next.js 14.2.35 (App Router) — ⚠ Maintenance mode, security patches only
-- React 18.3.1 — ⚠ Supported (legacy), React 19 is current
-- TypeScript 5.9.3 — ✅ Latest stable 5.x
-- Tailwind CSS 3.4.19 — ✅ Latest stable 3.x (4.x is current, deferred to Sprint 3)
+- Next.js 16.2.10 (App Router) — Current stable
+- React 19.2.7 — Current stable
+- TypeScript 5.9.3 — Latest stable 5.x
+- Tailwind CSS 4.3.2 — Current stable
 
 Backend
 
 - Next.js Route Handlers
-- Prisma ORM 5.22.0 — ⚠ Maintenance mode, security patches only
+- Prisma ORM 7.8.0 — Current stable
 
 Database
 
-- PostgreSQL 16 — ✅ LTS, supported until November 2028
+- PostgreSQL 16 — LTS, supported until November 2028
 - Docker Compose
 
 Development
 
-- Node.js 24.16.0 — ✅ Active LTS
+- Node.js 24.16.0 — Active LTS
 - npm 11.13.0
-- Docker 29.0.1
-- Docker Compose 2.40.3
-- ESLint 8.57.1 — ❌ **EOL since October 2023, no security patches**
-- Prettier 3.9.4 — ✅ Latest stable
-- Husky 9.1.7 — ✅ Latest stable
-- lint-staged 17.0.8 — ✅ Latest stable
-- PostCSS 8.5.16 — ✅ Latest stable
-- Autoprefixer 10.5.2 — ✅ Latest stable
-- Git 2.54.0
+- ESLint 9.39.4 — Current stable
+- Prettier 3.9.4 — Current stable
+- Husky 9.1.7 — Current stable
+- lint-staged 17.0.8 — Current stable
 
 Testing
 
-- Vitest 4.1.10 — ✅ Latest stable
-- Playwright 1.61.1 — ✅ Latest stable
+- Vitest 4.1.10 — Current stable
+- Playwright 1.61.1 — Current stable
 
-Deployment (Planned)
+Deployment
 
 - Vercel
 - Supabase
 
-## Post-Sprint 1 Migration Targets
-
-| Package | Current | Target | Sprint |
-|---------|---------|--------|--------|
-| Next.js | 14.2.35 | 16.2.10 | 2 |
-| React | 18.3.1 | 19.2.7 | 2 |
-| React DOM | 18.3.1 | 19.2.7 | 2 |
-| Prisma | 5.22.0 | 7.8.0 | 2 |
-| ESLint | 8.57.1 | 9.x+ | 2 |
-| eslint-config-next | 14.2.35 | 16.2.10 | 2 |
-| @types/react | 18.3.31 | 19.2.17 | 2 |
-| @types/react-dom | 18.3.7 | 19.2.3 | 2 |
-| @types/node | 20.19.43 | 24.x | 2 |
-| Tailwind CSS | 3.4.19 | 4.3.2 | 3 |
-
----
-
-## Upgrade Policy
-
-| Upgrade Type | Policy |
-|--------------|--------|
-| Patch versions | Auto-update during development |
-| Minor versions | Review and update quarterly |
-| Major versions | Plan and execute post-MVP (Sprint 2–3) |
-
-## Security Support
-
-- **ESLint 8.57.1:** ❌ EOL — no security patches since October 2023. Must upgrade before production.
-- **Next.js 14.2.35:** ⚠ Maintenance — critical security patches only.
-- **Prisma 5.22.0:** ⚠ Maintenance — critical security patches only.
-- All other packages: ✅ Active security support.
-
-## Official Baseline
-
-This technology stack is the official baseline for Sprint 1. See `docs/engineering/technology-stack-policy.md` for complete version management policy. See `docs/engineering/technology-decision-record.md` for the full audit report.
+See `docs/engineering/technology-stack-policy.md` for version management policy.
 
 ---
 
@@ -166,14 +125,12 @@ This technology stack is the official baseline for Sprint 1. See `docs/engineeri
 app/
 src/
 prisma/
-scripts/
 docs/
-tests/
 public/
 
 Business logic belongs in:
 
-src/services
+lib/
 
 Database access belongs in:
 
@@ -187,9 +144,9 @@ Feature-specific code belongs in:
 
 src/features
 
-Utilities belong in:
+Types belong in:
 
-src/utils
+src/types
 
 ---
 
@@ -399,19 +356,13 @@ npx prisma migrate dev
 npx prisma studio
 ```
 
----
+Testing
 
-# MCP Servers
-
-Configured servers
-
-- context7
-- github
-- postgres
-- playwright
-- sequential-thinking
-
-Use them whenever they improve accuracy or productivity.
+```bash
+npm run test
+npm run test:run
+npm run test:e2e
+```
 
 ---
 
@@ -424,10 +375,6 @@ Component
 ↓
 
 Service
-
-↓
-
-Repository
 
 ↓
 
