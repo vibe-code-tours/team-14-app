@@ -19,7 +19,7 @@ export function Navbar() {
           </Link>
           <Link
             href="/suggest"
-            className="bg-white text-emerald-600 px-4 py-1.5 rounded-full font-semibold shadow hover:bg-gray-100 transition"
+            className="bg-white text-emerald-600 px-4 py-1.5 rounded-full font-semibold shadow-sm hover:bg-gray-100 transition"
           >
             Suggest
           </Link>
