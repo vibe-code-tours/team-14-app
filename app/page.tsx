@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
@@ -27,11 +27,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [showSuggestModal, setShowSuggestModal] = useState(false);
 
-  useEffect(() => {
-    fetchFactories();
-  }, []);
-
-  const fetchFactories = async (search?: string) => {
+  const fetchFactories = useCallback(async (search?: string) => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -46,7 +42,12 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchFactories();
+  }, [fetchFactories]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
