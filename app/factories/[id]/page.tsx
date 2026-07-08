@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, useCallback, use } from "react";
 import Link from "next/link";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
@@ -54,11 +54,7 @@ export default function FactoryDetailPage({
   const [loading, setLoading] = useState(true);
   const [showReviewModal, setShowReviewModal] = useState(false);
 
-  useEffect(() => {
-    fetchFactoryData();
-  }, [id]);
-
-  const fetchFactoryData = async () => {
+  const fetchFactoryData = useCallback(async () => {
     setLoading(true);
     try {
       const [factoryRes, reviewsRes] = await Promise.all([
@@ -80,7 +76,12 @@ export default function FactoryDetailPage({
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchFactoryData();
+  }, [fetchFactoryData]);
 
   const handleReviewSubmitted = () => {
     fetchFactoryData();

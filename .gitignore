@@ -43,6 +43,9 @@ next-env.d.ts
 /src/generated/prisma
 migrant-review-app/
 
+# playwright mcp output
+.playwright-mcp/
+
 # extracted raw factory data (regenerate from Original_data_1_7_2026.zip; seeded data lives in prisma/seed/)
 docs/project/raw_data_for_factory/*.xls
 !docs/project/raw_data_for_factory/1_อ.พระนคร.xls

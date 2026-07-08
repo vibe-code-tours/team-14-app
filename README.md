@@ -53,6 +53,55 @@ migrant-review-platform/
 
 You can run the app either **fully in Docker** (recommended — no local Node.js setup required) or **on your host** with only PostgreSQL in Docker.
 
+### Quick Start (5 minutes)
+
+**Prerequisites:**
+- Docker Desktop installed and running
+
+**Setup:**
+```bash
+# 1. Clone repository
+git clone <repository-url>
+cd team-14-app
+
+# 2. Create environment file
+cp .env.example .env
+
+# 3. Start Docker containers
+docker compose up -d
+
+# 4. Generate Prisma client (first time only)
+docker compose exec app npx prisma generate
+
+# 5. Open in browser
+open http://localhost:3000
+```
+
+**Verify it's working:**
+```bash
+# Check all services are running
+docker compose ps
+
+# Expected output:
+# migrant-review-app      Up      0.0.0.0:3000->3000/tcp
+# migrant-review-postgres Up      0.0.0.0:5432->5432/tcp
+```
+
+**Common Commands:**
+```bash
+docker compose logs -f          # View live logs
+docker compose restart          # Restart all services
+docker compose down             # Stop all services
+docker compose up -d --build    # Rebuild after changes
+```
+
+**What You Get:**
+- ✅ Homepage with factory search
+- ✅ 5,137 factories in database
+- ✅ Factory detail pages with reviews
+- ✅ Suggest new workplace feature
+- ✅ Hot reload for development
+
 ### Option A: Run everything with Docker Desktop (recommended)
 
 Use this if you don't want to install Node.js, npm, or PostgreSQL locally — Docker Desktop is the only requirement. It builds the app image and runs the database, migrations, and Next.js dev server as three containers that talk to each other over an internal Docker network.
