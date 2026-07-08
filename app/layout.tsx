@@ -8,8 +8,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Migrant Review Platform",
-  description: "Worker review platform for factories and agencies",
+  title: "WorkerVoice | Migrant Worker Reviews",
+  description:
+    "Find safe workplaces with real reviews from migrant workers in Thailand",
 };
 
 export default function RootLayout({
@@ -19,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable}`}>
-      <body className="min-h-screen bg-gray-50">{children}</body>
+      <body className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased">
+        {children}
+      </body>
     </html>
   );
 }

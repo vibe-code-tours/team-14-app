@@ -1,8 +1,28 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* Custom Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Dialog styling */
+dialog {
+  border: none;
+  padding: 0;
+}
+
+dialog::backdrop {
+  background-color: rgba(15, 23, 42, 0.5);
 }
 
 /*
