@@ -18,6 +18,11 @@ import psycopg2
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 
+# Reconfigure stdout/stderr to UTF-8 so Thai filenames print on Windows consoles
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 # Load .env from project root
 load_dotenv(Path(__file__).parent.parent / '.env')
 
@@ -113,7 +118,8 @@ def parse_excel(filepath):
             row = sheet.row_values(row_idx)
 
             # Skip empty rows
-            if not row or not row[col_indices['name']].strip():
+            name_val = row[col_indices['name']] if row else None
+            if not isinstance(name_val, str) or not name_val.strip():
                 continue
 
             factory = {}
