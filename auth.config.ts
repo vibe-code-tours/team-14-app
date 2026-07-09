@@ -21,5 +21,21 @@ export default {
     authorized({ auth }) {
       return !!auth?.user;
     },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = (user as any).role;
+        token.isAdmin = (user as any).isAdmin ?? false;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
+        session.user.isAdmin = token.isAdmin as boolean;
+      }
+      return session;
+    },
   },
 } satisfies NextAuthConfig;
