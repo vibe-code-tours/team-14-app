@@ -1,45 +1,58 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { useLanguage } from "@/src/contexts/LanguageContext";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 interface NavbarProps {
   onSuggestClick?: () => void;
 }
 
 export function Navbar({ onSuggestClick }: NavbarProps) {
+  const { t } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const { data: session, status } = useSession();
 
   return (
     <nav className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 px-4 sm:py-4 sm:px-6 sticky top-0 z-20 shadow-md">
       <div className="max-w-5xl mx-auto flex justify-between items-center">
-        <Link href="/" className="font-bold text-lg sm:text-xl flex items-center gap-2 hover:opacity-90 transition">
+        <Link
+          href="/"
+          className="font-bold text-xl flex items-center gap-2 hover:opacity-90 transition"
+        >
           <span>🌏</span> WorkerVoice
         </Link>
 
         {/* Desktop links */}
         <div className="hidden sm:flex items-center gap-3 md:gap-4 text-sm">
           <Link href="/" className="hover:text-emerald-200 transition py-1">
-            Home
+            {t("nav.home")}
           </Link>
           <Link href="/factories" className="hover:text-emerald-200 transition py-1">
-            Factories
+            {t("nav.factories")}
           </Link>
+          <Link
+            href="/contact"
+            className="hover:text-emerald-200 transition hidden sm:inline"
+          >
+            {t("nav.contact")}
+          </Link>
+          <LanguageSwitcher />
           {onSuggestClick ? (
             <button
               onClick={onSuggestClick}
               className="bg-white text-emerald-600 px-4 py-1.5 rounded-full font-semibold shadow-sm hover:bg-gray-100 transition"
             >
-              Suggest
+              {t("nav.suggest")}
             </button>
           ) : (
             <Link
               href="/suggest"
               className="bg-white text-emerald-600 px-4 py-1.5 rounded-full font-semibold shadow-sm hover:bg-gray-100 transition inline-block"
             >
-              Suggest
+              {t("nav.suggest")}
             </Link>
           )}
 
@@ -89,21 +102,21 @@ export function Navbar({ onSuggestClick }: NavbarProps) {
             onClick={() => setMenuOpen(false)}
             className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
           >
-            Home
+            {t("nav.home")}
           </Link>
           <Link
             href="/factories"
             onClick={() => setMenuOpen(false)}
             className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
           >
-            Factories
+            {t("nav.factories")}
           </Link>
           {onSuggestClick ? (
             <button
               onClick={() => { onSuggestClick(); setMenuOpen(false); }}
               className="block w-full text-left py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
             >
-              Suggest
+              {t("nav.suggest")}
             </button>
           ) : (
             <Link
@@ -111,7 +124,7 @@ export function Navbar({ onSuggestClick }: NavbarProps) {
               onClick={() => setMenuOpen(false)}
               className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
             >
-              Suggest
+              {t("nav.suggest")}
             </Link>
           )}
 
