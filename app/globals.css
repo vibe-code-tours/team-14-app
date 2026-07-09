@@ -15,14 +15,28 @@
   animation: fadeIn 0.4s ease-out forwards;
 }
 
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
 /* Dialog styling */
 dialog {
   border: none;
   padding: 0;
+  background: transparent;
 }
 
 dialog::backdrop {
-  background-color: rgba(15, 23, 42, 0.5);
+  background-color: transparent;
+}
+
+dialog[open] {
+  overflow: visible;
 }
 
 /*
