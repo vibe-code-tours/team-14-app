@@ -20,7 +20,7 @@ export async function searchFactories(params: FactorySearchParams) {
     region,
     workersMin,
     workersMax,
-    sort = "name_asc",
+    sort = "id_asc",
     limit = 20,
     offset = 0,
   } = params;
@@ -57,6 +57,9 @@ export async function searchFactories(params: FactorySearchParams) {
   if (workersMax !== undefined) {
     where.workers = { ...((where.workers as object) || {}), lte: workersMax };
   }
+
+  // Exclude factories with empty names
+  where.name = { not: "" };
 
   const orderBy = getOrderBy(sort);
 
@@ -257,8 +260,9 @@ function getOrderBy(sort: string) {
     name_desc: { name: "desc" },
     workers_asc: { workers: "asc" },
     workers_desc: { workers: "desc" },
+    id_asc: { id: "asc" },
     newest: { id: "desc" },
   };
 
-  return sortOptions[sort] || sortOptions.name_asc;
+  return sortOptions[sort] || sortOptions.id_asc;
 }

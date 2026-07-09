@@ -92,39 +92,57 @@ export function ReviewModal({
   return (
     <dialog
       open={isOpen}
-      className="p-0 rounded-3xl shadow-2xl backdrop:bg-slate-900/40 w-full max-w-md border border-slate-100 overflow-hidden"
+      onClose={handleClose}
+      className="fixed inset-0 z-50 bg-black/50 p-0 m-0 max-w-none w-full h-full rounded-none border-0 shadow-none backdrop:visible backdrop:bg-black/50"
     >
-      <div className="relative">
-        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6">
-          <h2 className="text-xl font-bold">Write a Worker Review</h2>
-          <p className="text-white/80 text-xs mt-1">
-            Help others make informed, safe career choices.
-          </p>
-        </div>
-
-        {/* Privacy Banner */}
-        <div className="bg-amber-50 border-b border-amber-100 p-4 text-xs flex gap-2.5 items-center text-amber-800">
-          <span className="text-lg">🔒</span>
-          <div>
-            <strong className="block">
-              ၁၀၀% လူမည်မဖော်ပြဘဲ လျှို့ဝှက်ပေးထားပါသည်
-            </strong>
-            Your name and identity are completely safe. We never share them.
+      <div className="flex items-end sm:items-center justify-center min-h-full">
+        <div className="relative bg-white w-full max-w-md sm:rounded-3xl rounded-t-3xl shadow-2xl border border-slate-100 max-h-[90dvh] sm:max-h-[85dvh] flex flex-col overflow-hidden animate-slide-up">
+          <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-5 sm:p-6 shrink-0">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold">Write a Worker Review</h2>
+                <p className="text-white/80 text-xs mt-1">
+                  Help others make informed, safe career choices.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleClose}
+                className="text-white/60 hover:text-white transition p-1 -mr-1"
+                aria-label="Close"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
-        </div>
 
-        {success ? (
-          <div className="p-8 text-center">
-            <div className="text-4xl mb-4">✅</div>
-            <p className="text-emerald-600 font-medium">
-              ကျေးဇူးတင်ပါသည်။ သုံးသပ်ချက် အောင်မြင်စွာ တင်သွင်းပြီးပါပြီ။
-            </p>
-            <p className="text-slate-500 text-sm mt-2">
-              Thank you! Review submitted successfully.
-            </p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Scrollable content area */}
+          <div className="overflow-y-auto overscroll-contain flex-1 min-h-0">
+            {/* Privacy Banner */}
+            <div className="bg-amber-50 border-b border-amber-100 p-4 text-xs flex gap-2.5 items-center text-amber-800">
+              <span className="text-lg shrink-0">🔒</span>
+              <div>
+                <strong className="block">
+                  ၁၀၀% လူမည်မဖော်ပြဘဲ လျှို့ဝှက်ပေးထားပါသည်
+                </strong>
+                Your name and identity are completely safe. We never share them.
+              </div>
+            </div>
+
+          {success ? (
+            <div className="p-8 text-center">
+              <div className="text-4xl mb-4">✅</div>
+              <p className="text-emerald-600 font-medium">
+                ကျေးဇူးတင်ပါသည်။ သုံးသပ်ချက် အောင်မြင်စွာ တင်သွင်းပြီးပါပြီ။
+              </p>
+              <p className="text-slate-500 text-sm mt-2">
+                Thank you! Review submitted successfully.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
                 Your Role in Factory (အလုပ်အကိုင်)
@@ -265,6 +283,8 @@ export function ReviewModal({
             </div>
           </form>
         )}
+          </div>
+        </div>
       </div>
     </dialog>
   );
