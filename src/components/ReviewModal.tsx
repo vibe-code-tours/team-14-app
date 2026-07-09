@@ -92,7 +92,7 @@ export function ReviewModal({
   return (
     <dialog
       open={isOpen}
-      className="p-0 rounded-3xl shadow-2xl backdrop:bg-slate-900/40 w-full max-w-md border border-slate-100 overflow-hidden"
+      className="fixed inset-0 m-auto p-0 rounded-3xl shadow-2xl w-full max-w-md border border-slate-100 overflow-hidden"
     >
       <div className="relative">
         <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6">
