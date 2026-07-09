@@ -59,7 +59,7 @@ export function SuggestModal({ isOpen, onClose }: SuggestModalProps) {
   return (
     <dialog
       open={isOpen}
-      className="p-0 rounded-2xl shadow-2xl backdrop:bg-slate-900/50 w-full max-w-md border-0"
+      className="fixed inset-0 m-auto p-0 rounded-2xl shadow-2xl w-full max-w-md border-0"
     >
       <div className="p-6">
         <h2 className="text-2xl font-bold mb-1">Suggest New Workplace</h2>
