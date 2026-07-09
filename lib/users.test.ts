@@ -81,6 +81,34 @@ describe("registerUser", () => {
       })
     );
   });
+
+  it("treats an empty-string nickname the same as an omitted one", async () => {
+    (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+    (prisma.user.create as ReturnType<typeof vi.fn>).mockResolvedValue({
+      id: "1",
+      email: "a@b.com",
+      fullName: "Aye Aye",
+      nickname: null,
+    });
+    (prisma.verificationToken.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
+
+    // A registration form always submits a `nickname` field, even when the
+    // worker leaves it blank — this must not be rejected as invalid input.
+    await expect(
+      registerUser({
+        email: "a@b.com",
+        password: "longenough",
+        fullName: "Aye Aye",
+        nickname: "",
+      })
+    ).resolves.not.toThrow();
+
+    expect(prisma.user.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ nickname: null }),
+      })
+    );
+  });
 });
 
 describe("verifyEmail", () => {
