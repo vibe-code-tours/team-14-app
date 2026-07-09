@@ -65,12 +65,33 @@ Future authentication:
 * Google Login
 * Apple Login
 
+Implementation
+
+* Framework: Auth.js (NextAuth v5) with the Credentials provider and Prisma adapter.
+* Session strategy: JWT (httpOnly cookie, signed with AUTH_SECRET). Database sessions
+  are not used.
+* Password hashing: bcryptjs, cost factor 12 (Auth.js's Credentials provider does not
+  hash passwords itself).
+* Email delivery (verification + password reset): Resend.
+
 Requirements:
 
 * Passwords must never be stored in plain text.
 * Passwords must be hashed using a secure algorithm provided by the authentication provider.
 * Sessions must expire automatically.
 * Password reset tokens must expire after a limited time.
+* Email-verification and password-reset tokens are stored as a SHA-256 hash, never in
+  plaintext, and compared by hash — this extends the "never log tokens" rule to at-rest
+  storage.
+* Rate limiting on register, login, and password-reset is enforced via a Postgres-backed
+  fixed-window counter (the `rate_limits` table), not an in-memory counter, so limits
+  hold correctly across multiple app instances.
+* A registered user's `full_name` is captured for internal admin audit trails only and
+  must never be returned by any public-facing API. The optional `nickname` is shown
+  publicly instead wherever a name is displayed; if no nickname is set, `full_name` is
+  shown publicly by default. This is an intentional product decision — nickname is an
+  opt-in privacy upgrade the worker can choose, not a system-enforced anonymity
+  guarantee — communicated to the user at registration.
 
 ⸻
 

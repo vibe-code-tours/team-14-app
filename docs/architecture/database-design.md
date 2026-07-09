@@ -86,21 +86,42 @@ Review
 
 6. Table Definitions
 
-profiles
+users
 
 Purpose
 
-Store registered user information.
+Store registered user information (implemented via Auth.js's Prisma adapter).
 
-Suggested Fields
+Fields
 
-* id
-* email
-* display_name
-* preferred_language
-* role
-* created_at
-* updated_at
+* id (String, cuid — an adapter-mandated exception to the Int autoincrement IDs used
+  elsewhere in this schema)
+* email (unique)
+* password_hash (nullable — allows future OAuth-only users with no password)
+* full_name — the worker's real name, captured for internal admin audit trails only.
+  Never exposed via any public API or UI.
+* nickname (nullable) — optional privacy upgrade. If set, shown publicly instead of
+  full_name wherever a name is displayed (reviews, profile). If not set, full_name is
+  shown publicly by default — this is an intentional product decision, not a gap:
+  nickname is an opt-in safety feature, not a system-enforced anonymity guarantee.
+  Public display name resolves via `getPublicDisplayName(user)` in `lib/users.ts`
+  (`nickname ?? fullName`), the only function permitted to surface a name publicly.
+* role (see Role enum below)
+* email_verified (nullable timestamp)
+* image (nullable — adapter-standard, unused until OAuth providers are added)
+* created_at / updated_at
+
+Related Auth.js adapter tables
+
+* accounts — OAuth provider links (unused today, Credentials-only; kept for future
+  Google/Telegram login without another migration)
+* sessions — unused under the JWT session strategy; kept for adapter type-contract
+  compatibility and future database-session support
+* verification_tokens — reused for the email-verification flow (identifier = email);
+  tokens are stored as a SHA-256 hash, never in plaintext
+* password_reset_tokens — separate from verification_tokens because password reset has
+  a different lifecycle (per-user, 1-hour expiry); tokens stored as a SHA-256 hash
+* rate_limits — fixed-window counters for register/login/password-reset rate limiting
 
 ⸻
 
@@ -267,10 +288,15 @@ Record administrator actions.
 
 Example enums
 
-Role
+Role (UserRole)
 
-* USER
-* ADMIN
+* user
+* moderator
+* administrator
+
+(Lowercase values to match this schema's existing enum-value convention —
+OrganizationType.factory, SuggestionStatus.pending — and the three roles defined in
+docs/operations/security.md's RBAC section.)
 
 Review Status
 
@@ -345,7 +371,7 @@ review_votes
 * review_id
 * user_id (unique)
 
-profiles
+users
 
 * email (unique)
 

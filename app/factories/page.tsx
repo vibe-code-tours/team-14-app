@@ -40,7 +40,6 @@ export default function FactoriesPage() {
       if (selectedRegion) params.set("region", selectedRegion);
       params.set("limit", limit.toString());
       params.set("offset", ((page - 1) * limit).toString());
-
       const res = await fetch(`/api/factories?${params}`);
       const data: FactoryResponse = await res.json();
       setFactories(data.data);

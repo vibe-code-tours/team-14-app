@@ -177,7 +177,10 @@ The platform shall allow users to:
 * Search factories and agencies.
 * View workplace profiles.
 * Read anonymous reviews.
-* Submit anonymous reviews after authentication.
+* Submit anonymous reviews after authentication. (Note: authentication now exists —
+  see docs/operations/security.md §4 — but the Review model/API is not yet gated
+  behind login; this remains an open decision, out of scope for the auth feature
+  itself.)
 * Rate salary, overtime, accommodation, and welfare.
 * Vote whether reviews are useful.
 * Edit their own profile.
