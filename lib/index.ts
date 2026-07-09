@@ -22,3 +22,15 @@ export {
   updateSuggestionStatus,
   type CreateSuggestionInput,
 } from "./suggestions";
+
+export {
+  registerUser,
+  verifyCredentials,
+  verifyEmail,
+  requestPasswordReset,
+  resetPassword,
+  getPublicDisplayName,
+  type RegisterUserInput,
+} from "./users";
+
+export { checkRateLimit } from "./rate-limit";

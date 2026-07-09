@@ -237,6 +237,29 @@ Retrieve worker information articles.
 
 9. Authentication APIs
 
+Authentication is implemented with Auth.js (NextAuth v5). Login, logout, and session
+management are handled by Auth.js's own catch-all route and are not custom endpoints;
+registration, email verification, and password reset are custom endpoints since Auth.js
+does not provide them out of the box.
+
+Session mechanism
+
+Auth.js JWT session cookie (httpOnly, signed with AUTH_SECRET), not a manually-issued
+Bearer/Refresh token pair.
+
+⸻
+
+Login / Logout / Session (Auth.js-owned)
+
+POST /api/auth/[...nextauth] (sign-in, callback, session, csrf, sign-out sub-routes)
+
+Purpose
+
+Authenticate, end, and inspect the current session. Called via the `next-auth/react`
+client helpers (`signIn("credentials", ...)`, `signOut()`), not called directly.
+
+⸻
+
 Register
 
 POST /api/auth/register
@@ -249,22 +272,12 @@ Request
 
 * Email
 * Password
-* Display Name
+* Full Name (required — internal admin audit use only, never shown publicly)
+* Nickname (optional — shown publicly instead of Full Name if set; see database-design.md)
 
-⸻
+Rate limit
 
-Login
-
-POST /api/auth/login
-
-Purpose
-
-Authenticate user.
-
-Returns
-
-* Access Token
-* Refresh Token
+10 requests/minute/IP
 
 ⸻
 
@@ -274,17 +287,46 @@ POST /api/auth/verify-email
 
 Purpose
 
-Verify email address.
+Verify email address using the token emailed at registration.
+
+Request
+
+* Token
+* Email
 
 ⸻
 
-Logout
+Request Password Reset
 
-POST /api/auth/logout
+POST /api/auth/request-password-reset
 
 Purpose
 
-End user session.
+Send a password reset link to the given email if an account exists. Always returns a
+generic success response to avoid leaking whether an email is registered.
+
+Request
+
+* Email
+
+Rate limit
+
+5 requests/hour/email
+
+⸻
+
+Reset Password
+
+POST /api/auth/reset-password
+
+Purpose
+
+Set a new password using the token emailed by the request above.
+
+Request
+
+* Token
+* New Password
 
 ⸻
 

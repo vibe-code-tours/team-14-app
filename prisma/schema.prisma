@@ -22,6 +22,106 @@ enum SuggestionStatus {
   rejected
 }
 
+enum UserRole {
+  user
+  moderator
+  administrator
+}
+
+// Registered platform users (auth)
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique @db.VarChar(255)
+  passwordHash  String?   @map("password_hash") @db.VarChar(255)
+  // Real name, captured for admin audit trails only — never exposed via any public API.
+  fullName      String    @map("full_name") @db.VarChar(255)
+  // Optional privacy upgrade: shown instead of fullName wherever a name is displayed publicly.
+  // If null, fullName is shown by default — this is an intentional product decision, not a bug.
+  nickname      String?   @map("nickname") @db.VarChar(50)
+  role          UserRole  @default(user)
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  accounts            Account[]
+  sessions            Session[]
+  passwordResetTokens PasswordResetToken[]
+
+  @@map("users")
+}
+
+// Auth.js adapter-standard model (required field shapes per @auth/prisma-adapter contract)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+// Auth.js adapter-standard model (JWT session strategy does not require this table,
+// but it's kept so the adapter's type contract is satisfied and OAuth/email providers
+// can be added later without another migration)
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// Auth.js adapter-standard model, reused here for the email-verification flow
+// (identifier = email). token is stored as a SHA-256 hash, never the raw value.
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Password reset tokens have their own model (distinct lifecycle from VerificationToken:
+// per-user, 1-hour expiry). token is stored as a SHA-256 hash, never the raw value.
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique @db.VarChar(255)
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+// Fixed-window rate limit counters (register, password reset, login attempts).
+// DB-backed rather than in-memory so limits hold correctly across multiple app instances.
+model RateLimit {
+  key         String   @id
+  count       Int      @default(0)
+  windowStart DateTime @map("window_start")
+
+  @@map("rate_limits")
+}
+
 // User-submitted organizations (pending admin approval)
 model SuggestedOrganization {
   id        Int              @id @default(autoincrement())
