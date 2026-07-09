@@ -34,7 +34,15 @@ export function LoginForm() {
       return;
     }
 
-    router.push(callbackUrl);
+    // Check if user is admin and redirect accordingly
+    const res = await fetch("/api/auth/session");
+    const session = await res.json();
+
+    if (session?.user?.isAdmin) {
+      router.push("/admin/dashboard");
+    } else {
+      router.push(callbackUrl);
+    }
   };
 
   return (

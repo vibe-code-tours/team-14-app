@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPendingSuggestions } from "@/lib/suggestions";
+import { getAdminReviews } from "@/lib/admin-reviews";
 import { auth } from "@/auth";
 
 export async function GET(request: NextRequest) {
@@ -9,13 +9,17 @@ export async function GET(request: NextRequest) {
   }
 
   const searchParams = request.nextUrl.searchParams;
-  const status = searchParams.get("status") || undefined;
 
   try {
-    const data = await getPendingSuggestions(status);
-    return NextResponse.json({ data });
+    const data = await getAdminReviews({
+      search: searchParams.get("search") || undefined,
+      visibility: searchParams.get("visibility") || undefined,
+      limit: parseInt(searchParams.get("limit") || "20"),
+      offset: parseInt(searchParams.get("offset") || "0"),
+    });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Error getting suggestions:", error);
+    console.error("Error getting reviews:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
