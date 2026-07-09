@@ -11,7 +11,12 @@ const registerSchema = z.object({
   email: z.string().trim().toLowerCase().email(),
   password: z.string().min(8),
   fullName: z.string().trim().min(1).max(255),
-  nickname: z.string().trim().min(1).max(50).optional(),
+  nickname: z
+    .string()
+    .trim()
+    .max(50)
+    .optional()
+    .transform((value) => (value ? value : undefined)),
 });
 
 export interface RegisterUserInput {
