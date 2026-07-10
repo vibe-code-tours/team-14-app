@@ -1,10 +1,18 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend: Resend | null = null;
+
+function getResendClient(): Resend {
+  if (!resend) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
+
 const FROM = process.env.EMAIL_FROM || "noreply@workervoice.example";
 
 export async function sendVerificationEmail(to: string, verifyUrl: string) {
-  const { error } = await resend.emails.send({
+  const { error } = await getResendClient().emails.send({
     from: FROM,
     to,
     subject: "Verify your WorkerVoice account",
@@ -16,7 +24,7 @@ export async function sendVerificationEmail(to: string, verifyUrl: string) {
 }
 
 export async function sendPasswordResetEmail(to: string, resetUrl: string) {
-  const { error } = await resend.emails.send({
+  const { error } = await getResendClient().emails.send({
     from: FROM,
     to,
     subject: "Reset your WorkerVoice password",
