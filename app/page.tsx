@@ -100,10 +100,10 @@ export default function Home() {
       <main className="flex-grow max-w-5xl mx-auto p-4 mt-6 w-full space-y-8 animate-fade-in">
         {/* Search Hero */}
         <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm text-center border border-slate-100">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-slate-800">
+          <h2 className="text-3xl font-extrabold mb-8 text-slate-800">
             {t("hero.title")}
           </h2>
-          <p className="text-slate-500 mb-2">{t("hero.subtitle")}</p>
+          <p className="text-slate-500 mb-6">{t("hero.subtitle")}</p>
           <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
             <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl overflow-hidden focus-within:ring-2 focus:ring-emerald-500 transition shadow-inner">
               <span className="pl-4 text-slate-400">🔍</span>
