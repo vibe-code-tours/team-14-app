@@ -11,6 +11,12 @@ function getResendClient(): Resend {
 
 const FROM = process.env.EMAIL_FROM || "noreply@workervoice.example";
 
+function getClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return null;
+  return new Resend(apiKey);
+}
+
 export async function sendVerificationEmail(to: string, verifyUrl: string) {
   const { error } = await getResendClient().emails.send({
     from: FROM,

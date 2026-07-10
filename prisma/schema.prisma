@@ -22,6 +22,12 @@ enum SuggestionStatus {
   rejected
 }
 
+enum FactoryStatus {
+  pending
+  approved
+  declined
+}
+
 enum UserRole {
   user
   moderator
@@ -39,6 +45,7 @@ model User {
   // If null, fullName is shown by default — this is an intentional product decision, not a bug.
   nickname      String?   @map("nickname") @db.VarChar(50)
   role          UserRole  @default(user)
+  isAdmin       Boolean   @default(false) @map("is_admin")
   emailVerified DateTime? @map("email_verified")
   image         String?
   createdAt     DateTime  @default(now()) @map("created_at")
@@ -161,6 +168,7 @@ model Factory {
   tsic             String?  @db.VarChar(50)
   oldRegNumber     String?  @map("old_reg_number") @db.VarChar(50)
   country          String   @default("Thailand") @db.VarChar(100)
+  status           FactoryStatus @default(approved)
   createdAt        DateTime @default(now()) @map("created_at")
 
   reviews Review[]
@@ -182,6 +190,7 @@ model Review {
   ratingOt       Int      @map("rating_ot")
   ratingHousing  Int      @map("rating_housing")
   reviewText     String   @map("review_text") @db.Text
+  isVisible      Boolean  @default(true)
   createdAt      DateTime @default(now()) @map("created_at")
 
   organization SuggestedOrganization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)

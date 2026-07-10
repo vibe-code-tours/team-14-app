@@ -100,6 +100,7 @@ export async function verifyCredentials(email: string, password: string) {
     id: user.id,
     email: user.email,
     role: user.role,
+    isAdmin: user.isAdmin,
     displayName: getPublicDisplayName(user),
   };
 }
