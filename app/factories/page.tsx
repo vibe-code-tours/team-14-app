@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
 import { SuggestModal } from "@/src/components/SuggestModal";
+import { useLanguage } from "@/src/contexts/LanguageContext";
 
 interface Factory {
   id: number;
@@ -23,6 +24,7 @@ interface FactoryResponse {
 }
 
 export default function FactoriesPage() {
+  const { t } = useLanguage();
   const [factories, setFactories] = useState<Factory[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -72,9 +74,9 @@ export default function FactoriesPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">🏭 Factories</h1>
+            <h1 className="text-2xl font-bold text-slate-800">{t("factoryList.title")}</h1>
             <p className="text-slate-500 text-sm">
-              Browse verified factories in Thailand
+              {t("factoryList.subtitle")}
             </p>
           </div>
         </div>
@@ -88,7 +90,7 @@ export default function FactoriesPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by factory name..."
+                placeholder={t("factoryList.searchPlaceholder")}
                 className="w-full p-3 bg-transparent outline-none text-sm"
               />
             </div>
@@ -100,7 +102,7 @@ export default function FactoriesPage() {
               }}
               className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 ring-emerald-500 outline-none"
             >
-              <option value="">All Regions</option>
+              <option value="">{t("factoryList.allRegions")}</option>
               <option value="Bangkok_and_Central">Bangkok & Central</option>
               <option value="Eastern">Eastern</option>
               <option value="Northern">Northern</option>
@@ -112,7 +114,7 @@ export default function FactoriesPage() {
               type="submit"
               className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 transition text-sm"
             >
-              Search
+              {t("factoryList.search")}
             </button>
           </form>
         </div>
@@ -120,11 +122,9 @@ export default function FactoriesPage() {
         {/* Results Count */}
         <div className="text-sm text-slate-500">
           {loading ? (
-            "Loading..."
+            t("factoryList.loading")
           ) : (
-            <>
-              Showing {factories.length} of {total} factories
-            </>
+            t("factoryList.showing").replace("{count}", String(factories.length)).replace("{total}", String(total))
           )}
         </div>
 
@@ -144,12 +144,12 @@ export default function FactoriesPage() {
           </div>
         ) : factories.length === 0 ? (
           <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 text-center">
-            <p className="text-slate-500 mb-4">No factories found</p>
+            <p className="text-slate-500 mb-4">{t("factoryList.empty")}</p>
             <button
               onClick={() => setShowSuggestModal(true)}
               className="text-emerald-600 font-medium hover:underline"
             >
-              Suggest a factory →
+              {t("factoryList.suggestFactory")}
             </button>
           </div>
         ) : (
@@ -174,7 +174,7 @@ export default function FactoriesPage() {
                 </p>
                 {factory.workers && (
                   <p className="text-xs text-slate-400">
-                    {factory.workers.toLocaleString()} workers
+                    {factory.workers.toLocaleString()} {t("factoryList.workers")}
                   </p>
                 )}
                 {factory.type && (
@@ -193,17 +193,17 @@ export default function FactoriesPage() {
               disabled={page === 1}
               className="px-4 py-2 rounded-lg border border-slate-200 text-sm font-medium disabled:opacity-50 hover:bg-slate-50 transition"
             >
-              Previous
+              {t("factoryList.previous")}
             </button>
             <span className="px-4 py-2 text-sm text-slate-600">
-              Page {page} of {totalPages}
+              {t("factoryList.pageOf").replace("{page}", String(page)).replace("{total}", String(totalPages))}
             </span>
             <button
               onClick={() => setPage(Math.min(totalPages, page + 1))}
               disabled={page === totalPages}
               className="px-4 py-2 rounded-lg border border-slate-200 text-sm font-medium disabled:opacity-50 hover:bg-slate-50 transition"
             >
-              Next
+              {t("factoryList.next")}
             </button>
           </div>
         )}
