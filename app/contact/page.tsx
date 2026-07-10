@@ -40,7 +40,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Navbar onSuggestClick={() => setShowSuggestModal(true)} />
+      <Navbar />
 
       <main className="flex-grow max-w-3xl mx-auto p-4 md:p-8 mt-6 w-full space-y-8 animate-fade-in">
         {/* Header */}

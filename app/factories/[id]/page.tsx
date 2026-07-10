@@ -7,6 +7,7 @@ import { Footer } from "@/src/components/Footer";
 import { ReviewModal } from "@/src/components/ReviewModal";
 import { StarRating } from "@/src/components/StarRating";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/src/components/Tabs";
+import { useLanguage } from "@/src/contexts/LanguageContext";
 
 interface Factory {
   id: number;
@@ -53,6 +54,7 @@ export default function FactoryDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const { t } = useLanguage();
   const [factory, setFactory] = useState<Factory | null>(null);
   const [reviewsData, setReviewsData] = useState<ReviewsResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -132,10 +134,10 @@ export default function FactoryDetailPage({
         <Navbar />
         <main className="flex-grow max-w-4xl mx-auto p-4 mt-6 w-full text-center py-16">
           <h1 className="text-2xl font-bold text-slate-800 mb-4">
-            Factory not found
+            {t("factoryDetail.notFound")}
           </h1>
           <Link href="/factories" className="text-emerald-600 hover:underline">
-            ← Back to factories
+            {t("factoryDetail.backToFactories")}
           </Link>
         </main>
         <Footer />
@@ -159,7 +161,7 @@ export default function FactoryDetailPage({
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-full">
-                  🇹🇭 Thailand
+                  {t("factoryDetail.thailand")}
                 </span>
               </div>
 
@@ -177,11 +179,7 @@ export default function FactoryDetailPage({
                   <StarRating rating={stats?.avgOverall ?? 0} size="lg" showValue />
                 </div>
                 <div className="text-xs text-slate-400">
-                  Based on{" "}
-                  <span className="font-semibold text-slate-600">
-                    {stats?.count || 0}
-                  </span>{" "}
-                  reviews
+                  {t("factoryDetail.basedOn").replace("{count}", String(stats?.count || 0))}
                 </div>
               </div>
             </div>
@@ -189,14 +187,14 @@ export default function FactoryDetailPage({
             {/* Multi-Criteria Progress Bars */}
             <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100 flex flex-col justify-center space-y-5">
               <h3 className="font-bold text-slate-700 text-sm tracking-wide uppercase">
-                Multi-Criteria Score
+                {t("factoryDetail.multiCriteriaScore")}
               </h3>
 
               <div className="space-y-4">
                 {/* Salary */}
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs font-medium text-slate-500">
-                    <span>💰 Salary Paid On-Time</span>
+                    <span>{t("factoryDetail.salaryScore")}</span>
                     <span className="font-semibold text-slate-700">
                       {stats?.avgSalary?.toFixed(1) || "0.0"}
                     </span>
@@ -212,7 +210,7 @@ export default function FactoryDetailPage({
                 {/* OT */}
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs font-medium text-slate-500">
-                    <span>⏱️ OT Hours & Fairness</span>
+                    <span>{t("factoryDetail.otScore")}</span>
                     <span className="font-semibold text-slate-700">
                       {stats?.avgOt?.toFixed(1) || "0.0"}
                     </span>
@@ -228,7 +226,7 @@ export default function FactoryDetailPage({
                 {/* Housing */}
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs font-medium text-slate-500">
-                    <span>🏠 Housing & Dormitory Quality</span>
+                    <span>{t("factoryDetail.housingScore")}</span>
                     <span className="font-semibold text-slate-700">
                       {stats?.avgHousing?.toFixed(1) || "0.0"}
                     </span>
@@ -250,15 +248,15 @@ export default function FactoryDetailPage({
         {/* Tab Navigation */}
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabKey)}>
           <TabsList>
-            <TabsTrigger value="about">About</TabsTrigger>
-            <TabsTrigger value="reviews">Reviews</TabsTrigger>
+            <TabsTrigger value="about">{t("factoryDetail.aboutTab")}</TabsTrigger>
+            <TabsTrigger value="reviews">{t("factoryDetail.reviewsTab")}</TabsTrigger>
           </TabsList>
 
           {/* About Tab */}
           <TabsContent value="about" className="space-y-6">
             {factory.businessActivity && (
               <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-3">
-                <h3 className="font-bold text-slate-800 text-sm">About</h3>
+                <h3 className="font-bold text-slate-800 text-sm">{t("factoryDetail.aboutSection")}</h3>
                 <p className="text-slate-600 leading-relaxed text-sm">
                   {factory.businessActivity}
                 </p>
@@ -266,29 +264,29 @@ export default function FactoryDetailPage({
             )}
 
             <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-3">
-              <h3 className="font-bold text-slate-800 text-sm">Details</h3>
+              <h3 className="font-bold text-slate-800 text-sm">{t("factoryDetail.detailsSection")}</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-slate-400">Location</span>
+                  <span className="text-slate-400">{t("factoryDetail.location")}</span>
                   <p className="text-slate-700 font-medium">
                     {[factory.district, factory.province].filter(Boolean).join(", ") || "Thailand"}
                   </p>
                 </div>
                 <div>
-                  <span className="text-slate-400">Workers</span>
+                  <span className="text-slate-400">{t("factoryDetail.workers")}</span>
                   <p className="text-slate-700 font-medium">
                     {factory.workers?.toLocaleString() || "—"}
                   </p>
                 </div>
                 {factory.operator && (
                   <div>
-                    <span className="text-slate-400">Operator</span>
+                    <span className="text-slate-400">{t("factoryDetail.operator")}</span>
                     <p className="text-slate-700 font-medium">{factory.operator}</p>
                   </div>
                 )}
                 {factory.type && (
                   <div>
-                    <span className="text-slate-400">Type</span>
+                    <span className="text-slate-400">{t("factoryDetail.type")}</span>
                     <p className="text-slate-700 font-medium">{factory.type}</p>
                   </div>
                 )}
@@ -300,7 +298,7 @@ export default function FactoryDetailPage({
           <TabsContent value="reviews" className="space-y-4">
             <div className="flex justify-between items-center mt-4">
               <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                🗣️ Worker Reviews
+                {t("factoryDetail.workerReviews")}
                 <span className="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-medium">
                   {stats?.count || 0}
                 </span>
@@ -309,7 +307,7 @@ export default function FactoryDetailPage({
                 onClick={() => setShowReviewModal(true)}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-sm transition hover:shadow-md active:scale-95 flex items-center gap-1.5"
               >
-                ✏️ Write a Review
+                ✏️ {t("nav.writeReview")}
               </button>
             </div>
 
@@ -317,7 +315,7 @@ export default function FactoryDetailPage({
             <div className="space-y-4">
               {!reviewsData?.data || reviewsData.data.length === 0 ? (
                 <div className="bg-white p-8 rounded-2xl border text-center text-slate-400">
-                  No reviews yet. Be the first to write a review!
+                  {t("factoryDetail.noReviews")}
                 </div>
               ) : (
                 reviewsData.data.map((review) => {
@@ -341,8 +339,7 @@ export default function FactoryDetailPage({
                               {getCountryFlag(review.countryFrom)}
                             </h4>
                             <p className="text-xs text-slate-400 font-medium">
-                              From {review.countryFrom} • Submitted{" "}
-                              {formatDate(review.createdAt)}
+                              {t("factoryDetail.reviewFrom").replace("{country}", review.countryFrom).replace("{date}", formatDate(review.createdAt))}
                             </p>
                           </div>
                         </div>
@@ -389,7 +386,7 @@ export default function FactoryDetailPage({
             href="/factories"
             className="text-emerald-600 hover:underline text-sm font-medium"
           >
-            ← Back to all factories
+            {t("factoryDetail.backToAll")}
           </Link>
         </div>
       </main>
