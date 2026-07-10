@@ -82,6 +82,17 @@ export async function registerUser(input: RegisterUserInput) {
   const verifyUrl = `${process.env.AUTH_URL || "http://localhost:3000"}/verify-email?token=${rawToken}&email=${encodeURIComponent(email)}`;
   await sendVerificationEmail(email, verifyUrl);
 
+  // Auto-verify in dev mode (no Resend API key)
+  if (!process.env.RESEND_API_KEY) {
+    await prisma.user.update({
+      where: { email },
+      data: { emailVerified: new Date() },
+    });
+    await prisma.verificationToken.delete({
+      where: { identifier_token: { identifier: email, token: hashToken(rawToken) } },
+    });
+  }
+
   return user;
 }
 
@@ -101,6 +112,7 @@ export async function verifyCredentials(email: string, password: string) {
     email: user.email,
     role: user.role,
     isAdmin: user.isAdmin,
+    isSuperAdmin: user.isSuperAdmin,
     displayName: getPublicDisplayName(user),
   };
 }

@@ -34,9 +34,14 @@ enum UserRole {
   administrator
 }
 
+enum UserStatus {
+  active
+  blocked
+}
+
 // Registered platform users (auth)
 model User {
-  id            String    @id @default(cuid())
+  id            Int       @id @default(autoincrement())
   email         String    @unique @db.VarChar(255)
   passwordHash  String?   @map("password_hash") @db.VarChar(255)
   // Real name, captured for admin audit trails only — never exposed via any public API.
@@ -46,6 +51,8 @@ model User {
   nickname      String?   @map("nickname") @db.VarChar(50)
   role          UserRole  @default(user)
   isAdmin       Boolean   @default(false) @map("is_admin")
+  isSuperAdmin  Boolean   @default(false) @map("is_super_admin")
+  status        UserStatus @default(active)
   emailVerified DateTime? @map("email_verified")
   image         String?
   createdAt     DateTime  @default(now()) @map("created_at")
@@ -54,6 +61,8 @@ model User {
   accounts            Account[]
   sessions            Session[]
   passwordResetTokens PasswordResetToken[]
+  factories           Factory[]
+  reviews             Review[]
 
   @@map("users")
 }
@@ -61,7 +70,7 @@ model User {
 // Auth.js adapter-standard model (required field shapes per @auth/prisma-adapter contract)
 model Account {
   id                String  @id @default(cuid())
-  userId            String  @map("user_id")
+  userId            Int     @map("user_id")
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
@@ -85,7 +94,7 @@ model Account {
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique @map("session_token")
-  userId       String   @map("user_id")
+  userId       Int      @map("user_id")
   expires      DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -109,7 +118,7 @@ model VerificationToken {
 model PasswordResetToken {
   id        String   @id @default(cuid())
   token     String   @unique @db.VarChar(255)
-  userId    String   @map("user_id")
+  userId    Int      @map("user_id")
   expiresAt DateTime @map("expires_at")
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -169,8 +178,11 @@ model Factory {
   oldRegNumber     String?  @map("old_reg_number") @db.VarChar(50)
   country          String   @default("Thailand") @db.VarChar(100)
   status           FactoryStatus @default(approved)
+  image            String?   @db.VarChar(500)
+  userId           Int?      @map("user_id")
   createdAt        DateTime @default(now()) @map("created_at")
 
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   reviews Review[]
 
   @@index([name])
@@ -191,8 +203,10 @@ model Review {
   ratingHousing  Int      @map("rating_housing")
   reviewText     String   @map("review_text") @db.Text
   isVisible      Boolean  @default(true)
+  userId         Int?     @map("user_id")
   createdAt      DateTime @default(now()) @map("created_at")
 
+  user         User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
   organization SuggestedOrganization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   factory      Factory?              @relation(fields: [factoryId], references: [id], onDelete: Cascade)
 

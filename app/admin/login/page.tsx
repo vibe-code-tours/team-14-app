@@ -3,9 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import Link from "next/link";
-import { Input } from "@/src/components/Input";
-import { Button } from "@/src/components/Button";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -30,7 +27,6 @@ export default function AdminLoginPage() {
         throw new Error("Invalid email or password");
       }
 
-      // Check if user is admin by fetching session
       const res = await fetch("/api/auth/session");
       const session = await res.json();
 
@@ -47,58 +43,87 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-8 rounded-t-2xl">
-          <div className="text-center">
-            <span className="text-4xl">🌏</span>
-            <h1 className="text-2xl font-bold mt-3">WorkerVoice Admin</h1>
-            <p className="text-white/80 text-sm mt-1">
-              Sign in to manage factories and reviews
-            </p>
+    <div className="fixed inset-0 flex items-center justify-center bg-linear-to-br from-emerald-600 via-emerald-500 to-teal-600">
+      {/* Decorative circles */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-white/5" />
+      <div className="absolute -bottom-48 -left-24 w-[500px] h-[500px] rounded-full bg-white/5" />
+      <div className="absolute top-1/4 right-0 w-64 h-64 rounded-full bg-white/5" />
+      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full bg-white/5" />
+
+      {/* Login card */}
+      <div className="relative z-10 w-full max-w-md mx-4">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-sm mb-4">
+            <span className="text-3xl">🌏</span>
           </div>
+          <h1 className="text-3xl font-bold text-white">WorkerVoice</h1>
+          <p className="text-emerald-100 mt-1">Admin Portal</p>
         </div>
 
-        {/* Form */}
-        <div className="bg-white p-8 rounded-b-2xl shadow-sm border border-t-0 border-slate-100">
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-1">Welcome back</h2>
+          <p className="text-sm text-slate-500 mb-6">Sign in to your admin account</p>
+
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="admin@workervoice.com"
-            />
-            <Input
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Enter your password"
-            />
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
+                Email address
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="admin@workervoice.com"
+                className="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Enter your password"
+                className="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400"
+              />
+            </div>
 
             {error && (
-              <div className="bg-red-50 text-red-800 p-3 rounded-lg text-sm">
+              <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-xl border border-red-100 flex items-center gap-2">
+                <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
                 {error}
               </div>
             )}
 
-            <Button type="submit" isLoading={loading} className="w-full">
-              Sign In
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <Link
-              href="/"
-              className="text-sm text-slate-500 hover:text-emerald-600 transition"
+            <button
+              type="submit"
+              disabled={loading || !email || !password}
+              className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              ← Back to WorkerVoice
-            </Link>
-          </div>
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Signing in...
+                </>
+              ) : (
+                "Sign in"
+              )}
+            </button>
+          </form>
         </div>
       </div>
     </div>

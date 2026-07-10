@@ -3,16 +3,26 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Badge } from "@/src/components/Badge";
-import type { AdminFactory } from "@/src/types/admin";
+
+interface User {
+  id: string;
+  email: string;
+  fullName: string;
+  nickname: string | null;
+  role: string;
+  isAdmin: boolean;
+  status: "active" | "blocked";
+  emailVerified: string | null;
+  createdAt: string;
+}
 
 const statusVariant: Record<string, "default" | "success" | "warning" | "error"> = {
-  pending: "warning",
-  approved: "success",
-  declined: "error",
+  active: "success",
+  blocked: "error",
 };
 
-export default function AdminFactoriesPage() {
-  const [factories, setFactories] = useState<AdminFactory[]>([]);
+export default function AdminUsersPage() {
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -20,19 +30,14 @@ export default function AdminFactoriesPage() {
   const [total, setTotal] = useState(0);
   const limit = 10;
 
-  const [updatingId, setUpdatingId] = useState<number | null>(null);
-  const [actionError, setActionError] = useState("");
-
-  // Confirm modal state
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
-    title: string;
-    message: string;
-    variant: "approve" | "decline";
-    onConfirm: () => void;
-  }>({ isOpen: false, title: "", message: "", variant: "approve", onConfirm: () => {} });
+    userId: string;
+    userName: string;
+    action: "active" | "blocked" | "promote";
+  }>({ isOpen: false, userId: "", userName: "", action: "active" });
 
-  const fetchFactories = useCallback(async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     const startTime = Date.now();
     try {
@@ -42,12 +47,12 @@ export default function AdminFactoriesPage() {
       params.set("limit", limit.toString());
       params.set("offset", ((page - 1) * limit).toString());
 
-      const res = await fetch(`/api/admin/factories?${params}`);
+      const res = await fetch(`/api/admin/users?${params}`);
       const data = await res.json();
-      setFactories(data.data);
+      setUsers(data.data);
       setTotal(data.total);
     } catch (error) {
-      console.error("Error fetching factories:", error);
+      console.error("Error fetching users:", error);
     } finally {
       const elapsed = Date.now() - startTime;
       const remaining = Math.max(0, 500 - elapsed);
@@ -56,47 +61,39 @@ export default function AdminFactoriesPage() {
   }, [search, statusFilter, page, limit]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchFactories();
-  }, [fetchFactories]);
+    fetchUsers();
+  }, [fetchUsers]);
 
-  const executeStatusChange = async (factoryId: number, newStatus: "approved" | "declined") => {
-    setUpdatingId(factoryId);
-    setActionError("");
+  const handleStatusChange = async (userId: string, newStatus: "active" | "blocked") => {
     try {
-      const res = await fetch(`/api/admin/factories/${factoryId}/status`, {
+      const res = await fetch(`/api/admin/users/${userId}/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to update status");
+      if (res.ok) {
+        fetchUsers();
       }
-
-      fetchFactories();
-    } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Action failed");
-    } finally {
-      setUpdatingId(null);
+    } catch (error) {
+      console.error("Error updating user status:", error);
     }
   };
 
-  const handleStatusChange = (factoryId: number, newStatus: "approved" | "declined") => {
-    const factory = factories.find((f) => f.id === factoryId);
-    const statusLabel = newStatus === "approved" ? "Approve" : "Decline";
-    setConfirmModal({
-      isOpen: true,
-      title: `${statusLabel} Factory`,
-      message: `Are you sure you want to ${statusLabel.toLowerCase()} "${factory?.name || ""}"?`,
-      variant: newStatus === "approved" ? "approve" : "decline",
-      onConfirm: () => {
-        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-        executeStatusChange(factoryId, newStatus);
-      },
-    });
+  const handlePromote = async (userId: string) => {
+    try {
+      const res = await fetch(`/api/admin/users/${userId}/admin`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isAdmin: true }),
+      });
+
+      if (res.ok) {
+        fetchUsers();
+      }
+    } catch (error) {
+      console.error("Error promoting user:", error);
+    }
   };
 
   const totalPages = Math.ceil(total / limit);
@@ -104,21 +101,12 @@ export default function AdminFactoriesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">🏭 Factories</h1>
-          <p className="text-slate-500 text-sm">
-            Manage factory listings and approvals
-          </p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold text-slate-800">👥 Users</h1>
+        <p className="text-slate-500 text-sm">
+          Manage registered users
+        </p>
       </div>
-
-      {/* Error Message */}
-      {actionError && (
-        <div className="bg-red-50 text-red-800 p-4 rounded-xl border border-red-200">
-          <p className="text-sm font-medium">{actionError}</p>
-        </div>
-      )}
 
       {/* Filters */}
       <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
@@ -132,7 +120,7 @@ export default function AdminFactoriesPage() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              placeholder="Search factories..."
+              placeholder="Search users..."
               className="w-full p-3 bg-transparent outline-none text-sm"
             />
           </div>
@@ -146,9 +134,8 @@ export default function AdminFactoriesPage() {
               className="appearance-none border border-slate-200 rounded-xl pl-4 pr-10 py-2.5 text-sm font-medium bg-linear-to-b from-white to-slate-50 hover:from-slate-50 hover:to-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none shadow-sm transition cursor-pointer"
             >
               <option value="">All Statuses</option>
-              <option value="pending">⏳ Pending</option>
-              <option value="approved">✅ Approved</option>
-              <option value="declined">❌ Declined</option>
+              <option value="active">✅ Active</option>
+              <option value="blocked">🚫 Blocked</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
               <div className="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[6px] border-t-emerald-500"></div>
@@ -157,7 +144,7 @@ export default function AdminFactoriesPage() {
         </div>
       </div>
 
-      {/* Table */}
+      {/* Users Table */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
         {loading ? (
           <div className="p-12 text-center">
@@ -168,9 +155,9 @@ export default function AdminFactoriesPage() {
               </svg>
             </div>
           </div>
-        ) : factories?.length === 0 ? (
+        ) : users?.length === 0 ? (
           <div className="p-8 text-center text-slate-500">
-            No factories found
+            No users found
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -181,94 +168,100 @@ export default function AdminFactoriesPage() {
                     ID
                   </th>
                   <th className="text-left p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                    Factory
+                    User
                   </th>
                   <th className="text-left p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                    Creator
-                  </th>
-                  <th className="text-left p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                    Location
-                  </th>
-                  <th className="text-left p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                    Workers
+                    Email
                   </th>
                   <th className="text-left p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                     Status
                   </th>
+                  <th className="text-left p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    Role
+                  </th>
                   <th className="text-center p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                    Actions
+                    Action
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {factories?.map((factory, index) => (
+                {users?.map((user, index) => (
                   <tr
-                    key={factory.id}
-                    className="border-b border-slate-50 hover:bg-slate-50 transition animate-fade-in"
-                    style={{
-                      animationDelay: `${index * 80}ms`,
-                      animationFillMode: "forwards",
-                      opacity: 0,
-                    }}
+                    key={user.id}
+                    className="border-b border-slate-50 hover:bg-slate-50 transition opacity-0 animate-fade-in"
+                    style={{ animationDelay: `${index * 80}ms`, animationFillMode: "forwards" }}
                   >
                     <td className="p-4">
-                      <span className="text-sm text-slate-500">{factory.id}</span>
+                      <span className="text-sm text-slate-500">{user.id}</span>
                     </td>
                     <td className="p-4">
                       <p className="font-medium text-slate-800 text-sm">
-                        {factory.name}
+                        {user.nickname || user.fullName}
                       </p>
-                      {factory.regNumber && (
+                      {user.nickname && (
                         <p className="text-xs text-slate-400">
-                          Reg: {factory.regNumber}
+                          {user.fullName}
                         </p>
                       )}
                     </td>
                     <td className="p-4">
-                      <p className="text-sm text-slate-600">
-                        {factory.user?.nickname || factory.user?.fullName || "—"}
-                      </p>
+                      <p className="text-sm text-slate-600">{user.email}</p>
                     </td>
                     <td className="p-4">
-                      <p className="text-sm text-slate-600">
-                        {[factory.district, factory.province]
-                          .filter(Boolean)
-                          .join(", ") || "—"}
-                      </p>
-                    </td>
-                    <td className="p-4">
-                      <span className="text-sm text-slate-600">
-                        {factory.workers?.toLocaleString() || "—"}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      <Badge variant={statusVariant[factory.status]}>
-                        {factory.status.charAt(0).toUpperCase() + factory.status.slice(1)}
+                      <Badge variant={statusVariant[user.status]}>
+                        {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
                       </Badge>
                     </td>
                     <td className="p-4">
+                      {user.isAdmin ? (
+                        <span className="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-1 rounded">Admin</span>
+                      ) : (
+                        <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded">User</span>
+                      )}
+                    </td>
+                    <td className="p-4">
                       <div className="flex items-center justify-center gap-2">
-                        <Link href={`/admin/factories/${factory.id}/view`}>
+                        <Link href={`/admin/users/${user.id}/view`}>
                           <button className="text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition" title="View detail">
                             👁️
                           </button>
                         </Link>
-                        {factory.status !== "approved" && (
+                        {!user.isAdmin && (
                           <button
-                            onClick={() => handleStatusChange(factory.id, "approved")}
-                            disabled={updatingId === factory.id}
-                            className="text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg transition disabled:opacity-50"
+                            onClick={() => setConfirmModal({
+                              isOpen: true,
+                              userId: user.id,
+                              userName: user.nickname || user.fullName,
+                              action: "promote",
+                            })}
+                            className="text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition"
                           >
-                            {updatingId === factory.id ? "..." : "✓ Approve"}
+                            ⬆️ Promote
                           </button>
                         )}
-                        {factory.status !== "declined" && (
+                        {user.status === "active" ? (
                           <button
-                            onClick={() => handleStatusChange(factory.id, "declined")}
-                            disabled={updatingId === factory.id}
-                            className="text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition disabled:opacity-50"
+                            onClick={() => setConfirmModal({
+                              isOpen: true,
+                              userId: user.id,
+                              userName: user.nickname || user.fullName,
+                              action: "blocked",
+                            })}
+                            className="text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition"
                           >
-                            {updatingId === factory.id ? "..." : "✕ Decline"}
+                            🚫 Block
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setConfirmModal({
+                              isOpen: true,
+                              userId: user.id,
+                              userName: user.nickname || user.fullName,
+                              action: "active",
+                            })}
+                            className="text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg transition"
+                          >
+                            ✓ Unblock
                           </button>
                         )}
                       </div>
@@ -310,38 +303,57 @@ export default function AdminFactoriesPage() {
       {/* Confirm Modal */}
       {confirmModal.isOpen && (
         <div className="fixed z-50 top-24 left-1/2 -translate-x-1/2 w-full max-w-sm">
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden mx-4">
-              <div className={`px-3 py-2 ${confirmModal.variant === "approve" ? "bg-linear-to-r from-emerald-500 to-teal-500" : "bg-linear-to-r from-red-500 to-rose-500"}`}>
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">
-                    {confirmModal.variant === "approve" ? "✅" : "⚠️"}
-                  </span>
-                  <h3 className="text-sm font-bold text-white">{confirmModal.title}</h3>
-                </div>
-              </div>
-              <div className="px-3 py-2">
-                <p className="text-slate-600 text-xs leading-relaxed">{confirmModal.message}</p>
-              </div>
-              <div className="px-3 pb-3 flex gap-2 justify-end">
-                <button
-                  onClick={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
-                  className="px-2 py-1 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={confirmModal.onConfirm}
-                  className={`px-2 py-1 text-xs font-medium text-white rounded transition ${
-                    confirmModal.variant === "approve"
-                      ? "bg-emerald-600 hover:bg-emerald-700"
-                      : "bg-red-600 hover:bg-red-700"
-                  }`}
-                >
-                  {confirmModal.variant === "approve" ? "Approve" : "Decline"}
-                </button>
+          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden mx-4">
+            <div className={`px-3 py-2 ${
+              confirmModal.action === "blocked" ? "bg-linear-to-r from-red-500 to-rose-500" :
+              confirmModal.action === "promote" ? "bg-linear-to-r from-emerald-500 to-teal-500" :
+              "bg-linear-to-r from-emerald-500 to-teal-500"
+            }`}>
+              <div className="flex items-center gap-2">
+                <span className="text-lg">
+                  {confirmModal.action === "blocked" ? "⚠️" : confirmModal.action === "promote" ? "⬆️" : "✅"}
+                </span>
+                <h3 className="text-sm font-bold text-white">
+                  {confirmModal.action === "blocked" ? "Block User" : confirmModal.action === "promote" ? "Promote to Admin" : "Unblock User"}
+                </h3>
               </div>
             </div>
+            <div className="px-3 py-2">
+              <p className="text-slate-600 text-xs leading-relaxed">
+                {confirmModal.action === "blocked"
+                  ? `Are you sure you want to block "${confirmModal.userName}"? They won't be able to log in.`
+                  : confirmModal.action === "promote"
+                  ? `Are you sure you want to promote "${confirmModal.userName}" to admin? They will have full admin access.`
+                  : `Are you sure you want to unblock "${confirmModal.userName}"?`}
+              </p>
+            </div>
+            <div className="px-3 pb-3 flex gap-2 justify-end">
+              <button
+                onClick={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+                className="px-2 py-1 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+                  if (confirmModal.action === "promote") {
+                    handlePromote(confirmModal.userId);
+                  } else {
+                    handleStatusChange(confirmModal.userId, confirmModal.action);
+                  }
+                }}
+                className={`px-2 py-1 text-xs font-medium text-white rounded transition ${
+                  confirmModal.action === "blocked"
+                    ? "bg-red-600 hover:bg-red-700"
+                    : "bg-emerald-600 hover:bg-emerald-700"
+                }`}
+              >
+                {confirmModal.action === "blocked" ? "Block" : confirmModal.action === "promote" ? "Promote" : "Unblock"}
+              </button>
+            </div>
           </div>
+        </div>
       )}
     </div>
   );

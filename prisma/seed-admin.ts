@@ -19,6 +19,8 @@ async function main() {
       passwordHash,
       fullName: "Admin",
       isAdmin: true,
+      isSuperAdmin: true,
+      emailVerified: new Date(),
     },
   });
 
