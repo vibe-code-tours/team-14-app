@@ -10,7 +10,7 @@ export default function AgenciesPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Navbar onSuggestClick={() => setShowSuggestModal(true)} />
+      <Navbar />
 
       <main className="flex-grow max-w-5xl mx-auto p-4 mt-6 w-full space-y-6 animate-fade-in">
         {/* Header */}

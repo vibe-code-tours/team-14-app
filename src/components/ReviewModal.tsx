@@ -1,12 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+
+interface Factory {
+  id: number;
+  name: string;
+  operator: string | null;
+  province: string | null;
+  district: string | null;
+}
 
 interface ReviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  factoryId: number;
-  factoryName: string;
+  factoryId?: number;
+  factoryName?: string;
   onReviewSubmitted: () => void;
 }
 
@@ -25,17 +33,87 @@ export function ReviewModal({
     ratingHousing: 5,
     reviewText: "",
   });
+  const [selectedFactoryId, setSelectedFactoryId] = useState<number | null>(
+    factoryId ?? null
+  );
+  const [selectedFactoryName, setSelectedFactoryName] = useState<string>(
+    factoryName ?? ""
+  );
+  const [factorySearch, setFactorySearch] = useState("");
+  const [factories, setFactories] = useState<Factory[]>([]);
+  const [factoriesLoading, setFactoriesLoading] = useState(false);
+  const [showFactoryDropdown, setShowFactoryDropdown] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const isFactoryPreselected = !!factoryId;
+
+  // Fetch factories when searching (debounced 300ms)
+  const fetchFactories = useCallback((search: string) => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      setFactoriesLoading(true);
+      try {
+        const params = new URLSearchParams({ limit: "20" });
+        if (search.trim()) {
+          params.set("search", search.trim());
+        }
+        const res = await fetch(`/api/factories?${params}`);
+        if (res.ok) {
+          const data = await res.json();
+          setFactories(data.data ?? []);
+        }
+      } catch {
+        // Silently fail — user can retry
+      } finally {
+        setFactoriesLoading(false);
+      }
+    }, 300);
+  }, []);
+
+  useEffect(() => {
+    if (!isFactoryPreselected) {
+      fetchFactories(factorySearch);
+    }
+    return () => {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    };
+  }, [factorySearch, fetchFactories, isFactoryPreselected]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setShowFactoryDropdown(false);
+      }
+    }
+    if (showFactoryDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showFactoryDropdown]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedFactoryId) {
+      setError("Please select a factory before submitting.");
+      return;
+    }
     setSubmitting(true);
     setError("");
 
     try {
-      const res = await fetch(`/api/factories/${factoryId}/reviews`, {
+      const res = await fetch(`/api/factories/${selectedFactoryId}/reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -65,6 +143,12 @@ export function ReviewModal({
           ratingHousing: 5,
           reviewText: "",
         });
+        if (!factoryId) {
+          setSelectedFactoryId(null);
+          setSelectedFactoryName("");
+          setFactorySearch("");
+          setFactories([]);
+        }
         onReviewSubmitted();
       }, 2000);
     } catch (err) {
@@ -77,6 +161,7 @@ export function ReviewModal({
   const handleClose = () => {
     onClose();
     setSuccess(false);
+    setError("");
     setFormData({
       workerRole: "",
       countryFrom: "Myanmar",
@@ -85,6 +170,12 @@ export function ReviewModal({
       ratingHousing: 5,
       reviewText: "",
     });
+    if (!factoryId) {
+      setSelectedFactoryId(null);
+      setSelectedFactoryName("");
+      setFactorySearch("");
+      setFactories([]);
+    }
   };
 
   if (!isOpen) return null;
@@ -143,6 +234,71 @@ export function ReviewModal({
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
+            {/* Factory Selector */}
+            <div className="relative" ref={dropdownRef}>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+                Factory / Company (စက်ရုံ / ကုမ္ပဏီ)
+              </label>
+              {isFactoryPreselected ? (
+                <div className="w-full border border-slate-200 px-3.5 py-2.5 rounded-xl bg-slate-50 text-sm text-slate-700">
+                  🏭 {selectedFactoryName}
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="text"
+                    required
+                    value={selectedFactoryName || factorySearch}
+                    onChange={(e) => {
+                      setSelectedFactoryId(null);
+                      setSelectedFactoryName("");
+                      setFactorySearch(e.target.value);
+                      setShowFactoryDropdown(true);
+                    }}
+                    onFocus={() => setShowFactoryDropdown(true)}
+                    placeholder="Search for a factory..."
+                    className="w-full border border-slate-200 px-3.5 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition"
+                  />
+                  {showFactoryDropdown && (
+                    <div className="absolute z-10 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                      {factoriesLoading ? (
+                        <div className="px-3.5 py-2.5 text-sm text-slate-400">
+                          Searching...
+                        </div>
+                      ) : factories.length === 0 ? (
+                        <div className="px-3.5 py-2.5 text-sm text-slate-400">
+                          No factories found
+                        </div>
+                      ) : (
+                        factories.map((f) => (
+                          <button
+                            key={f.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedFactoryId(f.id);
+                              setSelectedFactoryName(f.name);
+                              setFactorySearch("");
+                              setShowFactoryDropdown(false);
+                            }}
+                            className="w-full text-left px-3.5 py-2.5 text-sm hover:bg-emerald-50 transition border-b border-slate-50 last:border-0"
+                          >
+                            <span className="font-medium text-slate-800">
+                              {f.name}
+                            </span>
+                            {(f.operator || f.province) && (
+                              <span className="block text-xs text-slate-400 mt-0.5">
+                                {[f.operator, f.province].filter(Boolean).join(" · ")}
+                              </span>
+                            )}
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
                 Your Role in Factory (အလုပ်အကိုင်)
