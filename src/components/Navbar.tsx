@@ -5,17 +5,20 @@ import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { ReviewModal } from "./ReviewModal";
 
-interface NavbarProps {
-  onSuggestClick?: () => void;
-}
-
-export function Navbar({ onSuggestClick }: NavbarProps) {
+export function Navbar() {
   const { t } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const { data: session, status } = useSession();
 
+  const handleReviewSubmitted = () => {
+    // Could trigger a toast or refresh if needed
+  };
+
   return (
+    <>
     <nav className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 px-4 sm:py-4 sm:px-6 sticky top-0 z-20 shadow-md">
       <div className="max-w-5xl mx-auto flex justify-between items-center">
         <Link
@@ -40,21 +43,12 @@ export function Navbar({ onSuggestClick }: NavbarProps) {
             {t("nav.contact")}
           </Link>
           <LanguageSwitcher />
-          {onSuggestClick ? (
-            <button
-              onClick={onSuggestClick}
-              className="bg-white text-emerald-600 px-4 py-1.5 rounded-full font-semibold shadow-sm hover:bg-gray-100 transition"
-            >
-              {t("nav.suggest")}
-            </button>
-          ) : (
-            <Link
-              href="/suggest"
-              className="bg-white text-emerald-600 px-4 py-1.5 rounded-full font-semibold shadow-sm hover:bg-gray-100 transition inline-block"
-            >
-              {t("nav.suggest")}
-            </Link>
-          )}
+          <button
+            onClick={() => setReviewModalOpen(true)}
+            className="bg-white text-emerald-600 px-4 py-1.5 rounded-full font-semibold shadow-sm hover:bg-gray-100 transition"
+          >
+            ✏️ {t("nav.writeReview")}
+          </button>
 
           {status === "authenticated" ? (
             <div className="flex items-center gap-2">
@@ -121,22 +115,12 @@ export function Navbar({ onSuggestClick }: NavbarProps) {
           <div className="py-2 px-2">
             <LanguageSwitcher />
           </div>
-          {onSuggestClick ? (
-            <button
-              onClick={() => { onSuggestClick(); setMenuOpen(false); }}
-              className="block w-full text-left py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
-            >
-              {t("nav.suggest")}
-            </button>
-          ) : (
-            <Link
-              href="/suggest"
-              onClick={() => setMenuOpen(false)}
-              className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
-            >
-              {t("nav.suggest")}
-            </Link>
-          )}
+          <button
+            onClick={() => { setReviewModalOpen(true); setMenuOpen(false); }}
+            className="block w-full text-left py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
+          >
+            ✏️ {t("nav.writeReview")}
+          </button>
 
           {status === "authenticated" ? (
             <>
@@ -163,5 +147,12 @@ export function Navbar({ onSuggestClick }: NavbarProps) {
         </div>
       )}
     </nav>
+
+    <ReviewModal
+      isOpen={reviewModalOpen}
+      onClose={() => setReviewModalOpen(false)}
+      onReviewSubmitted={handleReviewSubmitted}
+    />
+    </>
   );
 }

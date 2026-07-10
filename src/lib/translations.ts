@@ -8,6 +8,7 @@ export const translations: Record<string, TranslationEntry> = {
   "nav.home": { en: "Home", my: "ပင်မ" },
   "nav.factories": { en: "Factories", my: "စက်ရုံများ" },
   "nav.suggest": { en: "Suggest", my: "အကြံပြု" },
+  "nav.writeReview": { en: "Write a Review", my: "သုံးသပ်ချက် ရေးရန်" },
   "nav.contact": { en: "Contact", my: "ဆက်သွယ်ရန်" },
 
   // Privacy Banner
