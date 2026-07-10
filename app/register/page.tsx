@@ -1,10 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
 import { Card, CardContent } from "@/src/components/Card";
 import { RegisterForm } from "@/src/components/RegisterForm";
+import { useLanguage } from "@/src/contexts/LanguageContext";
 
 export default function RegisterPage() {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
@@ -12,12 +17,12 @@ export default function RegisterPage() {
       <main className="flex-grow max-w-md mx-auto p-4 mt-12 w-full">
         <Card>
           <CardContent>
-            <h1 className="text-2xl font-bold mb-6 text-center">Create an account</h1>
+            <h1 className="text-2xl font-bold mb-6 text-center">{t("register.title")}</h1>
             <RegisterForm />
             <p className="text-sm text-gray-500 text-center mt-6">
-              Already have an account?{" "}
+              {t("register.hasAccount")}{" "}
               <Link href="/login" className="text-emerald-600 hover:underline">
-                Log in
+                {t("nav.login")}
               </Link>
             </p>
           </CardContent>
