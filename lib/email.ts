@@ -1,5 +1,14 @@
 import { Resend } from "resend";
 
+let resend: Resend | null = null;
+
+function getResendClient(): Resend {
+  if (!resend) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
+
 const FROM = process.env.EMAIL_FROM || "noreply@workervoice.example";
 
 function getClient() {
@@ -9,12 +18,7 @@ function getClient() {
 }
 
 export async function sendVerificationEmail(to: string, verifyUrl: string) {
-  const resend = getClient();
-  if (!resend) {
-    console.warn("RESEND_API_KEY not set, skipping verification email");
-    return;
-  }
-  const { error } = await resend.emails.send({
+  const { error } = await getResendClient().emails.send({
     from: FROM,
     to,
     subject: "Verify your WorkerVoice account",
@@ -26,12 +30,7 @@ export async function sendVerificationEmail(to: string, verifyUrl: string) {
 }
 
 export async function sendPasswordResetEmail(to: string, resetUrl: string) {
-  const resend = getClient();
-  if (!resend) {
-    console.warn("RESEND_API_KEY not set, skipping password reset email");
-    return;
-  }
-  const { error } = await resend.emails.send({
+  const { error } = await getResendClient().emails.send({
     from: FROM,
     to,
     subject: "Reset your WorkerVoice password",
