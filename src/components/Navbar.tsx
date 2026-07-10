@@ -59,12 +59,12 @@ export function Navbar() {
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="hover:text-emerald-200 transition"
               >
-                Log out
+                {t("nav.logout")}
               </button>
             </div>
           ) : status === "unauthenticated" ? (
             <Link href="/login" className="hover:text-emerald-200 transition">
-              Log in
+              {t("nav.login")}
             </Link>
           ) : null}
         </div>
@@ -132,7 +132,7 @@ export function Navbar() {
                 onClick={() => { signOut({ callbackUrl: "/" }); setMenuOpen(false); }}
                 className="block w-full text-left py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
               >
-                Log out
+                {t("nav.logout")}
               </button>
             </>
           ) : status === "unauthenticated" ? (
@@ -141,7 +141,7 @@ export function Navbar() {
               onClick={() => setMenuOpen(false)}
               className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
             >
-              Log in
+              {t("nav.login")}
             </Link>
           ) : null}
         </div>

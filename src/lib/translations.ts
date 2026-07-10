@@ -10,6 +10,8 @@ export const translations: Record<string, TranslationEntry> = {
   "nav.suggest": { en: "Suggest", my: "အကြံပြု" },
   "nav.writeReview": { en: "Write a Review", my: "သုံးသပ်ချက် ရေးရန်" },
   "nav.contact": { en: "Contact", my: "ဆက်သွယ်ရန်" },
+  "nav.login": { en: "Log in", my: "ဝင်ရောက်ရန်" },
+  "nav.logout": { en: "Log out", my: "ထွက်ရန်" },
 
   // Privacy Banner
   "privacy.title": {
@@ -202,6 +204,36 @@ export const translations: Record<string, TranslationEntry> = {
     en: "© 2026 WorkerVoice. All rights reserved.",
     my: "© 2026 WorkerVoice. မူပိုင်ခွင့် အားလုံး ထိန်းသိမ်းထားပါသည်။",
   },
+
+  // Login Page
+  "login.title": { en: "Log in", my: "ဝင်ရောက်ရန်" },
+  "login.noAccount": { en: "Don't have an account?", my: "အကောင့်မရှိဘူးလား?" },
+  "login.createOne": { en: "Create one", my: "ဖန်တီးရန်" },
+  "login.email": { en: "Email", my: "အီးမေးလ်" },
+  "login.password": { en: "Password", my: "စကားဝှက်" },
+  "login.invalidCredentials": {
+    en: "Invalid email or password, or your email is not yet verified.",
+    my: "အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားနေပါသည်၊ သို့မဟုတ် သင့်အီးမေးလ်ကို မစစ်ဆေးရသေးပါ။",
+  },
+  "login.forgotPassword": {
+    en: "Forgot your password?",
+    my: "စကားဝှက် မေ့နေပါသလား?",
+  },
+
+  // Register Page
+  "register.title": { en: "Create an account", my: "အကောင့်ဖန်တီးရန်" },
+  "register.hasAccount": { en: "Already have an account?", my: "အကောင့်ရှိပြီးသားလား?" },
+  "register.fullName": { en: "Full name", my: "အပြည့်အစုံ အမည်" },
+  "register.nickname": { en: "Nickname (optional)", my: "နာမည်ခေါ်စဉ် (ရွေးချယ်စရာ)" },
+  "register.nicknameHint": {
+    en: "Add a nickname to keep your real name private on reviews. If you skip this, your full name will be shown publicly.",
+    my: "ပြန်လည်သုံးသပ်ချက်များတွင် သင့်အမည်ကို လျှို့ဝှက်ထားရန် နာမည်ခေါ်စဉ် ထည့်ပါ။ ဒီဟာကို ข้ามလွှားပါက သင့်အပြည့်အစုံ အမည်ကို အများပြည်သူသို့ ပြသပါမည်။",
+  },
+  "register.checkEmail": {
+    en: "Check your email to verify your account before logging in.",
+    my: "ဝင်ရောက်မီး သင့်အကောင့်ကို စစ်ဆေးရန် သင့်အီးမေးလ်ကို စစ်ဆေးပါ။",
+  },
+  "register.createAccount": { en: "Create account", my: "အကောင့်ဖန်တီးရန်" },
 };
 
 export type TranslationKey = keyof typeof translations;
