@@ -118,6 +118,9 @@ export function Navbar({ onSuggestClick }: NavbarProps) {
           >
             {t("nav.contact")}
           </Link>
+          <div className="py-2 px-2">
+            <LanguageSwitcher />
+          </div>
           {onSuggestClick ? (
             <button
               onClick={() => { onSuggestClick(); setMenuOpen(false); }}
