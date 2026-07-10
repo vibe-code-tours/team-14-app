@@ -112,11 +112,11 @@ export default function Home() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t("hero.placeholder")}
-                className="w-full p-4 bg-transparent outline-none"
+                className="w-full min-w-0 p-4 bg-transparent outline-none"
               />
               <button
                 type="submit"
-                className="bg-emerald-600 text-white px-6 py-4 font-medium hover:bg-emerald-700 transition active:scale-95"
+                className="bg-emerald-600 text-white px-4 py-4 sm:px-6 font-medium hover:bg-emerald-700 transition active:scale-95 shrink-0"
               >
                 {t("hero.searchButton")}
               </button>
