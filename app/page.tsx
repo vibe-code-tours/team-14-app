@@ -92,7 +92,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Navbar onSuggestClick={() => setShowSuggestModal(true)} />
+      <Navbar />
 
       {/* Privacy Banner */}
       <PrivacyBanner />
@@ -100,10 +100,10 @@ export default function Home() {
       <main className="flex-grow max-w-5xl mx-auto p-4 mt-6 w-full space-y-8 animate-fade-in">
         {/* Search Hero */}
         <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm text-center border border-slate-100">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-slate-800">
+          <h2 className="text-3xl font-extrabold mb-8 text-slate-800">
             {t("hero.title")}
           </h2>
-          <p className="text-slate-500 mb-2">{t("hero.subtitle")}</p>
+          <p className="text-slate-500 mb-6">{t("hero.subtitle")}</p>
           <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
             <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl overflow-hidden focus-within:ring-2 focus:ring-emerald-500 transition shadow-inner">
               <span className="pl-4 text-slate-400">🔍</span>
@@ -129,7 +129,7 @@ export default function Home() {
 
         {/* Factories Section */}
         <div>
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-4 border-b border-slate-200 pb-2">
+          <div className="flex flex-row justify-between items-center gap-2 mb-4 border-b border-slate-200 pb-2">
             <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
               <span>🏭</span> {t("factories.title")}
             </h3>
@@ -194,11 +194,11 @@ export default function Home() {
                   <p className="text-sm text-slate-500 mb-2">
                     {[factory.district, factory.province]
                       .filter(Boolean)
-                      .join(", ") || "Thailand"}
+                      .join(", ") || t("factoryList.thailand")}
                   </p>
                   {factory.workers && (
                     <p className="text-xs text-slate-400">
-                      {factory.workers.toLocaleString()} workers
+                      {factory.workers.toLocaleString()} {t("factoryList.workers")}
                     </p>
                   )}
                 </Link>

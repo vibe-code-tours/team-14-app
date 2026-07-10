@@ -6,11 +6,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Input } from "./Input";
 import { Button } from "./Button";
+import { useLanguage } from "@/src/contexts/LanguageContext";
 
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const { t } = useLanguage();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +31,7 @@ export function LoginForm() {
     });
 
     if (result?.error) {
-      setError("Invalid email or password, or your email is not yet verified.");
+      setError(t("login.invalidCredentials"));
       setSubmitting(false);
       return;
     }
@@ -48,14 +50,14 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Email"
+        label={t("login.email")}
         type="email"
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <Input
-        label="Password"
+        label={t("login.password")}
         type="password"
         required
         value={password}
@@ -67,12 +69,12 @@ export function LoginForm() {
       )}
 
       <Button type="submit" isLoading={submitting} className="w-full">
-        Log in
+        {t("nav.login")}
       </Button>
 
       <p className="text-sm text-gray-500 text-center">
         <Link href="/reset-password" className="text-emerald-600 hover:underline">
-          Forgot your password?
+          {t("login.forgotPassword")}
         </Link>
       </p>
     </form>

@@ -1,12 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+
+interface Factory {
+  id: number;
+  name: string;
+  operator: string | null;
+  province: string | null;
+  district: string | null;
+}
 
 interface ReviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  factoryId: number;
-  factoryName: string;
+  factoryId?: number;
+  factoryName?: string;
   onReviewSubmitted: () => void;
 }
 
@@ -25,17 +33,87 @@ export function ReviewModal({
     ratingHousing: 5,
     reviewText: "",
   });
+  const [selectedFactoryId, setSelectedFactoryId] = useState<number | null>(
+    factoryId ?? null
+  );
+  const [selectedFactoryName, setSelectedFactoryName] = useState<string>(
+    factoryName ?? ""
+  );
+  const [factorySearch, setFactorySearch] = useState("");
+  const [factories, setFactories] = useState<Factory[]>([]);
+  const [factoriesLoading, setFactoriesLoading] = useState(false);
+  const [showFactoryDropdown, setShowFactoryDropdown] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const isFactoryPreselected = !!factoryId;
+
+  // Fetch factories when searching (debounced 300ms)
+  const fetchFactories = useCallback((search: string) => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      setFactoriesLoading(true);
+      try {
+        const params = new URLSearchParams({ limit: "20" });
+        if (search.trim()) {
+          params.set("search", search.trim());
+        }
+        const res = await fetch(`/api/factories?${params}`);
+        if (res.ok) {
+          const data = await res.json();
+          setFactories(data.data ?? []);
+        }
+      } catch {
+        // Silently fail — user can retry
+      } finally {
+        setFactoriesLoading(false);
+      }
+    }, 300);
+  }, []);
+
+  useEffect(() => {
+    if (!isFactoryPreselected) {
+      fetchFactories(factorySearch);
+    }
+    return () => {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    };
+  }, [factorySearch, fetchFactories, isFactoryPreselected]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setShowFactoryDropdown(false);
+      }
+    }
+    if (showFactoryDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showFactoryDropdown]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedFactoryId) {
+      setError("Please select a factory before submitting.");
+      return;
+    }
     setSubmitting(true);
     setError("");
 
     try {
-      const res = await fetch(`/api/factories/${factoryId}/reviews`, {
+      const res = await fetch(`/api/factories/${selectedFactoryId}/reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -65,6 +143,12 @@ export function ReviewModal({
           ratingHousing: 5,
           reviewText: "",
         });
+        if (!factoryId) {
+          setSelectedFactoryId(null);
+          setSelectedFactoryName("");
+          setFactorySearch("");
+          setFactories([]);
+        }
         onReviewSubmitted();
       }, 2000);
     } catch (err) {
@@ -77,6 +161,7 @@ export function ReviewModal({
   const handleClose = () => {
     onClose();
     setSuccess(false);
+    setError("");
     setFormData({
       workerRole: "",
       countryFrom: "Myanmar",
@@ -85,6 +170,12 @@ export function ReviewModal({
       ratingHousing: 5,
       reviewText: "",
     });
+    if (!factoryId) {
+      setSelectedFactoryId(null);
+      setSelectedFactoryName("");
+      setFactorySearch("");
+      setFactories([]);
+    }
   };
 
   if (!isOpen) return null;
@@ -143,6 +234,65 @@ export function ReviewModal({
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
+            {/* Factory Selector — only shown when no factory is pre-selected */}
+            {!isFactoryPreselected && (
+              <div className="relative" ref={dropdownRef}>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+                  Factory / Company (စက်ရုံ / ကုမ္ပဏီ)
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={selectedFactoryName || factorySearch}
+                  onChange={(e) => {
+                    setSelectedFactoryId(null);
+                    setSelectedFactoryName("");
+                    setFactorySearch(e.target.value);
+                    setShowFactoryDropdown(true);
+                  }}
+                  onFocus={() => setShowFactoryDropdown(true)}
+                  placeholder="Search for a factory..."
+                  className="w-full border border-slate-200 px-3.5 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition"
+                />
+                {showFactoryDropdown && (
+                  <div className="absolute z-10 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                    {factoriesLoading ? (
+                      <div className="px-3.5 py-2.5 text-sm text-slate-400">
+                        Searching...
+                      </div>
+                    ) : factories.length === 0 ? (
+                      <div className="px-3.5 py-2.5 text-sm text-slate-400">
+                        No factories found
+                      </div>
+                    ) : (
+                      factories.map((f) => (
+                        <button
+                          key={f.id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedFactoryId(f.id);
+                            setSelectedFactoryName(f.name);
+                            setFactorySearch("");
+                            setShowFactoryDropdown(false);
+                          }}
+                          className="w-full text-left px-3.5 py-2.5 text-sm hover:bg-emerald-50 transition border-b border-slate-50 last:border-0"
+                        >
+                          <span className="font-medium text-slate-800">
+                            {f.name}
+                          </span>
+                          {(f.operator || f.province) && (
+                            <span className="block text-xs text-slate-400 mt-0.5">
+                              {[f.operator, f.province].filter(Boolean).join(" · ")}
+                            </span>
+                          )}
+                        </button>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
                 Your Role in Factory (အလုပ်အကိုင်)
@@ -168,7 +318,7 @@ export function ReviewModal({
                 onChange={(e) =>
                   setFormData({ ...formData, countryFrom: e.target.value })
                 }
-                className="w-full border border-slate-200 px-3.5 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-sm transition font-medium"
+                className="w-full border border-slate-200 pl-3.5 pr-8 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%236b7280%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-no-repeat bg-[position:right_0.5rem_center] text-sm transition font-medium appearance-none"
               >
                 <option value="Myanmar">🇲🇲 Myanmar</option>
                 <option value="Cambodia">🇰🇭 Cambodia</option>
@@ -190,7 +340,7 @@ export function ReviewModal({
                       ratingSalary: parseInt(e.target.value),
                     })
                   }
-                  className="w-full border border-slate-200 px-3 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-sm transition"
+                  className="w-full border border-slate-200 pl-3 pr-8 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%236b7280%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-no-repeat bg-[position:right_0.5rem_center] text-sm transition appearance-none"
                 >
                   <option value="5">5/5 (Good)</option>
                   <option value="4">4/5</option>
@@ -211,7 +361,7 @@ export function ReviewModal({
                       ratingOt: parseInt(e.target.value),
                     })
                   }
-                  className="w-full border border-slate-200 px-3 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-sm transition"
+                  className="w-full border border-slate-200 pl-3 pr-8 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%236b7280%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-no-repeat bg-[position:right_0.5rem_center] text-sm transition appearance-none"
                 >
                   <option value="5">5/5 (Good)</option>
                   <option value="4">4/5</option>
@@ -232,7 +382,7 @@ export function ReviewModal({
                       ratingHousing: parseInt(e.target.value),
                     })
                   }
-                  className="w-full border border-slate-200 px-3 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-sm transition"
+                  className="w-full border border-slate-200 pl-3 pr-8 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%236b7280%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-no-repeat bg-[position:right_0.5rem_center] text-sm transition appearance-none"
                 >
                   <option value="5">5/5 (Good)</option>
                   <option value="4">4/5</option>

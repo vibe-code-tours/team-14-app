@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { Input } from "./Input";
 import { Button } from "./Button";
+import { useLanguage } from "@/src/contexts/LanguageContext";
 
 export function RegisterForm() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     fullName: "",
     nickname: "",
@@ -45,7 +47,7 @@ export function RegisterForm() {
       <div className="text-center py-8">
         <div className="text-4xl mb-4">✅</div>
         <p className="text-emerald-600 font-medium">
-          Check your email to verify your account before logging in.
+          {t("register.checkEmail")}
         </p>
       </div>
     );
@@ -54,7 +56,7 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Full name"
+        label={t("register.fullName")}
         required
         value={formData.fullName}
         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
@@ -62,18 +64,17 @@ export function RegisterForm() {
 
       <div>
         <Input
-          label="Nickname (optional)"
+          label={t("register.nickname")}
           value={formData.nickname}
           onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
         />
         <p className="mt-1 text-xs text-gray-500">
-          Add a nickname to keep your real name private on reviews. If you skip this,
-          your full name will be shown publicly.
+          {t("register.nicknameHint")}
         </p>
       </div>
 
       <Input
-        label="Email"
+        label={t("login.email")}
         type="email"
         required
         value={formData.email}
@@ -81,7 +82,7 @@ export function RegisterForm() {
       />
 
       <Input
-        label="Password"
+        label={t("login.password")}
         type="password"
         required
         minLength={8}
@@ -94,7 +95,7 @@ export function RegisterForm() {
       )}
 
       <Button type="submit" isLoading={submitting} className="w-full">
-        Create account
+        {t("register.createAccount")}
       </Button>
     </form>
   );
