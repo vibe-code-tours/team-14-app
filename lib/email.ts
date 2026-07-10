@@ -18,6 +18,11 @@ function getClient() {
 }
 
 export async function sendVerificationEmail(to: string, verifyUrl: string) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.log(`[DEV] Skipping verification email. Verify URL: ${verifyUrl}`);
+    return;
+  }
   const { error } = await getResendClient().emails.send({
     from: FROM,
     to,
@@ -30,6 +35,11 @@ export async function sendVerificationEmail(to: string, verifyUrl: string) {
 }
 
 export async function sendPasswordResetEmail(to: string, resetUrl: string) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.log(`[DEV] Skipping password reset email. Reset URL: ${resetUrl}`);
+    return;
+  }
   const { error } = await getResendClient().emails.send({
     from: FROM,
     to,

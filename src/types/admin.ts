@@ -22,8 +22,14 @@ export interface AdminFactory {
   workers: number | null;
   country: string;
   type: string | null;
+  image: string | null;
   status: "pending" | "approved" | "declined";
   createdAt: Date;
+  user: {
+    id: string;
+    fullName: string;
+    nickname: string | null;
+  } | null;
 }
 
 export interface AdminReview {
@@ -38,6 +44,11 @@ export interface AdminReview {
   createdAt: Date;
   factoryName: string | null;
   organizationName: string | null;
+  user: {
+    id: string;
+    fullName: string;
+    nickname: string | null;
+  } | null;
 }
 
 export interface FactoryFormData {

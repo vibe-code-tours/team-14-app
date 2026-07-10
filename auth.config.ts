@@ -26,6 +26,7 @@ export default {
         token.id = user.id;
         token.role = (user as any).role;
         token.isAdmin = (user as any).isAdmin ?? false;
+        token.isSuperAdmin = (user as any).isSuperAdmin ?? false;
       }
       return token;
     },
@@ -34,6 +35,7 @@ export default {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
         session.user.isAdmin = token.isAdmin as boolean;
+        session.user.isSuperAdmin = token.isSuperAdmin as boolean;
       }
       return session;
     },

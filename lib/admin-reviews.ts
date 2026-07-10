@@ -29,7 +29,7 @@ export async function getAdminReviews(params: AdminReviewSearchParams) {
   const [reviews, total] = await Promise.all([
     prisma.review.findMany({
       where,
-      orderBy: { createdAt: "desc" },
+      orderBy: { id: "desc" },
       take: limit,
       skip: offset,
       select: {
@@ -48,6 +48,13 @@ export async function getAdminReviews(params: AdminReviewSearchParams) {
         organization: {
           select: { name: true },
         },
+        user: {
+          select: {
+            id: true,
+            fullName: true,
+            nickname: true,
+          },
+        },
       },
     }),
     prisma.review.count({ where }),
@@ -65,6 +72,7 @@ export async function getAdminReviews(params: AdminReviewSearchParams) {
     createdAt: r.createdAt,
     factoryName: r.factory?.name ?? null,
     organizationName: r.organization?.name ?? null,
+    user: r.user ?? null,
   }));
 
   return { data, total, limit, offset };

@@ -14,7 +14,13 @@ interface ReviewRowProps {
   createdAt: string;
   factoryName: string | null;
   organizationName: string | null;
-  onToggleVisibility: (id: number) => void;
+  onRequestToggle: (id: number, isVisible: boolean, name: string) => void;
+  index?: number;
+  user?: {
+    id: string;
+    fullName: string;
+    nickname: string | null;
+  } | null;
 }
 
 export function ReviewRow({
@@ -29,13 +35,21 @@ export function ReviewRow({
   createdAt,
   factoryName,
   organizationName,
-  onToggleVisibility,
+  onRequestToggle,
+  index = 0,
+  user,
 }: ReviewRowProps) {
   const avgRating =
     ((ratingSalary + ratingOt + ratingHousing) / 3).toFixed(1);
 
   return (
-    <tr className="border-b border-slate-100 hover:bg-slate-50 transition">
+    <tr
+      className="border-b border-slate-100 hover:bg-slate-50 transition opacity-0 animate-fade-in"
+      style={{ animationDelay: `${index * 80}ms`, animationFillMode: "forwards" }}
+    >
+      <td className="p-4">
+        <span className="text-sm text-slate-500">{id}</span>
+      </td>
       <td className="p-4">
         <div>
           <p className="font-medium text-slate-800 text-sm">{workerRole}</p>
@@ -43,6 +57,11 @@ export function ReviewRow({
             {factoryName || organizationName || "Unknown"}
           </p>
         </div>
+      </td>
+      <td className="p-4">
+        <p className="text-sm text-slate-600">
+          {user?.nickname || user?.fullName || "—"}
+        </p>
       </td>
       <td className="p-4">
         <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
@@ -66,7 +85,7 @@ export function ReviewRow({
       </td>
       <td className="p-4">
         <button
-          onClick={() => onToggleVisibility(id)}
+          onClick={() => onRequestToggle(id, isVisible, factoryName || organizationName || "Unknown")}
           className={`text-xs font-medium px-3 py-1.5 rounded-lg transition ${
             isVisible
               ? "text-amber-700 bg-amber-50 hover:bg-amber-100"
