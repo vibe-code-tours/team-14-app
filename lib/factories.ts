@@ -20,7 +20,7 @@ export async function searchFactories(params: FactorySearchParams) {
     region,
     workersMin,
     workersMax,
-    sort = "id_asc",
+    sort = "id_desc",
     limit = 20,
     offset = 0,
   } = params;
@@ -260,9 +260,9 @@ function getOrderBy(sort: string) {
     name_desc: { name: "desc" },
     workers_asc: { workers: "asc" },
     workers_desc: { workers: "desc" },
-    id_asc: { id: "asc" },
+    id_desc: { id: "desc" },
     newest: { id: "desc" },
   };
 
-  return sortOptions[sort] || sortOptions.id_asc;
+  return sortOptions[sort] || sortOptions.id_desc;
 }
