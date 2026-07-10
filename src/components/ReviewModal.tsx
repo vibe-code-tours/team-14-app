@@ -318,7 +318,7 @@ export function ReviewModal({
                 onChange={(e) =>
                   setFormData({ ...formData, countryFrom: e.target.value })
                 }
-                className="w-full border border-slate-200 px-3.5 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-sm transition font-medium"
+                className="w-full border border-slate-200 pl-3.5 pr-8 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%236b7280%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-no-repeat bg-[position:right_0.5rem_center] text-sm transition font-medium appearance-none"
               >
                 <option value="Myanmar">🇲🇲 Myanmar</option>
                 <option value="Cambodia">🇰🇭 Cambodia</option>
@@ -340,7 +340,7 @@ export function ReviewModal({
                       ratingSalary: parseInt(e.target.value),
                     })
                   }
-                  className="w-full border border-slate-200 px-3 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-sm transition"
+                  className="w-full border border-slate-200 pl-3 pr-8 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%236b7280%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-no-repeat bg-[position:right_0.5rem_center] text-sm transition appearance-none"
                 >
                   <option value="5">5/5 (Good)</option>
                   <option value="4">4/5</option>
@@ -361,7 +361,7 @@ export function ReviewModal({
                       ratingOt: parseInt(e.target.value),
                     })
                   }
-                  className="w-full border border-slate-200 px-3 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-sm transition"
+                  className="w-full border border-slate-200 pl-3 pr-8 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%236b7280%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-no-repeat bg-[position:right_0.5rem_center] text-sm transition appearance-none"
                 >
                   <option value="5">5/5 (Good)</option>
                   <option value="4">4/5</option>
@@ -382,7 +382,7 @@ export function ReviewModal({
                       ratingHousing: parseInt(e.target.value),
                     })
                   }
-                  className="w-full border border-slate-200 px-3 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-sm transition"
+                  className="w-full border border-slate-200 pl-3 pr-8 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%236b7280%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-no-repeat bg-[position:right_0.5rem_center] text-sm transition appearance-none"
                 >
                   <option value="5">5/5 (Good)</option>
                   <option value="4">4/5</option>

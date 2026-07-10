@@ -129,7 +129,7 @@ export default function Home() {
 
         {/* Factories Section */}
         <div>
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-4 border-b border-slate-200 pb-2">
+          <div className="flex flex-row justify-between items-center gap-2 mb-4 border-b border-slate-200 pb-2">
             <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
               <span>🏭</span> {t("factories.title")}
             </h3>
