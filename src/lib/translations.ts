@@ -61,6 +61,92 @@ export const translations: Record<string, TranslationEntry> = {
     my: "စစ်ထုတ်မှုများ ဖျက်ပြီး ထပ်ကြိုးစားပါ",
   },
 
+  // Factory List Page
+  "factoryList.title": { en: "🏭 Factories", my: "🏭 စက်ရုံများ" },
+  "factoryList.subtitle": {
+    en: "Browse verified factories in Thailand",
+    my: "ထိုင်းနိုင်ငံရှိ စစ်ဆေးပြီးသား စက်ရုံများကို ကြည့်ရှုပါ",
+  },
+  "factoryList.searchPlaceholder": {
+    en: "Search by factory name...",
+    my: "စက်ရုံအမည်ဖြင့် ရှာဖွေပါ...",
+  },
+  "factoryList.allRegions": { en: "All Regions", my: "ဒေသအားလုံး" },
+  "factoryList.search": { en: "Search", my: "ရှာဖွေရန်" },
+  "factoryList.loading": { en: "Loading...", my: "ဆွဲနေသည်..." },
+  "factoryList.showing": {
+    en: "Showing {count} of {total} factories",
+    my: "စက်ရုံ {total} ခုအနက် {count} ခု ပြသနေသည်",
+  },
+  "factoryList.empty": { en: "No factories found", my: "စက်ရုံ ရှာမတွေ့ပါ" },
+  "factoryList.suggestFactory": {
+    en: "Suggest a factory →",
+    my: "စက်ရုံ အကြံပြုရန် →",
+  },
+  "factoryList.workers": { en: "workers", my: "လုပ်သားများ" },
+  "factoryList.thailand": { en: "Thailand", my: "ထိုင်း" },
+  "factoryList.previous": { en: "Previous", my: "နောက်သို့" },
+  "factoryList.next": { en: "Next", my: "ရှေ့သို့" },
+  "factoryList.pageOf": {
+    en: "Page {page} of {total}",
+    my: "စာမျက်နှာ {total} အနက် {page}",
+  },
+
+  // Factory Detail Page
+  "factoryDetail.notFound": {
+    en: "Factory not found",
+    my: "စက်ရုံ ရှာမတွေ့ပါ",
+  },
+  "factoryDetail.backToFactories": {
+    en: "← Back to factories",
+    my: "← စက်ရုံများသို့ ပြန်သွားရန်",
+  },
+  "factoryDetail.thailand": { en: "🇹🇭 Thailand", my: "🇹🇭 ထိုင်း" },
+  "factoryDetail.basedOn": {
+    en: "Based on {count} reviews",
+    my: "ပြန်လည်သုံးသပ်ချက် {count} ခုအပေါ် အခြေခံသည်",
+  },
+  "factoryDetail.multiCriteriaScore": {
+    en: "Multi-Criteria Score",
+    my: "အဆင့်သတ်မှတ်ချက် အမျိုးမျိုး",
+  },
+  "factoryDetail.salaryScore": {
+    en: "💰 Salary Paid On-Time",
+    my: "💰 လုပ်ခလစာ အချိန်မီ ပေးအပ်မှု",
+  },
+  "factoryDetail.otScore": {
+    en: "⏱️ OT Hours & Fairness",
+    my: "⏱️ အချိန်ပိုနာရီနှင့် တရားမျှတမှု",
+  },
+  "factoryDetail.housingScore": {
+    en: "🏠 Housing & Dormitory Quality",
+    my: "🏠 နေထိုင်ရေးနှင့် အိပ်ဆောင် အရည်အသွေး",
+  },
+  "factoryDetail.aboutTab": { en: "About", my: "အကြောင်းအရာ" },
+  "factoryDetail.reviewsTab": { en: "Reviews", my: "သုံးသပ်ချက်များ" },
+  "factoryDetail.aboutSection": { en: "About", my: "အကြောင်းအရာ" },
+  "factoryDetail.detailsSection": { en: "Details", my: "အသေးစိတ်" },
+  "factoryDetail.location": { en: "Location", my: "တည်နေရာ" },
+  "factoryDetail.workers": { en: "Workers", my: "လုပ်သားများ" },
+  "factoryDetail.operator": { en: "Operator", my: "လုပ်ငန်းရှင်" },
+  "factoryDetail.type": { en: "Type", my: "အမျိုးအစား" },
+  "factoryDetail.workerReviews": {
+    en: "🗣️ Worker Reviews",
+    my: "🗣️ လုပ်သားများ၏ သုံးသပ်ချက်များ",
+  },
+  "factoryDetail.noReviews": {
+    en: "No reviews yet. Be the first to write a review!",
+    my: "ပြန်လည်သုံးသပ်ချက် မရှိသေးပါ။ ပထမဆုံး ရေးသားပါ!",
+  },
+  "factoryDetail.reviewFrom": {
+    en: "From {country} • Submitted {date}",
+    my: "{country}မှ • {date} တွင် တင်သွင်းခဲ့သည်",
+  },
+  "factoryDetail.backToAll": {
+    en: "← Back to all factories",
+    my: "← စက်ရုံအားလုံးသို့ ပြန်သွားရန်",
+  },
+
   // About Us
   "about.title": { en: "About WorkerVoice", my: "WorkerVoice အကြောင်း" },
   "about.p1": {

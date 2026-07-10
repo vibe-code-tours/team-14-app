@@ -234,70 +234,64 @@ export function ReviewModal({
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
-            {/* Factory Selector */}
-            <div className="relative" ref={dropdownRef}>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
-                Factory / Company (စက်ရုံ / ကုမ္ပဏီ)
-              </label>
-              {isFactoryPreselected ? (
-                <div className="w-full border border-slate-200 px-3.5 py-2.5 rounded-xl bg-slate-50 text-sm text-slate-700">
-                  🏭 {selectedFactoryName}
-                </div>
-              ) : (
-                <>
-                  <input
-                    type="text"
-                    required
-                    value={selectedFactoryName || factorySearch}
-                    onChange={(e) => {
-                      setSelectedFactoryId(null);
-                      setSelectedFactoryName("");
-                      setFactorySearch(e.target.value);
-                      setShowFactoryDropdown(true);
-                    }}
-                    onFocus={() => setShowFactoryDropdown(true)}
-                    placeholder="Search for a factory..."
-                    className="w-full border border-slate-200 px-3.5 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition"
-                  />
-                  {showFactoryDropdown && (
-                    <div className="absolute z-10 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
-                      {factoriesLoading ? (
-                        <div className="px-3.5 py-2.5 text-sm text-slate-400">
-                          Searching...
-                        </div>
-                      ) : factories.length === 0 ? (
-                        <div className="px-3.5 py-2.5 text-sm text-slate-400">
-                          No factories found
-                        </div>
-                      ) : (
-                        factories.map((f) => (
-                          <button
-                            key={f.id}
-                            type="button"
-                            onClick={() => {
-                              setSelectedFactoryId(f.id);
-                              setSelectedFactoryName(f.name);
-                              setFactorySearch("");
-                              setShowFactoryDropdown(false);
-                            }}
-                            className="w-full text-left px-3.5 py-2.5 text-sm hover:bg-emerald-50 transition border-b border-slate-50 last:border-0"
-                          >
-                            <span className="font-medium text-slate-800">
-                              {f.name}
+            {/* Factory Selector — only shown when no factory is pre-selected */}
+            {!isFactoryPreselected && (
+              <div className="relative" ref={dropdownRef}>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+                  Factory / Company (စက်ရုံ / ကုမ္ပဏီ)
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={selectedFactoryName || factorySearch}
+                  onChange={(e) => {
+                    setSelectedFactoryId(null);
+                    setSelectedFactoryName("");
+                    setFactorySearch(e.target.value);
+                    setShowFactoryDropdown(true);
+                  }}
+                  onFocus={() => setShowFactoryDropdown(true)}
+                  placeholder="Search for a factory..."
+                  className="w-full border border-slate-200 px-3.5 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition"
+                />
+                {showFactoryDropdown && (
+                  <div className="absolute z-10 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                    {factoriesLoading ? (
+                      <div className="px-3.5 py-2.5 text-sm text-slate-400">
+                        Searching...
+                      </div>
+                    ) : factories.length === 0 ? (
+                      <div className="px-3.5 py-2.5 text-sm text-slate-400">
+                        No factories found
+                      </div>
+                    ) : (
+                      factories.map((f) => (
+                        <button
+                          key={f.id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedFactoryId(f.id);
+                            setSelectedFactoryName(f.name);
+                            setFactorySearch("");
+                            setShowFactoryDropdown(false);
+                          }}
+                          className="w-full text-left px-3.5 py-2.5 text-sm hover:bg-emerald-50 transition border-b border-slate-50 last:border-0"
+                        >
+                          <span className="font-medium text-slate-800">
+                            {f.name}
+                          </span>
+                          {(f.operator || f.province) && (
+                            <span className="block text-xs text-slate-400 mt-0.5">
+                              {[f.operator, f.province].filter(Boolean).join(" · ")}
                             </span>
-                            {(f.operator || f.province) && (
-                              <span className="block text-xs text-slate-400 mt-0.5">
-                                {[f.operator, f.province].filter(Boolean).join(" · ")}
-                              </span>
-                            )}
-                          </button>
-                        ))
-                      )}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+                          )}
+                        </button>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">

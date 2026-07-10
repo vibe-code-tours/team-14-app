@@ -194,11 +194,11 @@ export default function Home() {
                   <p className="text-sm text-slate-500 mb-2">
                     {[factory.district, factory.province]
                       .filter(Boolean)
-                      .join(", ") || "Thailand"}
+                      .join(", ") || t("factoryList.thailand")}
                   </p>
                   {factory.workers && (
                     <p className="text-xs text-slate-400">
-                      {factory.workers.toLocaleString()} workers
+                      {factory.workers.toLocaleString()} {t("factoryList.workers")}
                     </p>
                   )}
                 </Link>
