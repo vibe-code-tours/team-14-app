@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import { LanguageProvider } from "@/src/contexts/LanguageContext";
 import { SessionProvider } from "@/src/components/SessionProvider";
 
@@ -24,7 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`} suppressHydrationWarning>
       <head>
-        <script
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('admin-theme');if(t==='dark'||(!t&&true)){document.documentElement.classList.add('dark')}}catch(e){}})()`,
           }}
