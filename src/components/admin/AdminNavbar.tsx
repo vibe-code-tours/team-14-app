@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useTheme } from "@/src/contexts/ThemeContext";
 
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
@@ -17,22 +18,52 @@ export function AdminNavbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
+  const { theme, toggleTheme } = useTheme();
   const [loggingOut, setLoggingOut] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch("/api/admin/profile")
+      .then((res) => res.json())
+      .then((data) => setProfileImage(data.image))
+      .catch(() => {});
+
+    const handleImageUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setProfileImage(customEvent.detail);
+    };
+    window.addEventListener("profile-image-updated", handleImageUpdate);
+
+    return () => window.removeEventListener("profile-image-updated", handleImageUpdate);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   if (pathname === "/admin/login") return null;
 
   const handleLogout = async () => {
     setLoggingOut(true);
+    setDropdownOpen(false);
     await signOut({ redirect: false });
+    localStorage.setItem("logout-success", "1");
     router.push("/admin/login");
-    setLoggingOut(false);
   };
 
   const closeMobile = () => setMobileOpen(false);
 
   return (
-    <nav className="bg-linear-to-r from-emerald-600 to-teal-600 text-white sticky top-0 z-10 shadow-md">
+    <nav className="bg-linear-to-r from-emerald-600 to-teal-600 dark:from-slate-800 dark:to-slate-900 text-white sticky top-0 z-10 shadow-md dark:shadow-slate-900/50">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Left: Logo + desktop nav */}
         <div className="flex items-center gap-6">
@@ -64,25 +95,57 @@ export function AdminNavbar() {
           </div>
         </div>
 
-        {/* Right: Profile + Logout (desktop) */}
-        <div className="hidden md:flex items-center gap-2">
-          <Link
-            href="/admin/profile"
-            className={`text-sm px-3 py-1.5 rounded-lg transition ${
-              pathname.startsWith("/admin/profile")
-                ? "bg-white/20 text-white"
-                : "text-white/80 hover:text-white hover:bg-white/10"
-            }`}
-          >
-            👤 Profile
-          </Link>
+        {/* Right: Theme toggle + Profile dropdown (desktop) */}
+        <div className="hidden md:flex items-center gap-2 relative" ref={dropdownRef}>
           <button
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="text-sm text-white/80 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-lg transition disabled:opacity-50"
+            onClick={toggleTheme}
+            className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition cursor-pointer text-lg"
+            title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
           >
-            {loggingOut ? "Logging out..." : "Logout"}
+            {theme === "light" ? "🌙" : "☀️"}
           </button>
+          <button
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="w-8 h-8 rounded-full overflow-hidden bg-white/20 flex items-center justify-center hover:bg-white/30 transition cursor-pointer"
+          >
+            {profileImage ? (
+              <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-lg">👤</span>
+            )}
+          </button>
+
+          {dropdownOpen && (
+            <div className="absolute right-0 top-12 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700 py-2 z-50">
+              <Link
+                href="/admin/profile"
+                onClick={() => setDropdownOpen(false)}
+                className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
+              >
+                {profileImage ? (
+                  <img src={profileImage} alt="Profile" className="w-5 h-5 rounded-full object-cover" />
+                ) : (
+                  <span>👤</span>
+                )}
+                Profile
+              </Link>
+              <Link
+                href="/admin/change-password"
+                onClick={() => setDropdownOpen(false)}
+                className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
+              >
+                <span>🔒</span> Change Password
+              </Link>
+              <div className="border-t border-slate-100 dark:border-slate-700 my-1"></div>
+              <button
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition disabled:opacity-50"
+              >
+                <span>🚪</span> {loggingOut ? "Logging out..." : "Logout"}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Hamburger (mobile) */}
@@ -126,14 +189,33 @@ export function AdminNavbar() {
             <Link
               href="/admin/profile"
               onClick={closeMobile}
-              className={`block px-3 py-2 rounded-lg text-sm font-medium transition ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition ${
                 pathname.startsWith("/admin/profile")
                   ? "bg-white/20 text-white"
                   : "text-white/80 hover:text-white hover:bg-white/10"
               }`}
             >
-              👤 Profile
+              {profileImage ? (
+                <img src={profileImage} alt="Profile" className="w-5 h-5 rounded-full object-cover" />
+              ) : (
+                <span>👤</span>
+              )}
+              Profile
             </Link>
+            <Link
+              href="/admin/change-password"
+              onClick={closeMobile}
+              className="block px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition"
+            >
+              <span className="mr-2">🔒</span>Change Password
+            </Link>
+            <button
+              onClick={() => { closeMobile(); toggleTheme(); }}
+              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition"
+            >
+              <span className="mr-2">{theme === "light" ? "🌙" : "☀️"}</span>
+              {theme === "light" ? "Dark Mode" : "Light Mode"}
+            </button>
             <button
               onClick={() => { closeMobile(); handleLogout(); }}
               disabled={loggingOut}

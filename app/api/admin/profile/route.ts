@@ -46,8 +46,8 @@ export async function PUT(request: NextRequest) {
       where: { id: Number(session.user.id) },
       data: {
         fullName: fullName || undefined,
-        nickname: nickname || undefined,
-        image: image || undefined,
+        nickname: nickname !== undefined && nickname !== "" ? nickname : null,
+        image: image !== undefined ? image : undefined,
       },
       select: {
         id: true,

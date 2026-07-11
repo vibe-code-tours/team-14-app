@@ -27,10 +27,10 @@ export default function AdminDashboardPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-800">
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
           📊 Dashboard
         </h1>
-        <p className="text-slate-500 text-sm">
+        <p className="text-slate-500 dark:text-slate-400 text-sm">
           Overview of your platform
         </p>
       </div>
@@ -52,8 +52,8 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 text-center">
-          <p className="text-slate-500">Failed to load stats</p>
+        <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 text-center">
+          <p className="text-slate-500 dark:text-slate-400">Failed to load stats</p>
         </div>
       )}
 
@@ -61,15 +61,15 @@ export default function AdminDashboardPage() {
       <div className="grid md:grid-cols-2 gap-4">
         <Link
           href="/admin/factories"
-          className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition group"
+          className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition group"
         >
           <div className="flex items-center gap-4">
             <span className="text-3xl">🏭</span>
             <div>
-              <h3 className="font-bold text-slate-800 group-hover:text-emerald-600 transition">
+              <h3 className="font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition">
                 Manage Factories
               </h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 View, create, edit, and approve factories
               </p>
             </div>
@@ -77,15 +77,15 @@ export default function AdminDashboardPage() {
         </Link>
         <Link
           href="/admin/reviews"
-          className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition group"
+          className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition group"
         >
           <div className="flex items-center gap-4">
             <span className="text-3xl">💬</span>
             <div>
-              <h3 className="font-bold text-slate-800 group-hover:text-emerald-600 transition">
+              <h3 className="font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition">
                 Moderate Reviews
               </h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Approve or hide user-submitted reviews
               </p>
             </div>

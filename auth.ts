@@ -28,7 +28,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!user) return null;
 
         return {
-          id: user.id,
+          id: String(user.id),
           email: user.email,
           role: user.role,
           isAdmin: user.isAdmin,

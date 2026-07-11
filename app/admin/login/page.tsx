@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
@@ -10,6 +10,26 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+
+  useEffect(() => {
+    const showLogout = localStorage.getItem("logout-success");
+    if (showLogout) {
+      localStorage.removeItem("logout-success");
+      /* eslint-disable react-hooks/set-state-in-effect */
+      setSuccessMsg("Logout successful!");
+      setSuccess(true);
+      /* eslint-enable react-hooks/set-state-in-effect */
+    }
+  }, []);
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => setSuccess(false), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +54,9 @@ export default function AdminLoginPage() {
         throw new Error("Unauthorized: Admin access required");
       }
 
-      router.push("/admin/dashboard");
+      setSuccessMsg("Login successful! Redirecting...");
+      setSuccess(true);
+      setTimeout(() => router.push("/admin/dashboard"), 1500);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -43,7 +65,16 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-linear-to-br from-emerald-600 via-emerald-500 to-teal-600">
+    <div className="fixed inset-0 flex items-center justify-center bg-linear-to-br from-emerald-600 via-emerald-500 to-teal-600 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      {/* Success Toast */}
+      {success && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50">
+          <div className="flex items-center gap-2 px-4 py-3 bg-green-500 text-white rounded-lg shadow-lg text-sm font-medium">
+            <span>✅</span>
+            <span>{successMsg || "Login successful! Redirecting..."}</span>
+          </div>
+        </div>
+      )}
       {/* Decorative circles */}
       <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-white/5" />
       <div className="absolute -bottom-48 -left-24 w-[500px] h-[500px] rounded-full bg-white/5" />
@@ -53,7 +84,7 @@ export default function AdminLoginPage() {
       {/* Login card */}
       <div className="relative z-10 w-full max-w-md mx-4">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-sm mb-4">
             <span className="text-3xl">🌏</span>
           </div>
@@ -62,13 +93,13 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
-          <h2 className="text-xl font-semibold text-slate-800 mb-1">Welcome back</h2>
-          <p className="text-sm text-slate-500 mb-6">Sign in to your admin account</p>
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 opacity-0 animate-[fadeIn_0.5s_ease-out_0.2s_forwards]">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-1">Welcome back</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Sign in to your admin account</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 Email address
               </label>
               <input
@@ -78,12 +109,12 @@ export default function AdminLoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="admin@workervoice.com"
-                className="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400"
+                className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 Password
               </label>
               <input
@@ -93,7 +124,7 @@ export default function AdminLoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="Enter your password"
-                className="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400"
+                className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
 
