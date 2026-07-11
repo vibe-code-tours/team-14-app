@@ -27,7 +27,7 @@ export async function getAdminFactories(params: AdminFactorySearchParams) {
   const [data, total] = await Promise.all([
     prisma.factory.findMany({
       where,
-      orderBy: { createdAt: "desc" },
+      orderBy: { id: "desc" },
       take: limit,
       skip: offset,
       select: {
@@ -40,8 +40,16 @@ export async function getAdminFactories(params: AdminFactorySearchParams) {
         workers: true,
         country: true,
         type: true,
+        image: true,
         status: true,
         createdAt: true,
+        user: {
+          select: {
+            id: true,
+            fullName: true,
+            nickname: true,
+          },
+        },
       },
     }),
     prisma.factory.count({ where }),
