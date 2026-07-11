@@ -129,6 +129,13 @@ export function Navbar() {
               >
                 👤 {t("nav.profile")}
               </Link>
+              <Link
+                href="/profile/change-password"
+                onClick={() => setMenuOpen(false)}
+                className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
+              >
+                🔑 {t("nav.changePassword")}
+              </Link>
               <div className="flex items-center gap-3 px-2 py-2">
                 <UserAvatar
                   name={session.user?.name}

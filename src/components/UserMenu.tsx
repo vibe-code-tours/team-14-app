@@ -85,6 +85,14 @@ export function UserMenu({ name, email, image, isAdmin }: UserMenuProps) {
               {t("nav.profile")}
             </Link>
             <Link
+              href="/profile/change-password"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition"
+            >
+              <span>🔑</span>
+              {t("nav.changePassword")}
+            </Link>
+            <Link
               href="/factories/new"
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition"

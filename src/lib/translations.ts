@@ -17,6 +17,7 @@ export const translations: Record<string, TranslationEntry> = {
   "nav.createFactory": { en: "Create Factory", my: "စက်ရုံ ဖန်တီးရန်" },
   "nav.loggingOut": { en: "Logging out...", my: "ထွက်နေသည်..." },
   "nav.profile": { en: "My Profile", my: "ကျွန်ုပ်၏ ပရိုဖိုင်" },
+  "nav.changePassword": { en: "Change Password", my: "စကားဝှက် ပြောင်းရန်" },
 
   // Privacy Banner
   "privacy.title": {
