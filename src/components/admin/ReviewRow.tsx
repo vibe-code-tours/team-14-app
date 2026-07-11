@@ -44,7 +44,7 @@ export function ReviewRow({
 
   return (
     <tr
-      className="border-b border-slate-100 hover:bg-slate-50 transition opacity-0 animate-fade-in"
+      className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition opacity-0 animate-fade-in"
       style={{ animationDelay: `${index * 80}ms`, animationFillMode: "forwards" }}
     >
       <td className="p-4">
