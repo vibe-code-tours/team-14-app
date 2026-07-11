@@ -6,6 +6,8 @@ import { useSession, signOut } from "next-auth/react";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ReviewModal } from "./ReviewModal";
+import { UserAvatar } from "./UserAvatar";
+import { UserMenu } from "./UserMenu";
 
 export function Navbar() {
   const { t } = useLanguage();
@@ -51,17 +53,12 @@ export function Navbar() {
           </button>
 
           {status === "authenticated" ? (
-            <div className="flex items-center gap-2">
-              <span className="hidden md:inline text-emerald-100">
-                {session.user?.name}
-              </span>
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="hover:text-emerald-200 transition"
-              >
-                {t("nav.logout")}
-              </button>
-            </div>
+            <UserMenu
+              name={session.user?.name}
+              email={session.user?.email}
+              image={session.user?.image}
+              isAdmin={session.user?.isAdmin}
+            />
           ) : status === "unauthenticated" ? (
             <Link href="/login" className="hover:text-emerald-200 transition">
               {t("nav.login")}
@@ -125,14 +122,44 @@ export function Navbar() {
           {status === "authenticated" ? (
             <>
               <div className="border-t border-white/20 my-1" />
-              <div className="px-2 py-1 text-xs text-emerald-200">
-                {session.user?.name}
+              <div className="flex items-center gap-3 px-2 py-2">
+                <UserAvatar
+                  name={session.user?.name}
+                  image={session.user?.image}
+                  size="md"
+                />
+                <div className="min-w-0">
+                  <p className="text-sm font-medium truncate">
+                    {session.user?.name}
+                  </p>
+                  {session.user?.email && (
+                    <p className="text-xs text-emerald-200 truncate">
+                      {session.user.email}
+                    </p>
+                  )}
+                </div>
               </div>
+              <Link
+                href="/factories/new"
+                onClick={() => setMenuOpen(false)}
+                className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
+              >
+                🏭 {t("nav.createFactory")}
+              </Link>
+              {session.user?.isAdmin && (
+                <Link
+                  href="/admin/dashboard"
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
+                >
+                  🛡️ {t("nav.adminDashboard")}
+                </Link>
+              )}
               <button
                 onClick={() => { signOut({ callbackUrl: "/" }); setMenuOpen(false); }}
-                className="block w-full text-left py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
+                className="block w-full text-left py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm text-red-300"
               >
-                {t("nav.logout")}
+                🚪 {t("nav.logout")}
               </button>
             </>
           ) : status === "unauthenticated" ? (
