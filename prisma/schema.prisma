@@ -178,7 +178,7 @@ model Factory {
   oldRegNumber     String?  @map("old_reg_number") @db.VarChar(50)
   country          String   @default("Thailand") @db.VarChar(100)
   status           FactoryStatus @default(approved)
-  image            String?   @db.VarChar(500)
+  image            String?
   userId           Int?      @map("user_id")
   createdAt        DateTime @default(now()) @map("created_at")
 
