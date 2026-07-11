@@ -52,9 +52,15 @@ export function Navbar() {
 
           {status === "authenticated" ? (
             <div className="flex items-center gap-2">
-              <span className="hidden md:inline text-emerald-100">
+              <Link
+                href="/profile"
+                className="hidden md:inline text-emerald-100 hover:text-white transition"
+              >
                 {session.user?.name}
-              </span>
+              </Link>
+              <Link href="/profile" className="hover:text-emerald-200 transition">
+                {t("nav.profile")}
+              </Link>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="hover:text-emerald-200 transition"
@@ -128,6 +134,13 @@ export function Navbar() {
               <div className="px-2 py-1 text-xs text-emerald-200">
                 {session.user?.name}
               </div>
+              <Link
+                href="/profile"
+                onClick={() => setMenuOpen(false)}
+                className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
+              >
+                {t("nav.profile")}
+              </Link>
               <button
                 onClick={() => { signOut({ callbackUrl: "/" }); setMenuOpen(false); }}
                 className="block w-full text-left py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
