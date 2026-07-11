@@ -7,7 +7,6 @@ import type { AdminStats } from "@/src/types/admin";
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<AdminStats | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchStats() {
@@ -19,8 +18,6 @@ export default function AdminDashboardPage() {
         }
       } catch (error) {
         console.error("Error fetching stats:", error);
-      } finally {
-        setLoading(false);
       }
     }
     fetchStats();
@@ -39,42 +36,20 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      {loading ? (
+      {stats ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="bg-white p-5 rounded-xl shadow-xs border border-gray-100 animate-pulse"
-            >
-              <div className="h-4 bg-slate-200 rounded w-1/2 mb-3"></div>
-              <div className="h-8 bg-slate-200 rounded w-1/3"></div>
-            </div>
-          ))}
-        </div>
-      ) : stats ? (
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatsCard
-            icon="🏭"
-            label="Total Factories"
-            value={stats.totalFactories}
-          />
-          <StatsCard
-            icon="⏳"
-            label="Pending Approvals"
-            value={stats.pendingFactories}
-            sublabel="Factories awaiting review"
-          />
-          <StatsCard
-            icon="💬"
-            label="Total Reviews"
-            value={stats.totalReviews}
-          />
-          <StatsCard
-            icon="👁️"
-            label="Visible Reviews"
-            value={stats.visibleReviews}
-            sublabel="Published to public"
-          />
+          <div className="opacity-0 animate-fade-in" style={{ animationDelay: "0ms", animationFillMode: "forwards" }}>
+            <StatsCard icon="🏭" label="Total Factories" value={stats.totalFactories} />
+          </div>
+          <div className="opacity-0 animate-fade-in" style={{ animationDelay: "100ms", animationFillMode: "forwards" }}>
+            <StatsCard icon="⏳" label="Pending Approvals" value={stats.pendingFactories} sublabel="Factories awaiting review" />
+          </div>
+          <div className="opacity-0 animate-fade-in" style={{ animationDelay: "200ms", animationFillMode: "forwards" }}>
+            <StatsCard icon="💬" label="Total Reviews" value={stats.totalReviews} />
+          </div>
+          <div className="opacity-0 animate-fade-in" style={{ animationDelay: "300ms", animationFillMode: "forwards" }}>
+            <StatsCard icon="👁️" label="Visible Reviews" value={stats.visibleReviews} sublabel="Published to public" />
+          </div>
         </div>
       ) : (
         <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 text-center">
