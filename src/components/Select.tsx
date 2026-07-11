@@ -15,7 +15,7 @@ export function Select({ label, options, placeholder, className = "", ...props }
         </label>
       )}
       <select
-        className={`w-full pl-4 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-emerald-500 focus:border-transparent ${SELECT_ARROW} ${className}`}
+        className={`w-full pl-4 pr-8 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 focus:border-transparent ${SELECT_ARROW} ${className}`}
         {...props}
       >
         {placeholder && (

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchFactories } from "@/lib/factories";
+import { searchFactories, createPublicFactory } from "@/lib/factories";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -25,6 +25,43 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error searching factories:", error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+
+    if (!body.name) {
+      return NextResponse.json(
+        { error: "Factory name is required" },
+        { status: 400 }
+      );
+    }
+
+    const factory = await createPublicFactory({
+      name: body.name,
+      regNumber: body.regNumber,
+      operator: body.operator,
+      businessActivity: body.businessActivity,
+      houseNumber: body.houseNumber,
+      village: body.village,
+      soi: body.soi,
+      road: body.road,
+      subdistrict: body.subdistrict,
+      district: body.district,
+      province: body.province,
+      postalCode: body.postalCode,
+      phone: body.phone,
+      type: body.type,
+      workers: body.workers,
+      country: body.country,
+    });
+
+    return NextResponse.json(factory, { status: 201 });
+  } catch (error) {
+    console.error("Error creating factory:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
