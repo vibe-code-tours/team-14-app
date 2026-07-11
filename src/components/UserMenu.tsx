@@ -77,6 +77,14 @@ export function UserMenu({ name, email, image, isAdmin }: UserMenuProps) {
           {/* Menu items */}
           <div className="py-1">
             <Link
+              href="/profile"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition"
+            >
+              <span>👤</span>
+              {t("nav.profile")}
+            </Link>
+            <Link
               href="/factories/new"
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition"

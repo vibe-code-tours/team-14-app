@@ -16,4 +16,5 @@ ENV HOSTNAME=0.0.0.0
 # Dev Dockerfile runs as root because docker-compose volume mounts
 # (.:/app, /app/.next) require root ownership for hot-reload writes.
 # Production should use a separate Dockerfile with a non-root USER.
-CMD ["npm", "run", "dev"]  # nosemgrep: dockerfile.security.missing-user.missing-user
+# nosemgrep: dockerfile.security.missing-user.missing-user
+CMD ["npm", "run", "dev"]
