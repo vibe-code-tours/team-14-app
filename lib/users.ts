@@ -114,6 +114,7 @@ export async function verifyCredentials(email: string, password: string) {
     isAdmin: user.isAdmin,
     isSuperAdmin: user.isSuperAdmin,
     displayName: getPublicDisplayName(user),
+    image: user.image,
   };
 }
 
@@ -181,4 +182,36 @@ export async function resetPassword(rawToken: string, newPassword: string) {
   });
 
   await prisma.passwordResetToken.deleteMany({ where: { userId: record.userId } });
+}
+
+export async function changePassword(
+  userId: number,
+  currentPassword: string,
+  newPassword: string
+) {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (!user.passwordHash) {
+    throw new Error("Your account does not have a password. Please reset your password instead.");
+  }
+
+  const valid = await bcrypt.compare(currentPassword, user.passwordHash);
+  if (!valid) {
+    throw new Error("Current password is incorrect");
+  }
+
+  if (newPassword.length < 8) {
+    throw new Error("New password must be at least 8 characters");
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, 12);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { passwordHash },
+  });
 }
