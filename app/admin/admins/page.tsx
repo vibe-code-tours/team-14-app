@@ -54,6 +54,7 @@ export default function AdminAdminsPage() {
   }, [search, page, limit]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAdmins();
   }, [fetchAdmins]);
 
@@ -244,7 +245,7 @@ export default function AdminAdminsPage() {
             </div>
             <div className="px-3 py-2">
               <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
-                Are you sure you want to demote "{confirmModal.userName}"? They will lose admin access and become a regular user.
+                {`Are you sure you want to demote "${confirmModal.userName}"? They will lose admin access and become a regular user.`}
               </p>
             </div>
             <div className="px-3 pb-3 flex gap-2 justify-end">

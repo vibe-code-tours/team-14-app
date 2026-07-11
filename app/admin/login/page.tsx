@@ -14,13 +14,22 @@ export default function AdminLoginPage() {
   const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
-    if (localStorage.getItem("logout-success")) {
+    const showLogout = localStorage.getItem("logout-success");
+    if (showLogout) {
       localStorage.removeItem("logout-success");
+      /* eslint-disable react-hooks/set-state-in-effect */
       setSuccessMsg("Logout successful!");
       setSuccess(true);
-      setTimeout(() => setSuccess(false), 1500);
+      /* eslint-enable react-hooks/set-state-in-effect */
     }
   }, []);
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => setSuccess(false), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
