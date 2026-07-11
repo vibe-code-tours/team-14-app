@@ -13,4 +13,7 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-CMD ["npm", "run", "dev"]
+# Dev Dockerfile runs as root because docker-compose volume mounts
+# (.:/app, /app/.next) require root ownership for hot-reload writes.
+# Production should use a separate Dockerfile with a non-root USER.
+CMD ["npm", "run", "dev"]  # nosemgrep: dockerfile.security.missing-user.missing-user
