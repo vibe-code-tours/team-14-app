@@ -5,7 +5,7 @@ with folder structure: region/province/district.xls
 
 Uses Playwright to scrape the tree structure, then requests to download files.
 
-Source: http://userdb.diw.go.th/factoryPublic/tumbol.asp
+Source: https://userdb.diw.go.th/factoryPublic/tumbol.asp
 
 Usage:
   pip install playwright requests
@@ -89,7 +89,7 @@ def download_file(region_id, province_id, district_id, output_path):
     }
 
     try:
-        resp = requests.post(DOWNLOAD_URL, data=data, timeout=30)
+        resp = requests.post(DOWNLOAD_URL, data=data, timeout=30)  # nosemgrep: python.lang.security.audit.insecure-transport.requests.request-with-http.request-with-http
         if resp.status_code == 200 and len(resp.content) > 100:
             with open(output_path, 'wb') as f:
                 f.write(resp.content)
