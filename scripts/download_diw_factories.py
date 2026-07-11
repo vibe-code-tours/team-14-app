@@ -22,8 +22,8 @@ from pathlib import Path
 import requests
 from playwright.sync_api import sync_playwright
 
-BASE_URL = "http://userdb.diw.go.th/factoryPublic/tumbol.asp"
-DOWNLOAD_URL = "http://userdb.diw.go.th/factoryPublic/results3.asp"
+BASE_URL = "https://userdb.diw.go.th/factoryPublic/tumbol.asp"
+DOWNLOAD_URL = "https://userdb.diw.go.th/factoryPublic/results3.asp"
 OUTPUT_DIR = Path(__file__).parent.parent / "diw_factories"
 
 # Region mapping
@@ -89,7 +89,7 @@ def download_file(region_id, province_id, district_id, output_path):
     }
 
     try:
-        resp = requests.post(DOWNLOAD_URL, data=data, timeout=30)  # nosemgrep: python.lang.security.audit.insecure-transport.requests.request-with-http.request-with-http
+        resp = requests.post(DOWNLOAD_URL, data=data, timeout=30)
         if resp.status_code == 200 and len(resp.content) > 100:
             with open(output_path, 'wb') as f:
                 f.write(resp.content)
