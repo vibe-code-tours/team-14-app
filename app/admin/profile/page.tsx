@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { createPortal } from "react-dom";
 
 interface Profile {
   id: number;
@@ -16,7 +16,6 @@ interface Profile {
 const DEFAULT_AVATAR = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjEuNSI+PGNpcmNsZSBjeD0iMTIiIGN5PSI4IiByPSI0Ii8+PHBhdGggZD0iTTQgMjFjMC00LjQxOCAzLjU4Mi04IDgtOHM4IDMuNTgyIDggOCIvPjwvc3ZnPg==";
 
 export default function AdminProfilePage() {
-  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,6 +25,7 @@ export default function AdminProfilePage() {
   const [fullName, setFullName] = useState("");
   const [nickname, setNickname] = useState("");
   const [image, setImage] = useState<string | null>(null);
+  const [showLightbox, setShowLightbox] = useState(false);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -85,15 +85,18 @@ export default function AdminProfilePage() {
       });
 
       if (res.ok) {
-        setMessage("Profile updated successfully!");
-        setTimeout(() => setMessage(""), 3000);
+        window.dispatchEvent(new CustomEvent("profile-image-updated", { detail: image }));
+        setTimeout(() => {
+          setSaving(false);
+          setMessage("Profile updated successfully!");
+          setTimeout(() => setMessage(""), 1500);
+        }, 500);
       } else {
         const data = await res.json();
         setMessage(data.error || "Failed to update profile");
       }
     } catch (error) {
       setMessage("Failed to update profile");
-    } finally {
       setSaving(false);
     }
   };
@@ -101,37 +104,42 @@ export default function AdminProfilePage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="h-8 bg-slate-200 rounded w-48 animate-pulse"></div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 animate-pulse">
-          <div className="h-20 bg-slate-200 rounded-full w-20 mb-4"></div>
-          <div className="h-10 bg-slate-100 rounded mb-3"></div>
-          <div className="h-10 bg-slate-100 rounded"></div>
+        <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded w-48 animate-pulse"></div>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 animate-pulse">
+          <div className="h-20 bg-slate-200 dark:bg-slate-700 rounded-full w-20 mb-4"></div>
+          <div className="h-10 bg-slate-100 dark:bg-slate-700 rounded mb-3"></div>
+          <div className="h-10 bg-slate-100 dark:bg-slate-700 rounded"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">👤 My Profile</h1>
-          <p className="text-slate-500 text-sm">Manage your account settings</p>
+    <div className="space-y-6 max-w-2xl mx-auto relative">
+      {/* Success Toast */}
+      {message && message.includes("success") && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-[slideIn_0.3s_ease-out]">
+          <div className="flex items-center gap-2 px-4 py-3 bg-green-500 text-white rounded-lg shadow-lg text-sm font-medium">
+            <span>✅</span>
+            <span>{message}</span>
+          </div>
         </div>
-        <button
-          onClick={() => router.push("/admin/change-password")}
-          className="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition"
-        >
-          🔒 Change Password
-        </button>
+      )}
+
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">👤 My Profile</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm">Manage your account settings</p>
       </div>
 
       {/* Profile Image */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-        <h3 className="text-lg font-bold text-slate-800 mb-4">📷 Profile Image</h3>
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">📷 Profile Image</h3>
         <div className="flex items-center gap-6">
-          <div className="w-24 h-24 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center">
+          <div
+            className="w-24 h-24 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-700 flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-emerald-500 transition"
+            onClick={() => image && setShowLightbox(true)}
+          >
             {image ? (
               <img src={image} alt="Profile" className="w-full h-full object-cover" />
             ) : (
@@ -148,14 +156,14 @@ export default function AdminProfilePage() {
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition"
+              className="px-4 py-2 text-sm font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-lg transition"
             >
               📁 Upload Image
             </button>
             {image && (
               <button
                 onClick={() => setImage(null)}
-                className="ml-2 px-4 py-2 text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-lg transition"
+                className="ml-2 px-4 py-2 text-sm font-medium text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-lg transition"
               >
                 ✕ Remove
               </button>
@@ -165,39 +173,33 @@ export default function AdminProfilePage() {
       </div>
 
       {/* Edit Profile */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-        <h3 className="text-lg font-bold text-slate-800 mb-4">✏️ Edit Profile</h3>
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">✏️ Edit Profile</h3>
         <div className="space-y-4">
           <div>
-            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</label>
-            <p className="mt-1 text-sm text-slate-600 bg-slate-50 p-3 rounded-lg">{profile?.email}</p>
+            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Email</label>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-700 p-3 rounded-lg">{profile?.email}</p>
           </div>
           <div>
-            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Full Name</label>
+            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Full Name</label>
             <input
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-emerald-500 outline-none"
             />
           </div>
           <div>
-            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Nickname</label>
+            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nickname</label>
             <input
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
-              className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="Optional"
             />
           </div>
         </div>
-
-        {message && (
-          <div className={`mt-4 p-3 rounded-lg text-sm ${message.includes("success") ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}>
-            {message}
-          </div>
-        )}
 
         <div className="mt-6 flex gap-3">
           <button
@@ -209,6 +211,21 @@ export default function AdminProfilePage() {
           </button>
         </div>
       </div>
+
+      {/* Image Lightbox */}
+      {showLightbox && image && createPortal(
+        <div
+          style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backgroundColor: "rgba(0,0,0,0.8)" }}
+          onClick={() => setShowLightbox(false)}
+        >
+          <img
+            src={image}
+            alt="Profile"
+            style={{ maxWidth: "90vw", maxHeight: "90vh", objectFit: "contain" }}
+          />
+        </div>,
+        document.body
+      )}
     </div>
   );
 }
