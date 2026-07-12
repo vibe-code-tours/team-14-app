@@ -1,0 +1,12 @@
+# Cloudflare Workers local development environment variables
+# Copy to .dev.vars and fill in values
+
+# Database (use cloud PostgreSQL URL, not localhost)
+DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
+
+# NextAuth
+NEXTAUTH_SECRET=your-secret-here
+NEXTAUTH_URL=http://localhost:8788
+
+# Cloudflare detection
+WRANGLER=1

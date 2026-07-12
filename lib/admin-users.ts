@@ -1,5 +1,5 @@
 import { prisma } from "./prisma";
-import type { UserStatus } from "@/src/generated/prisma/enums";
+import type { UserStatus } from "@prisma/client";
 
 export interface AdminUserSearchParams {
   search?: string;

@@ -46,7 +46,7 @@ export default function Home() {
       const res = await fetch(`/api/factories?${params}`);
       const data: FactoryResponse = await res.json();
 
-      let filtered = data.data;
+      let filtered = data.data ?? [];
 
       // Apply worker range filter client-side
       if (selectedWorkerRange) {

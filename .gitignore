@@ -53,3 +53,8 @@ migrant-review-app/
 # extracted raw factory data (regenerate from Original_data_1_7_2026.zip; seeded data lives in prisma/seed/)
 docs/project/raw_data_for_factory/*.xls
 !docs/project/raw_data_for_factory/1_อ.พระนคร.xls
+
+# cloudflare
+.dev.vars
+.open-next/
+wrangler.toml

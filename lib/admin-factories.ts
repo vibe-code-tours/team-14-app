@@ -1,5 +1,5 @@
 import { prisma } from "./prisma";
-import type { FactoryStatus } from "@/src/generated/prisma/enums";
+import type { FactoryStatus } from "@prisma/client";
 
 export interface AdminFactorySearchParams {
   search?: string;

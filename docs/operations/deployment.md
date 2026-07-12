@@ -450,3 +450,95 @@ Future improvements may include:
 
 Version	Date	Author	Description
 1.0.0	2026-07-07	DevOps Team	Initial deployment guide
+1.1.0	2026-07-12	DevOps Team	Add Cloudflare Workers deployment
+
+---
+
+21. Cloudflare Workers Deployment
+
+Overview
+
+WorkerVoice can be deployed to Cloudflare Workers using the OpenNext adapter.
+This provides global edge deployment at $5/month with generous limits.
+
+Local Wrangler Preview
+
+Prerequisites
+
+* Cloud database URL (Supabase or Neon)
+* Copy `.dev.vars.example` to `.dev.vars`
+* Fill in cloud `DATABASE_URL` and secrets
+
+Commands
+
+    npm run pages:build
+    npm run pages:preview
+
+This builds the app and starts a local Worker preview on port 8788.
+
+Production Deployment
+
+Prerequisites
+
+* Cloudflare account with Workers Paid plan ($5/month)
+* Cloud database (Supabase or Neon)
+* Custom domain configured in Cloudflare
+
+Steps
+
+    1. Set environment variables in Cloudflare Dashboard or `wrangler.jsonc`:
+
+       DATABASE_URL=postgresql://...neon.tech/...?sslmode=require
+       NEXTAUTH_SECRET=your-secret
+       NEXTAUTH_URL=https://your-domain.com
+
+    2. Build and deploy:
+
+       npm run pages:build
+       npm run deploy
+
+    3. Verify deployment:
+
+       npx wrangler tail
+
+Environment Variables
+
+Cloudflare-specific variables:
+
+* `WRANGLER=1` — triggers HTTP adapter for Prisma
+* `CF_PAGES=1` — alternative detection flag
+* `CLOUDFLARE=1` — alternative detection flag
+
+Database
+
+Cloudflare Workers cannot use TCP connections.
+The app automatically switches to HTTP adapter (`@prisma/adapter-neon`) when
+running in Cloudflare environment.
+
+Local development uses TCP adapter (`@prisma/adapter-pg`) for Docker PostgreSQL.
+
+Commands Reference
+
+    npm run pages:dev       — Local Worker dev server
+    npm run pages:build     — Build for Cloudflare
+    npm run pages:preview   — Build + preview locally
+    npm run deploy          — Deploy to Cloudflare
+    npm run cf:tail         — Stream production logs
+
+Troubleshooting
+
+    1. "Worker size exceeds limit"
+       — Add heavy packages to `serverExternalPackages` in `next.config.mjs`
+       — Consider paid plan (10MB+ limit)
+
+    2. "Could not connect to database"
+       — Ensure `DATABASE_URL` points to cloud DB, not localhost
+       — Verify `sslmode=require` in connection string
+
+    3. "bcryptjs timeout"
+       — bcrypt takes ~100ms CPU, within paid plan 30s limit
+       — If hitting limits, reduce bcrypt rounds or use external auth
+
+    4. "404 on pages.dev domain"
+       — Workers deploy to `workers.dev`, not `pages.dev`
+       — Configure custom domain in Cloudflare Dashboard

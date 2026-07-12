@@ -1,15 +1,31 @@
-import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+const isCloudflare = !!(
+  process.env.CF_PAGES ||
+  process.env.WRANGLER ||
+  process.env.CLOUDFLARE
+);
 
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
+  prisma: any | undefined;
 };
 
 function createPrismaClient() {
-  const adapter = new PrismaPg({
-    connectionString: process.env.DATABASE_URL!,
-  });
-  return new PrismaClient({ adapter });
+  if (isCloudflare) {
+    // Edge client + HTTP adapter for Cloudflare Workers (no TCP support)
+    const { PrismaClient: EdgeClient } = require("@prisma/client/edge");
+    const { PrismaNeonHTTP } = require("@prisma/adapter-neon");
+    const adapter = new PrismaNeonHTTP({
+      connectionString: process.env.DATABASE_URL!,
+    });
+    return new EdgeClient({ adapter });
+  } else {
+    // Standard Prisma client with PG adapter for local/Node.js environments
+    const { PrismaClient } = require("@prisma/client");
+    const { PrismaPg } = require("@prisma/adapter-pg");
+    const adapter = new PrismaPg({
+      connectionString: process.env.DATABASE_URL!,
+    });
+    return new PrismaClient({ adapter });
+  }
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
