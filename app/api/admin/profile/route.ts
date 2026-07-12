@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/auth";
+import { getAdminSession } from "@/lib/admin-auth";
 
 export async function GET() {
-  const session = await auth();
-  if (!session?.user?.isAdmin) {
+  const session = await getAdminSession();
+  if (!session?.isAdmin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const user = await prisma.user.findUnique({
-      where: { id: Number(session.user.id) },
+      where: { id: session.id },
       select: {
         id: true,
         email: true,
@@ -34,8 +34,8 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.isAdmin) {
+  const session = await getAdminSession();
+  if (!session?.isAdmin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -43,7 +43,7 @@ export async function PUT(request: NextRequest) {
     const { fullName, nickname, image } = await request.json();
 
     const user = await prisma.user.update({
-      where: { id: Number(session.user.id) },
+      where: { id: session.id },
       data: {
         fullName: fullName || undefined,
         nickname: nickname !== undefined && nickname !== "" ? nickname : null,

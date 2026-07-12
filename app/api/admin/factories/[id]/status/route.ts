@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateFactoryStatus } from "@/lib/admin-factories";
-import { auth } from "@/auth";
+import { getAdminSession } from "@/lib/admin-auth";
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-  if (!session?.user?.isAdmin) {
+  const session = await getAdminSession();
+  if (!session?.isAdmin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

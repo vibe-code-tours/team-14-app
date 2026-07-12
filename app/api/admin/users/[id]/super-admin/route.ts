@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { getAdminSession } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-  if (!session?.user?.isSuperAdmin) {
+  const session = await getAdminSession();
+  if (!session?.isSuperAdmin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

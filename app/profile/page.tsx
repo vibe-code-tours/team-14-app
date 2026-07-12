@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { createPortal } from "react-dom";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
+import { UserAuthGuard } from "@/src/components/UserAuthGuard";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 
 interface Profile {
@@ -124,7 +125,7 @@ export default function ProfilePage() {
         <Navbar />
         <div className="max-w-2xl mx-auto px-4 py-10 space-y-6">
           <div className="h-8 bg-slate-200 rounded w-48 animate-pulse" />
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 animate-pulse">
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 animate-pulse">
             <div className="h-20 w-20 bg-slate-200 rounded-full mb-4" />
             <div className="h-10 bg-slate-100 rounded mb-3" />
             <div className="h-10 bg-slate-100 rounded" />
@@ -136,7 +137,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <>
+    <UserAuthGuard>
       <Navbar />
       <div className="max-w-2xl mx-auto px-4 py-10 space-y-6 relative">
         {message && (
@@ -150,12 +151,12 @@ export default function ProfilePage() {
         )}
 
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">{t("nav.profile")}</h1>
-          <p className="text-slate-500 text-sm">Manage your account settings</p>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{t("nav.profile")}</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">Manage your account settings</p>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-          <h3 className="text-lg font-bold text-slate-800 mb-4">Profile Image</h3>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">Profile Image</h3>
           <div className="flex items-center gap-6">
             <div
               className="w-24 h-24 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-emerald-500 transition"
@@ -177,14 +178,14 @@ export default function ProfilePage() {
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition"
+                className="px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 rounded-lg transition"
               >
                 Upload Image
               </button>
               {image && (
                 <button
                   onClick={() => setImage(null)}
-                  className="ml-2 px-4 py-2 text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-lg transition"
+                  className="ml-2 px-4 py-2 text-sm font-medium text-red-700 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 rounded-lg transition"
                 >
                   Remove
                 </button>
@@ -193,21 +194,21 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-          <h3 className="text-lg font-bold text-slate-800 mb-4">Edit Profile</h3>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">Edit Profile</h3>
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 Email
               </label>
-              <p className="mt-1 text-sm text-slate-600 bg-slate-50 p-3 rounded-lg">
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 p-3 rounded-lg">
                 {profile?.email}
               </p>
             </div>
             <div>
               <label
                 htmlFor="fullName"
-                className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
               >
                 Full Name
               </label>
@@ -217,13 +218,13 @@ export default function ProfilePage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
+                className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none"
               />
             </div>
             <div>
               <label
                 htmlFor="nickname"
-                className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
               >
                 Nickname
               </label>
@@ -233,7 +234,7 @@ export default function ProfilePage() {
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 placeholder="Optional — shown publicly instead of your full name"
-                className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
+                className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none"
               />
             </div>
           </div>
@@ -278,6 +279,6 @@ export default function ProfilePage() {
           )}
       </div>
       <Footer />
-    </>
+    </UserAuthGuard>
   );
 }
