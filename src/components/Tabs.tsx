@@ -37,7 +37,7 @@ interface TabsListProps {
 
 export function TabsList({ children, className = "" }: TabsListProps) {
   return (
-    <div className="border-b border-slate-200">
+    <div className="border-b border-slate-200 dark:border-slate-700">
       <nav
         role="tablist"
         aria-label="Factory detail tabs"
@@ -67,13 +67,13 @@ export function TabsTrigger({ value, children, className = "" }: TabsTriggerProp
       onClick={() => onValueChange(value)}
       className={`px-5 py-3 text-sm font-semibold transition-colors relative ${
         isActive
-          ? "text-emerald-700"
-          : "text-slate-400 hover:text-slate-600"
+          ? "text-emerald-700 dark:text-emerald-400"
+          : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
       } ${className}`}
     >
       {children}
       {isActive && (
-        <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-600 rounded-t-full" />
+        <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-600 dark:bg-emerald-400 rounded-t-full" />
       )}
     </button>
   );

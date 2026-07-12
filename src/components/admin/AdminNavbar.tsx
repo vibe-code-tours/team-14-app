@@ -1,8 +1,9 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "@/src/contexts/ThemeContext";
 
@@ -55,8 +56,8 @@ export function AdminNavbar() {
   const handleLogout = async () => {
     setLoggingOut(true);
     setDropdownOpen(false);
-    await signOut({ redirect: false });
-    localStorage.setItem("logout-success", "1");
+    await fetch("/api/admin/auth/signout", { method: "POST" });
+    localStorage.setItem("admin-logout-success", "1");
     router.push("/admin/login");
   };
 

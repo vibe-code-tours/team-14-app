@@ -46,12 +46,12 @@ export function ContactLinks() {
   const { t } = useLanguage();
 
   return (
-    <div className="bg-white border border-slate-100 rounded-2xl p-6 md:p-8 shadow-sm">
-      <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+    <div className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl p-6 md:p-8 shadow-sm">
+      <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
         <span>📱</span> {t("contact.title")}
       </h3>
 
-      <p className="text-sm text-slate-500 mb-4">{t("contact.subtitle")}</p>
+      <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{t("contact.subtitle")}</p>
 
       {/* Responsive grid - 1 col mobile, 2 col sm, 4 col lg */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -62,7 +62,7 @@ export function ContactLinks() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Follow us on ${t(`contact.${link.key}`)}`}
-            className={`${link.color} ${link.hoverColor} text-white px-4 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+            className={`${link.color} ${link.hoverColor} text-white px-4 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-800 focus:ring-blue-500`}
           >
             <span className="text-base" aria-hidden="true">
               {link.icon}
@@ -86,10 +86,10 @@ export function ContactLinks() {
         ))}
       </div>
 
-      <div className="mt-4 pt-4 border-t border-slate-100">
+      <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
         <Link
           href="/contact"
-          className="text-emerald-600 text-sm font-medium hover:text-emerald-700 hover:underline inline-flex items-center gap-1 transition-colors"
+          className="text-emerald-600 dark:text-emerald-400 text-sm font-medium hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline inline-flex items-center gap-1 transition-colors"
         >
           {t("contact.viewFull")}
           <svg
