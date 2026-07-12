@@ -24,10 +24,7 @@ export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
   const isLoginPage = pathname === "/admin/login";
 
   useEffect(() => {
-    if (isLoginPage) {
-      setLoading(false);
-      return;
-    }
+    if (isLoginPage) return;
 
     fetch("/api/admin/auth/session")
       .then((res) => res.json())
@@ -40,6 +37,9 @@ export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
         setLoading(false);
       });
   }, [isLoginPage]);
+
+  // Derive loading: login page never shows loading spinner
+  const isLoading = isLoginPage ? false : loading;
 
   useEffect(() => {
     if (loading) return;
@@ -56,7 +56,7 @@ export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
     }
   }, [session, loading, router, isLoginPage]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-slate-500">Loading...</div>
