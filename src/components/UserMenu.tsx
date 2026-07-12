@@ -58,17 +58,17 @@ export function UserMenu({ name, email, image, isAdmin }: UserMenuProps) {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 top-12 w-56 bg-white rounded-xl shadow-lg border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="absolute right-0 top-12 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
           {/* User info */}
-          <div className="px-4 py-3 border-b border-slate-100">
+          <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700">
             <div className="flex items-center gap-3">
               <UserAvatar name={name} image={image} size="lg" />
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-slate-800 truncate">
+                <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">
                   {name || t("nav.user")}
                 </p>
                 {email && (
-                  <p className="text-xs text-slate-500 truncate">{email}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{email}</p>
                 )}
               </div>
             </div>
@@ -79,7 +79,7 @@ export function UserMenu({ name, email, image, isAdmin }: UserMenuProps) {
             <Link
               href="/profile"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition"
+              className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
             >
               <span>👤</span>
               {t("nav.profile")}
@@ -87,7 +87,7 @@ export function UserMenu({ name, email, image, isAdmin }: UserMenuProps) {
             <Link
               href="/profile/change-password"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition"
+              className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
             >
               <span>🔑</span>
               {t("nav.changePassword")}
@@ -95,7 +95,7 @@ export function UserMenu({ name, email, image, isAdmin }: UserMenuProps) {
             <Link
               href="/factories/new"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition"
+              className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
             >
               <span>🏭</span>
               {t("nav.createFactory")}
@@ -104,7 +104,7 @@ export function UserMenu({ name, email, image, isAdmin }: UserMenuProps) {
               <Link
                 href="/admin/dashboard"
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition"
+                className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
               >
                 <span>🛡️</span>
                 {t("nav.adminDashboard")}
@@ -113,7 +113,7 @@ export function UserMenu({ name, email, image, isAdmin }: UserMenuProps) {
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition disabled:opacity-50"
+              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition disabled:opacity-50"
             >
               <span>🚪</span>
               {loggingOut ? t("nav.loggingOut") : t("nav.logout")}

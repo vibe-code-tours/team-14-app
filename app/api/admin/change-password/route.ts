@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/auth";
+import { getAdminSession } from "@/lib/admin-auth";
 import bcrypt from "bcryptjs";
 
 export async function PUT(request: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.isAdmin) {
+  const session = await getAdminSession();
+  if (!session?.isAdmin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -21,7 +21,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: Number(session.user.id) },
+      where: { id: session.id },
       select: { id: true, passwordHash: true },
     });
 
@@ -37,7 +37,7 @@ export async function PUT(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(newPassword, 12);
 
     await prisma.user.update({
-      where: { id: Number(session.user.id) },
+      where: { id: session.id },
       data: { passwordHash: hashedPassword },
     });
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Input } from "./Input";
@@ -36,16 +36,20 @@ export function LoginForm() {
       return;
     }
 
-    // Check if user is admin and redirect accordingly
+    // Check session
     const res = await fetch("/api/auth/session");
     const text = await res.text();
     const session = text ? JSON.parse(text) : null;
 
+    // Block admin accounts from user login
     if (session?.user?.isAdmin) {
-      router.push("/admin/dashboard");
-    } else {
-      router.push(callbackUrl);
+      await signOut({ redirect: false });
+      setError("Admin accounts must use the admin login page");
+      setSubmitting(false);
+      return;
     }
+
+    router.push(callbackUrl);
   };
 
   return (
