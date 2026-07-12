@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="fixed inset-0 flex items-center justify-center bg-linear-to-br from-emerald-600 via-teal-600 to-emerald-700 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Success Toast */}
       {success && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50">
@@ -70,20 +70,20 @@ export default function AdminLoginPage() {
         </div>
       )}
       {/* Decorative circles */}
-      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-white/5" />
-      <div className="absolute -bottom-48 -left-24 w-[500px] h-[500px] rounded-full bg-white/5" />
-      <div className="absolute top-1/4 right-0 w-64 h-64 rounded-full bg-white/5" />
-      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full bg-white/5" />
+      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-white/10 dark:bg-white/5" />
+      <div className="absolute -bottom-48 -left-24 w-[500px] h-[500px] rounded-full bg-white/10 dark:bg-white/5" />
+      <div className="absolute top-1/4 right-0 w-64 h-64 rounded-full bg-white/10 dark:bg-white/5" />
+      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full bg-white/10 dark:bg-white/5" />
 
       {/* Login card */}
       <div className="relative z-10 w-full max-w-md mx-4">
         {/* Logo */}
         <div className="text-center mb-8 opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-sm mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-300/50 dark:bg-white/15 backdrop-blur-sm mb-4">
             <span className="text-3xl">🌏</span>
           </div>
-          <h1 className="text-3xl font-bold text-white">WorkerVoice</h1>
-          <p className="text-emerald-100 mt-1">Admin Portal</p>
+          <h1 className="text-3xl font-bold text-slate-800 dark:text-white">WorkerVoice</h1>
+          <p className="text-slate-700 dark:text-emerald-100 mt-1">Admin Portal</p>
         </div>
 
         {/* Card */}
