@@ -4,9 +4,13 @@
 # Database (use cloud PostgreSQL URL, not localhost)
 DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
 
-# NextAuth
-NEXTAUTH_SECRET=your-secret-here
-NEXTAUTH_URL=http://localhost:8788
+# Auth.js (NextAuth v5)
+AUTH_SECRET=your-auth-secret-here
+AUTH_URL=http://localhost:8788
 
-# Cloudflare detection
+# Cloudflare detection — triggers Prisma HTTP adapter
 WRANGLER=1
+
+# Email (Resend) — optional, used for verification + password reset
+RESEND_API_KEY=your-resend-api-key
+EMAIL_FROM=noreply@workervoice.dev

@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 
 export interface AdminReviewSearchParams {
@@ -7,10 +8,27 @@ export interface AdminReviewSearchParams {
   offset?: number;
 }
 
+const adminReviewSelect = {
+  id: true,
+  workerRole: true,
+  countryFrom: true,
+  ratingSalary: true,
+  ratingOt: true,
+  ratingHousing: true,
+  reviewText: true,
+  isVisible: true,
+  createdAt: true,
+  factory: { select: { name: true } },
+  organization: { select: { name: true } },
+  user: { select: { id: true, fullName: true, nickname: true } },
+} satisfies Prisma.ReviewSelect;
+
+type AdminReviewPayload = Prisma.ReviewGetPayload<{ select: typeof adminReviewSelect }>;
+
 export async function getAdminReviews(params: AdminReviewSearchParams) {
   const { search, visibility, limit = 20, offset = 0 } = params;
 
-  const where: Record<string, unknown> = {};
+  const where: Prisma.ReviewWhereInput = {};
 
   if (search) {
     where.OR = [
@@ -32,35 +50,12 @@ export async function getAdminReviews(params: AdminReviewSearchParams) {
       orderBy: { id: "desc" },
       take: limit,
       skip: offset,
-      select: {
-        id: true,
-        workerRole: true,
-        countryFrom: true,
-        ratingSalary: true,
-        ratingOt: true,
-        ratingHousing: true,
-        reviewText: true,
-        isVisible: true,
-        createdAt: true,
-        factory: {
-          select: { name: true },
-        },
-        organization: {
-          select: { name: true },
-        },
-        user: {
-          select: {
-            id: true,
-            fullName: true,
-            nickname: true,
-          },
-        },
-      },
+      select: adminReviewSelect,
     }),
     prisma.review.count({ where }),
   ]);
 
-  const data = reviews?.map((r) => ({
+  const data = reviews?.map((r: AdminReviewPayload) => ({
     id: r.id,
     workerRole: r.workerRole,
     countryFrom: r.countryFrom,

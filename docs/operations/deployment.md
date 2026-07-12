@@ -451,6 +451,7 @@ Future improvements may include:
 Version	Date	Author	Description
 1.0.0	2026-07-07	DevOps Team	Initial deployment guide
 1.1.0	2026-07-12	DevOps Team	Add Cloudflare Workers deployment
+1.2.0	2026-07-12	DevOps Team	Neon PostgreSQL serverless adapter setup
 
 ---
 
@@ -458,87 +459,151 @@ Version	Date	Author	Description
 
 Overview
 
-WorkerVoice can be deployed to Cloudflare Workers using the OpenNext adapter.
-This provides global edge deployment at $5/month with generous limits.
+WorkerVoice deploys to Cloudflare Workers using the OpenNext adapter with
+Neon PostgreSQL as the serverless database.
 
-Local Wrangler Preview
+Architecture
+
+    Cloudflare Workers (OpenNext)
+    ├── Edge Middleware (auth, redirects)
+    ├── Next.js Server Components
+    ├── API Routes (Node.js runtime via nodejs_compat)
+    ├── Prisma Client (Edge HTTP adapter → Neon)
+    └── Neon PostgreSQL (HTTP, no TCP)
+
+Local Docker development continues to use PostgreSQL 16 via Docker Compose.
+
+---
+
+22. Neon PostgreSQL Setup
+
+Free Tier Limits
+
+* Storage: 512 MB
+* Compute: ~191.9 hours/month
+* Connections: ~100 concurrent (HTTP adapter avoids persistent connections)
+
+Create a Neon Project
+
+    1. Sign up at https://neon.tech
+    2. Create a new project (PostgreSQL 16)
+    3. Copy the connection string from the Neon dashboard:
+       postgresql://user:pass@ep-xxx.us-east-2.aws.neon.tech/dbname?sslmode=require
+    4. Run Prisma migrations against Neon:
+
+       npx prisma migrate deploy --schema=prisma/schema.prisma
+
+    5. Seed the database (optional):
+
+       npx prisma db execute --file prisma/seed/factories_bangkok.sql
+
+The HTTP adapter (`@prisma/adapter-neon`) is used automatically on Cloudflare.
+No persistent connections are needed — each Prisma query is a single HTTP request.
+
+---
+
+23. Local Wrangler Preview
 
 Prerequisites
 
-* Cloud database URL (Supabase or Neon)
+* Neon database URL (or any cloud PostgreSQL)
 * Copy `.dev.vars.example` to `.dev.vars`
-* Fill in cloud `DATABASE_URL` and secrets
+* Fill in `DATABASE_URL`, `AUTH_SECRET`, and `AUTH_URL`
 
 Commands
 
+    npm install
     npm run pages:build
     npm run pages:preview
 
 This builds the app and starts a local Worker preview on port 8788.
 
-Production Deployment
+---
+
+24. Production Deployment
 
 Prerequisites
 
-* Cloudflare account with Workers Paid plan ($5/month)
-* Cloud database (Supabase or Neon)
-* Custom domain configured in Cloudflare
+* Cloudflare account (Workers Paid plan for custom domains)
+* Neon PostgreSQL project with migrations applied
+* Cloudflare API token (via `npx wrangler login`)
 
 Steps
 
-    1. Set environment variables in Cloudflare Dashboard or `wrangler.jsonc`:
+    1. Login to Wrangler:
 
-       DATABASE_URL=postgresql://...neon.tech/...?sslmode=require
-       NEXTAUTH_SECRET=your-secret
-       NEXTAUTH_URL=https://your-domain.com
+       npx wrangler login
 
-    2. Build and deploy:
+    2. Set secrets in Cloudflare Dashboard or via CLI:
+
+       npx wrangler secret put DATABASE_URL
+       npx wrangler secret put AUTH_SECRET
+       npx wrangler secret put AUTH_URL
+       npx wrangler secret put RESEND_API_KEY      # optional
+       npx wrangler secret put EMAIL_FROM           # optional
+
+    3. Build and deploy:
 
        npm run pages:build
        npm run deploy
 
-    3. Verify deployment:
+    4. Verify deployment:
 
        npx wrangler tail
 
 Environment Variables
 
-Cloudflare-specific variables:
+Cloudflare-specific (set in .dev.vars or Cloudflare Dashboard):
 
-* `WRANGLER=1` — triggers HTTP adapter for Prisma
-* `CF_PAGES=1` — alternative detection flag
-* `CLOUDFLARE=1` — alternative detection flag
+* `DATABASE_URL` — Neon PostgreSQL connection string with `sslmode=require`
+* `AUTH_SECRET` — NextAuth v5 secret (generate with `npx auth secret`)
+* `AUTH_URL` — Public URL of your deployed app (e.g. https://workervoice.example.com)
+* `WRANGLER=1` — Triggers Prisma HTTP adapter (set automatically in wrangler dev)
 
-Database
+The app detects Cloudflare via `CF_PAGES`, `WRANGLER`, or `CLOUDFLARE` env vars
+and switches from the TCP adapter (`@prisma/adapter-pg`) to the HTTP adapter
+(`@prisma/adapter-neon`).
 
-Cloudflare Workers cannot use TCP connections.
-The app automatically switches to HTTP adapter (`@prisma/adapter-neon`) when
-running in Cloudflare environment.
+---
 
-Local development uses TCP adapter (`@prisma/adapter-pg`) for Docker PostgreSQL.
+25. Commands Reference
 
-Commands Reference
+Local Development (Docker)
 
-    npm run pages:dev       — Local Worker dev server
-    npm run pages:build     — Build for Cloudflare
-    npm run pages:preview   — Build + preview locally
-    npm run deploy          — Deploy to Cloudflare
-    npm run cf:tail         — Stream production logs
+    docker compose up -d          — Start PostgreSQL
+    npm run dev                   — Start Next.js dev server
+    npx prisma migrate dev        — Create and apply migrations
+    npx prisma studio             — Open database browser
 
-Troubleshooting
+Cloudflare Workers
+
+    npm run pages:dev             — Local Worker dev server
+    npm run pages:build           — Build for Cloudflare
+    npm run pages:preview         — Build + preview locally
+    npm run deploy                — Deploy to Cloudflare
+    npm run cf:tail               — Stream production logs
+
+---
+
+26. Troubleshooting
 
     1. "Worker size exceeds limit"
-       — Add heavy packages to `serverExternalPackages` in `next.config.mjs`
-       — Consider paid plan (10MB+ limit)
+       — Heavy packages are externalized via `serverExternalPackages` in next.config.mjs
+       — Workers Paid plan allows 10MB+ bundles
 
     2. "Could not connect to database"
-       — Ensure `DATABASE_URL` points to cloud DB, not localhost
+       — Ensure DATABASE_URL points to Neon, not localhost
        — Verify `sslmode=require` in connection string
+       — Check Neon project is not paused (free tier auto-suspend)
 
     3. "bcryptjs timeout"
-       — bcrypt takes ~100ms CPU, within paid plan 30s limit
-       — If hitting limits, reduce bcrypt rounds or use external auth
+       — bcrypt takes ~100ms CPU, within Workers limits
+       — If hitting limits, reduce bcrypt rounds or use external auth service
 
     4. "404 on pages.dev domain"
        — Workers deploy to `workers.dev`, not `pages.dev`
        — Configure custom domain in Cloudflare Dashboard
+
+    5. "Prisma adapter not switching"
+       — Verify WRANGLER=1 or CF_PAGES=1 is set in environment
+       — Check lib/prisma.ts detection logic
