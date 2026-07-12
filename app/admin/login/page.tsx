@@ -65,7 +65,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-linear-to-br from-emerald-600 via-emerald-500 to-teal-600 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="fixed inset-0 flex items-center justify-center bg-linear-to-br from-emerald-600 via-emerald-500 to-teal-600">
       {/* Success Toast */}
       {success && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50">
@@ -93,13 +93,13 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Card */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 opacity-0 animate-[fadeIn_0.5s_ease-out_0.2s_forwards]">
-          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-1">Welcome back</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Sign in to your admin account</p>
+        <div className="bg-white rounded-2xl shadow-2xl p-8 opacity-0 animate-[fadeIn_0.5s_ease-out_0.2s_forwards]">
+          <h2 className="text-xl font-semibold text-slate-800 mb-1">Welcome back</h2>
+          <p className="text-sm text-slate-500 mb-6">Sign in to your admin account</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
                 Email address
               </label>
               <input
@@ -109,12 +109,12 @@ export default function AdminLoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="admin@workervoice.com"
-                className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                className="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 text-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
                 Password
               </label>
               <input
@@ -124,7 +124,7 @@ export default function AdminLoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="Enter your password"
-                className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                className="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 text-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400"
               />
             </div>
 

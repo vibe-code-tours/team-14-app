@@ -23,7 +23,7 @@ const DEFAULT_AVATAR =
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { status } = useSession();
+  const { status, update } = useSession();
   const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -105,6 +105,7 @@ export default function ProfilePage() {
       if (res.ok) {
         setSaving(false);
         setMessage("Profile updated successfully!");
+        await update();
         setTimeout(() => setMessage(""), 1500);
       } else {
         const data = await res.json();
