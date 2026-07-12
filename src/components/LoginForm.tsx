@@ -38,7 +38,8 @@ export function LoginForm() {
 
     // Check if user is admin and redirect accordingly
     const res = await fetch("/api/auth/session");
-    const session = await res.json();
+    const text = await res.text();
+    const session = text ? JSON.parse(text) : null;
 
     if (session?.user?.isAdmin) {
       router.push("/admin/dashboard");

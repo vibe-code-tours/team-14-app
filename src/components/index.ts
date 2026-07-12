@@ -15,3 +15,5 @@ export { FactoryFilters } from "./FactoryFilters";
 export { AboutUs } from "./AboutUs";
 export { ContactLinks } from "./ContactLinks";
 export { LanguageSwitcher } from "./LanguageSwitcher";
+export { UserAvatar } from "./UserAvatar";
+export { UserMenu } from "./UserMenu";

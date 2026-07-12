@@ -12,7 +12,12 @@ export const translations: Record<string, TranslationEntry> = {
   "nav.contact": { en: "Contact", my: "ဆက်သွယ်ရန်" },
   "nav.login": { en: "Log in", my: "ဝင်ရောက်ရန်" },
   "nav.logout": { en: "Log out", my: "ထွက်ရန်" },
+  "nav.user": { en: "User", my: "အသုံးပြုသူ" },
+  "nav.adminDashboard": { en: "Admin Dashboard", my: "Admin Dashboard" },
+  "nav.createFactory": { en: "Create Factory", my: "စက်ရုံ ဖန်တီးရန်" },
+  "nav.loggingOut": { en: "Logging out...", my: "ထွက်နေသည်..." },
   "nav.profile": { en: "My Profile", my: "ကျွန်ုပ်၏ ပရိုဖိုင်" },
+  "nav.changePassword": { en: "Change Password", my: "စကားဝှက် ပြောင်းရန်" },
 
   // Privacy Banner
   "privacy.title": {

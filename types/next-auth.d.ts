@@ -24,5 +24,6 @@ declare module "next-auth/jwt" {
     role: string;
     isAdmin: boolean;
     isSuperAdmin: boolean;
+    image: string | null;
   }
 }
