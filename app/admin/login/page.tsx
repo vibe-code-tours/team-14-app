@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -14,9 +13,9 @@ export default function AdminLoginPage() {
   const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
-    const showLogout = localStorage.getItem("logout-success");
+    const showLogout = localStorage.getItem("admin-logout-success");
     if (showLogout) {
-      localStorage.removeItem("logout-success");
+      localStorage.removeItem("admin-logout-success");
       /* eslint-disable react-hooks/set-state-in-effect */
       setSuccessMsg("Logout successful!");
       setSuccess(true);
@@ -37,21 +36,16 @@ export default function AdminLoginPage() {
     setError("");
 
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
+      const res = await fetch("/api/admin/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (result?.error) {
-        throw new Error("Invalid email or password");
-      }
+      const data = await res.json();
 
-      const res = await fetch("/api/auth/session");
-      const session = await res.json();
-
-      if (!session?.user?.isAdmin) {
-        throw new Error("Unauthorized: Admin access required");
+      if (!res.ok) {
+        throw new Error(data.error || "Login failed");
       }
 
       setSuccessMsg("Login successful! Redirecting...");
@@ -65,7 +59,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-linear-to-br from-emerald-600 via-emerald-500 to-teal-600">
+    <div className="fixed inset-0 flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Success Toast */}
       {success && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50">
@@ -93,13 +87,13 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 opacity-0 animate-[fadeIn_0.5s_ease-out_0.2s_forwards]">
-          <h2 className="text-xl font-semibold text-slate-800 mb-1">Welcome back</h2>
-          <p className="text-sm text-slate-500 mb-6">Sign in to your admin account</p>
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 opacity-0 animate-[fadeIn_0.5s_ease-out_0.2s_forwards]">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-1">Welcome back</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Sign in to your admin account</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-white mb-1.5">
                 Email address
               </label>
               <input
@@ -109,12 +103,12 @@ export default function AdminLoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="admin@workervoice.com"
-                className="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 text-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400"
+                className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-white mb-1.5">
                 Password
               </label>
               <input
@@ -124,12 +118,12 @@ export default function AdminLoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="Enter your password"
-                className="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 text-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400"
+                className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
 
             {error && (
-              <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-xl border border-red-100 flex items-center gap-2">
+              <div className="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-sm px-4 py-3 rounded-xl border border-red-100 dark:border-red-800 flex items-center gap-2">
                 <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
