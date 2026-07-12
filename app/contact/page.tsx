@@ -39,21 +39,21 @@ export default function ContactPage() {
   const [showSuggestModal, setShowSuggestModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
       <Navbar />
 
       <main className="flex-grow max-w-3xl mx-auto p-4 md:p-8 mt-6 w-full space-y-8 animate-fade-in">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-extrabold text-slate-800">
+          <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">
             📱 {t("contact.title")}
           </h1>
-          <p className="text-slate-500">Contact Us</p>
+          <p className="text-slate-500 dark:text-slate-400">Contact Us</p>
         </div>
 
         {/* Social Links */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8 space-y-6">
-          <h2 className="text-lg font-bold text-slate-800">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 md:p-8 space-y-6">
+          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">
             {t("contact.socialMedia")}
           </h2>
 
@@ -76,7 +76,7 @@ export default function ContactPage() {
         </div>
 
         {/* Info */}
-        <div className="bg-amber-50 border border-amber-100 rounded-2xl p-6 text-sm text-amber-800">
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-100 rounded-2xl p-6 text-sm text-amber-800">
           <p className="font-semibold mb-2">🔒 Privacy</p>
           <p>{t("contact.privacy")}</p>
         </div>

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { ThemeToggle } from "./ThemeToggle";
 import { ReviewModal } from "./ReviewModal";
 import { UserAvatar } from "./UserAvatar";
 import { UserMenu } from "./UserMenu";
@@ -21,7 +22,7 @@ export function Navbar() {
 
   return (
     <>
-    <nav className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 px-4 sm:py-4 sm:px-6 sticky top-0 z-20 shadow-md">
+    <nav className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-slate-800 dark:to-slate-900 text-white py-3 px-4 sm:py-4 sm:px-6 sticky top-0 z-20 shadow-md dark:shadow-slate-900/50">
       <div className="max-w-5xl mx-auto flex justify-between items-center">
         <Link
           href="/"
@@ -45,6 +46,7 @@ export function Navbar() {
             {t("nav.contact")}
           </Link>
           <LanguageSwitcher />
+          <ThemeToggle />
           <button
             onClick={() => setReviewModalOpen(true)}
             className="bg-white text-emerald-600 px-4 py-1.5 rounded-full font-semibold shadow-sm hover:bg-gray-100 transition"
@@ -53,12 +55,19 @@ export function Navbar() {
           </button>
 
           {status === "authenticated" ? (
-            <UserMenu
-              name={session.user?.name}
-              email={session.user?.email}
-              image={session.user?.image}
-              isAdmin={session.user?.isAdmin}
-            />
+            <>
+              {session.user?.isAdmin && (
+                <Link href="/admin/dashboard" className="bg-white/20 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-white/30 transition">
+                  🛡️
+                </Link>
+              )}
+              <UserMenu
+                name={session.user?.name}
+                email={session.user?.email}
+                image={session.user?.image}
+                isAdmin={session.user?.isAdmin}
+              />
+            </>
           ) : status === "unauthenticated" ? (
             <Link href="/login" className="hover:text-emerald-200 transition">
               {t("nav.login")}
@@ -109,8 +118,9 @@ export function Navbar() {
           >
             {t("nav.contact")}
           </Link>
-          <div className="py-2 px-2">
+          <div className="py-2 px-2 flex items-center gap-2">
             <LanguageSwitcher />
+            <ThemeToggle />
           </div>
           <button
             onClick={() => { setReviewModalOpen(true); setMenuOpen(false); }}
@@ -122,6 +132,15 @@ export function Navbar() {
           {status === "authenticated" ? (
             <>
               <div className="border-t border-white/20 my-1" />
+              {session.user?.isAdmin && (
+                <Link
+                  href="/admin/dashboard"
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm font-medium"
+                >
+                  🛡️ {t("nav.adminDashboard")}
+                </Link>
+              )}
               <Link
                 href="/profile"
                 onClick={() => setMenuOpen(false)}
@@ -160,15 +179,6 @@ export function Navbar() {
               >
                 🏭 {t("nav.createFactory")}
               </Link>
-              {session.user?.isAdmin && (
-                <Link
-                  href="/admin/dashboard"
-                  onClick={() => setMenuOpen(false)}
-                  className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
-                >
-                  🛡️ {t("nav.adminDashboard")}
-                </Link>
-              )}
               <button
                 onClick={() => { signOut({ callbackUrl: "/" }); setMenuOpen(false); }}
                 className="block w-full text-left py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm text-red-300"

@@ -102,14 +102,14 @@ export function PublicFactoryForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Notice */}
-      <div className="bg-blue-50 text-blue-800 p-4 rounded-xl text-sm">
+      <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200 p-4 rounded-xl text-sm">
         📝 Your submission will be reviewed by an admin before appearing
         publicly.
       </div>
 
       {/* Basic Info */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-        <h3 className="text-lg font-bold text-slate-800 mb-4">
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">
           📋 Basic Information
         </h3>
         <div className="grid md:grid-cols-2 gap-4">
@@ -161,8 +161,8 @@ export function PublicFactoryForm() {
       </div>
 
       {/* Address */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-        <h3 className="text-lg font-bold text-slate-800 mb-4">📍 Address</h3>
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">📍 Address</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <Input
             label="House Number"
@@ -225,13 +225,13 @@ export function PublicFactoryForm() {
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-800 p-4 rounded-xl text-sm">
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 p-4 rounded-xl text-sm">
           {error}
         </div>
       )}
 
       {success && (
-        <div className="bg-green-50 text-green-800 p-4 rounded-xl text-sm">
+        <div className="bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 p-4 rounded-xl text-sm">
           ✅ Factory submitted successfully! It will appear after admin review.
         </div>
       )}

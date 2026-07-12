@@ -115,12 +115,12 @@ export default function FactoryDetailPage({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
         <Navbar />
         <main className="flex-grow max-w-4xl mx-auto p-4 mt-6 w-full">
           <div className="animate-pulse space-y-6">
-            <div className="bg-white p-8 rounded-2xl h-64"></div>
-            <div className="bg-white p-6 rounded-2xl h-48"></div>
+            <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl h-64"></div>
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl h-48"></div>
           </div>
         </main>
         <Footer />
@@ -130,10 +130,10 @@ export default function FactoryDetailPage({
 
   if (!factory) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
         <Navbar />
         <main className="flex-grow max-w-4xl mx-auto p-4 mt-6 w-full text-center py-16">
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">
             {t("factoryDetail.notFound")}
           </h1>
           <Link href="/factories" className="text-emerald-600 hover:underline">
@@ -148,28 +148,28 @@ export default function FactoryDetailPage({
   const stats = reviewsData?.stats;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
       <Navbar />
 
       <main className="flex-grow max-w-4xl mx-auto p-4 md:p-8 mt-6 w-full space-y-6 animate-fade-in">
         {/* Factory Hero Card */}
-        <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden">
           {/* Gradient accent line */}
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-full">
+                <span className="text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 px-3 py-1 rounded-full">
                   {t("factoryDetail.thailand")}
                 </span>
               </div>
 
               <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-slate-800">
+                <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100">
                   {factory.name}
                 </h1>
-                <p className="text-slate-500 flex items-center gap-1 mt-1 text-sm">
+                <p className="text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1 text-sm">
                   📍 {[factory.district, factory.province].filter(Boolean).join(", ") || "Thailand"}
                 </p>
               </div>
@@ -178,28 +178,28 @@ export default function FactoryDetailPage({
                 <div className="flex items-center gap-2">
                   <StarRating rating={stats?.avgOverall ?? 0} size="lg" showValue />
                 </div>
-                <div className="text-xs text-slate-400">
+                <div className="text-xs text-slate-400 dark:text-slate-500">
                   {t("factoryDetail.basedOn").replace("{count}", String(stats?.count || 0))}
                 </div>
               </div>
             </div>
 
             {/* Multi-Criteria Progress Bars */}
-            <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100 flex flex-col justify-center space-y-5">
-              <h3 className="font-bold text-slate-700 text-sm tracking-wide uppercase">
+            <div className="bg-slate-50/50 dark:bg-slate-700/30 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col justify-center space-y-5">
+              <h3 className="font-bold text-slate-700 dark:text-slate-200 text-sm tracking-wide uppercase">
                 {t("factoryDetail.multiCriteriaScore")}
               </h3>
 
               <div className="space-y-4">
                 {/* Salary */}
                 <div className="space-y-1">
-                  <div className="flex justify-between text-xs font-medium text-slate-500">
+                  <div className="flex justify-between text-xs font-medium text-slate-500 dark:text-slate-400">
                     <span>{t("factoryDetail.salaryScore")}</span>
-                    <span className="font-semibold text-slate-700">
+                    <span className="font-semibold text-slate-700 dark:text-slate-200">
                       {stats?.avgSalary?.toFixed(1) || "0.0"}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div className="w-full bg-slate-200 dark:bg-slate-600 rounded-full h-2">
                     <div
                       className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
                       style={{ width: `${((stats?.avgSalary || 0) / 5) * 100}%` }}
@@ -209,13 +209,13 @@ export default function FactoryDetailPage({
 
                 {/* OT */}
                 <div className="space-y-1">
-                  <div className="flex justify-between text-xs font-medium text-slate-500">
+                  <div className="flex justify-between text-xs font-medium text-slate-500 dark:text-slate-400">
                     <span>{t("factoryDetail.otScore")}</span>
-                    <span className="font-semibold text-slate-700">
+                    <span className="font-semibold text-slate-700 dark:text-slate-200">
                       {stats?.avgOt?.toFixed(1) || "0.0"}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div className="w-full bg-slate-200 dark:bg-slate-600 rounded-full h-2">
                     <div
                       className="bg-amber-500 h-2 rounded-full transition-all duration-500"
                       style={{ width: `${((stats?.avgOt || 0) / 5) * 100}%` }}
@@ -225,13 +225,13 @@ export default function FactoryDetailPage({
 
                 {/* Housing */}
                 <div className="space-y-1">
-                  <div className="flex justify-between text-xs font-medium text-slate-500">
+                  <div className="flex justify-between text-xs font-medium text-slate-500 dark:text-slate-400">
                     <span>{t("factoryDetail.housingScore")}</span>
-                    <span className="font-semibold text-slate-700">
+                    <span className="font-semibold text-slate-700 dark:text-slate-200">
                       {stats?.avgHousing?.toFixed(1) || "0.0"}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div className="w-full bg-slate-200 dark:bg-slate-600 rounded-full h-2">
                     <div
                       className="bg-blue-500 h-2 rounded-full transition-all duration-500"
                       style={{
@@ -255,39 +255,39 @@ export default function FactoryDetailPage({
           {/* About Tab */}
           <TabsContent value="about" className="space-y-6">
             {factory.businessActivity && (
-              <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-3">
-                <h3 className="font-bold text-slate-800 text-sm">{t("factoryDetail.aboutSection")}</h3>
-                <p className="text-slate-600 leading-relaxed text-sm">
+              <section className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-3">
+                <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm">{t("factoryDetail.aboutSection")}</h3>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
                   {factory.businessActivity}
                 </p>
               </section>
             )}
 
-            <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-3">
-              <h3 className="font-bold text-slate-800 text-sm">{t("factoryDetail.detailsSection")}</h3>
+            <section className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-3">
+              <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm">{t("factoryDetail.detailsSection")}</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-slate-400">{t("factoryDetail.location")}</span>
-                  <p className="text-slate-700 font-medium">
+                  <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.location")}</span>
+                  <p className="text-slate-700 dark:text-slate-200 font-medium">
                     {[factory.district, factory.province].filter(Boolean).join(", ") || "Thailand"}
                   </p>
                 </div>
                 <div>
-                  <span className="text-slate-400">{t("factoryDetail.workers")}</span>
-                  <p className="text-slate-700 font-medium">
+                  <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.workers")}</span>
+                  <p className="text-slate-700 dark:text-slate-200 font-medium">
                     {factory.workers?.toLocaleString() || "—"}
                   </p>
                 </div>
                 {factory.operator && (
                   <div>
-                    <span className="text-slate-400">{t("factoryDetail.operator")}</span>
-                    <p className="text-slate-700 font-medium">{factory.operator}</p>
+                    <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.operator")}</span>
+                    <p className="text-slate-700 dark:text-slate-200 font-medium">{factory.operator}</p>
                   </div>
                 )}
                 {factory.type && (
                   <div>
-                    <span className="text-slate-400">{t("factoryDetail.type")}</span>
-                    <p className="text-slate-700 font-medium">{factory.type}</p>
+                    <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.type")}</span>
+                    <p className="text-slate-700 dark:text-slate-200 font-medium">{factory.type}</p>
                   </div>
                 )}
               </div>
@@ -297,9 +297,9 @@ export default function FactoryDetailPage({
           {/* Reviews Tab */}
           <TabsContent value="reviews" className="space-y-4">
             <div className="flex justify-between items-center mt-4">
-              <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 {t("factoryDetail.workerReviews")}
-                <span className="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-medium">
+                <span className="text-xs bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full font-medium">
                   {stats?.count || 0}
                 </span>
               </h2>
@@ -314,7 +314,7 @@ export default function FactoryDetailPage({
             {/* Reviews Feed */}
             <div className="space-y-4">
               {!reviewsData?.data || reviewsData.data.length === 0 ? (
-                <div className="bg-white p-8 rounded-2xl border text-center text-slate-400">
+                <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl border text-center text-slate-400 dark:text-slate-500">
                   {t("factoryDetail.noReviews")}
                 </div>
               ) : (
@@ -326,48 +326,48 @@ export default function FactoryDetailPage({
                   return (
                     <div
                       key={review.id}
-                      className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4 hover:shadow-md transition duration-300 relative overflow-hidden"
+                      className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-4 hover:shadow-md transition duration-300 relative overflow-hidden"
                     >
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-3">
-                          <div className="bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-800 font-bold w-10 h-10 rounded-full flex items-center justify-center shadow-inner">
+                          <div className="bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/40 dark:to-teal-900/40 text-emerald-800 dark:text-emerald-200 font-bold w-10 h-10 rounded-full flex items-center justify-center shadow-inner">
                             {review.workerRole.charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <h4 className="font-bold text-slate-800 text-sm flex items-center gap-1">
+                            <h4 className="font-bold text-slate-800 dark:text-slate-100 text-sm flex items-center gap-1">
                               {review.workerRole}{" "}
                               {getCountryFlag(review.countryFrom)}
                             </h4>
-                            <p className="text-xs text-slate-400 font-medium">
+                            <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">
                               {t("factoryDetail.reviewFrom").replace("{country}", review.countryFrom).replace("{date}", formatDate(review.createdAt))}
                             </p>
                           </div>
                         </div>
-                        <div className="bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full flex items-center">
+                        <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 px-2.5 py-1 rounded-full flex items-center">
                           <StarRating rating={overallRating} size="sm" showValue />
                         </div>
                       </div>
 
-                      <p className="text-slate-600 text-sm leading-relaxed">
+                      <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
                         {review.reviewText}
                       </p>
 
-                      <div className="flex gap-4 text-xs text-slate-400 border-t border-slate-50 pt-3 font-medium">
+                      <div className="flex gap-4 text-xs text-slate-400 dark:text-slate-500 border-t border-slate-50 dark:border-slate-700 pt-3 font-medium">
                         <span className="flex items-center gap-1">
                           💰 Salary:{" "}
-                          <strong className="text-slate-600">
+                          <strong className="text-slate-600 dark:text-slate-300">
                             {review.ratingSalary}/5
                           </strong>
                         </span>
                         <span className="flex items-center gap-1">
                           ⏱️ OT:{" "}
-                          <strong className="text-slate-600">
+                          <strong className="text-slate-600 dark:text-slate-300">
                             {review.ratingOt}/5
                           </strong>
                         </span>
                         <span className="flex items-center gap-1">
                           🏠 Housing:{" "}
-                          <strong className="text-slate-600">
+                          <strong className="text-slate-600 dark:text-slate-300">
                             {review.ratingHousing}/5
                           </strong>
                         </span>

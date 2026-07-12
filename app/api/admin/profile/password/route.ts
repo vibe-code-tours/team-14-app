@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { getAdminSession } from "@/lib/admin-auth";
 import { changeAdminPassword } from "@/lib/admin-profile";
 
 export async function PUT(request: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.email) {
+  const session = await getAdminSession();
+  if (!session?.email) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -18,7 +18,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    await changeAdminPassword(session.user.email, currentPassword, newPassword);
+    await changeAdminPassword(session.email, currentPassword, newPassword);
     return NextResponse.json({ message: "Password updated successfully" });
   } catch (error) {
     const message =
