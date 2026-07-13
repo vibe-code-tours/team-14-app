@@ -5,7 +5,7 @@ import { RequestResetForm } from "@/src/components/ResetPasswordForm";
 
 export default function RequestResetPage() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
       <Navbar />
 
       <main className="flex-grow max-w-md mx-auto p-4 mt-12 w-full">

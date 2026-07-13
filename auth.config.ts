@@ -1,25 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
 
-// Edge-safe config: no Prisma adapter, no bcrypt. This is imported by
-// middleware.ts (Edge runtime) as well as auth.ts (Node runtime).
 export default {
-  providers: [
-    Credentials({
-      credentials: {
-        email: {},
-        password: {},
-      },
-      // Real verification happens in auth.ts's authorize(), which needs
-      // Prisma + bcrypt and therefore cannot live in this Edge-safe file.
-      authorize: async () => null,
-    }),
-  ],
+  providers: [],
   session: { strategy: "jwt" },
-  pages: { signIn: "/login" },
-  callbacks: {
-    authorized({ auth }) {
-      return !!auth?.user;
-    },
-  },
+  pages: { signIn: "/admin/login" },
 } satisfies NextAuthConfig;

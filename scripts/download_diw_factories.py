@@ -5,7 +5,7 @@ with folder structure: region/province/district.xls
 
 Uses Playwright to scrape the tree structure, then requests to download files.
 
-Source: http://userdb.diw.go.th/factoryPublic/tumbol.asp
+Source: https://userdb.diw.go.th/factoryPublic/tumbol.asp
 
 Usage:
   pip install playwright requests
@@ -22,8 +22,8 @@ from pathlib import Path
 import requests
 from playwright.sync_api import sync_playwright
 
-BASE_URL = "http://userdb.diw.go.th/factoryPublic/tumbol.asp"
-DOWNLOAD_URL = "http://userdb.diw.go.th/factoryPublic/results3.asp"
+BASE_URL = "https://userdb.diw.go.th/factoryPublic/tumbol.asp"
+DOWNLOAD_URL = "https://userdb.diw.go.th/factoryPublic/results3.asp"
 OUTPUT_DIR = Path(__file__).parent.parent / "diw_factories"
 
 # Region mapping

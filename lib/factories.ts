@@ -20,7 +20,7 @@ export async function searchFactories(params: FactorySearchParams) {
     region,
     workersMin,
     workersMax,
-    sort = "id_asc",
+    sort = "id_desc",
     limit = 20,
     offset = 0,
   } = params;
@@ -254,15 +254,56 @@ async function getRegionProvinces(region: string): Promise<string[]> {
     .map(([province]) => province);
 }
 
+export async function createPublicFactory(data: {
+  name: string;
+  regNumber?: string;
+  operator?: string;
+  businessActivity?: string;
+  houseNumber?: string;
+  village?: string;
+  soi?: string;
+  road?: string;
+  subdistrict?: string;
+  district?: string;
+  province?: string;
+  postalCode?: string;
+  phone?: string;
+  type?: string;
+  workers?: number;
+  country?: string;
+}) {
+  return prisma.factory.create({
+    data: {
+      name: data.name,
+      regNumber: data.regNumber || null,
+      operator: data.operator || null,
+      businessActivity: data.businessActivity || null,
+      houseNumber: data.houseNumber || null,
+      village: data.village || null,
+      soi: data.soi || null,
+      road: data.road || null,
+      subdistrict: data.subdistrict || null,
+      district: data.district || null,
+      province: data.province || null,
+      postalCode: data.postalCode || null,
+      phone: data.phone || null,
+      type: data.type || null,
+      workers: data.workers || null,
+      country: data.country || "Thailand",
+      status: "pending",
+    },
+  });
+}
+
 function getOrderBy(sort: string) {
   const sortOptions: Record<string, object> = {
     name_asc: { name: "asc" },
     name_desc: { name: "desc" },
     workers_asc: { workers: "asc" },
     workers_desc: { workers: "desc" },
-    id_asc: { id: "asc" },
+    id_desc: { id: "desc" },
     newest: { id: "desc" },
   };
 
-  return sortOptions[sort] || sortOptions.id_asc;
+  return sortOptions[sort] || sortOptions.id_desc;
 }

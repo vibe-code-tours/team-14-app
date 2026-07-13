@@ -82,6 +82,17 @@ export async function registerUser(input: RegisterUserInput) {
   const verifyUrl = `${process.env.AUTH_URL || "http://localhost:3000"}/verify-email?token=${rawToken}&email=${encodeURIComponent(email)}`;
   await sendVerificationEmail(email, verifyUrl);
 
+  // Auto-verify in dev mode (no Resend API key)
+  if (!process.env.RESEND_API_KEY) {
+    await prisma.user.update({
+      where: { email },
+      data: { emailVerified: new Date() },
+    });
+    await prisma.verificationToken.delete({
+      where: { identifier_token: { identifier: email, token: hashToken(rawToken) } },
+    });
+  }
+
   return user;
 }
 
@@ -100,7 +111,10 @@ export async function verifyCredentials(email: string, password: string) {
     id: user.id,
     email: user.email,
     role: user.role,
+    isAdmin: user.isAdmin,
+    isSuperAdmin: user.isSuperAdmin,
     displayName: getPublicDisplayName(user),
+    image: user.image,
   };
 }
 
@@ -168,4 +182,36 @@ export async function resetPassword(rawToken: string, newPassword: string) {
   });
 
   await prisma.passwordResetToken.deleteMany({ where: { userId: record.userId } });
+}
+
+export async function changePassword(
+  userId: number,
+  currentPassword: string,
+  newPassword: string
+) {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (!user.passwordHash) {
+    throw new Error("Your account does not have a password. Please reset your password instead.");
+  }
+
+  const valid = await bcrypt.compare(currentPassword, user.passwordHash);
+  if (!valid) {
+    throw new Error("Current password is incorrect");
+  }
+
+  if (newPassword.length < 8) {
+    throw new Error("New password must be at least 8 characters");
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, 12);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { passwordHash },
+  });
 }

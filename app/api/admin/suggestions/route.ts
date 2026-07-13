@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPendingSuggestions } from "@/lib/suggestions";
-import { verifyAdminAuth } from "@/lib/admin";
+import { getAdminSession } from "@/lib/admin-auth";
 
 export async function GET(request: NextRequest) {
-  // Verify admin authentication
-  if (!verifyAdminAuth(request)) {
+  const session = await getAdminSession();
+  if (!session?.isAdmin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

@@ -1,14 +1,11 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "./lib/prisma";
 import { verifyCredentials } from "./lib/users";
 import { checkRateLimit } from "./lib/rate-limit";
 import authConfig from "./auth.config";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  adapter: PrismaAdapter(prisma),
   providers: [
     Credentials({
       credentials: {
@@ -28,9 +25,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!user) return null;
 
         return {
-          id: user.id,
+          id: String(user.id),
           email: user.email,
           role: user.role,
+          isAdmin: user.isAdmin,
+          isSuperAdmin: user.isSuperAdmin,
           name: user.displayName,
         };
       },
@@ -41,6 +40,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.isAdmin = (user as any).isAdmin ?? false;
+        token.isSuperAdmin = (user as any).isSuperAdmin ?? false;
       }
       return token;
     },
@@ -48,6 +49,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
+        session.user.isAdmin = token.isAdmin as boolean;
+        session.user.isSuperAdmin = token.isSuperAdmin as boolean;
       }
       return session;
     },

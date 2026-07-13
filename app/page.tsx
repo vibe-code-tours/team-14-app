@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
@@ -36,7 +36,7 @@ export default function Home() {
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedWorkerRange, setSelectedWorkerRange] = useState("");
 
-  const fetchFactories = async (search?: string) => {
+  const fetchFactories = useCallback(async (search?: string) => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -72,11 +72,12 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedRegion, selectedWorkerRange]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchFactories();
-  }, [selectedRegion, selectedWorkerRange]);
+  }, [fetchFactories]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,32 +91,32 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Navbar onSuggestClick={() => setShowSuggestModal(true)} />
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
+      <Navbar />
 
       {/* Privacy Banner */}
       <PrivacyBanner />
 
       <main className="flex-grow max-w-5xl mx-auto p-4 mt-6 w-full space-y-8 animate-fade-in">
         {/* Search Hero */}
-        <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm text-center border border-slate-100">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-slate-800">
+        <div className="bg-white dark:bg-slate-800 p-8 md:p-12 rounded-2xl shadow-sm text-center border border-slate-100 dark:border-slate-700">
+          <h2 className="text-3xl font-extrabold mb-8 text-slate-800 dark:text-slate-100">
             {t("hero.title")}
           </h2>
-          <p className="text-slate-500 mb-2">{t("hero.subtitle")}</p>
+          <p className="text-slate-500 dark:text-slate-400 mb-6">{t("hero.subtitle")}</p>
           <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl overflow-hidden focus-within:ring-2 focus:ring-emerald-500 transition shadow-inner">
+            <div className="flex items-center bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl overflow-hidden focus-within:ring-2 focus:ring-emerald-500 transition shadow-inner">
               <span className="pl-4 text-slate-400">🔍</span>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t("hero.placeholder")}
-                className="w-full p-4 bg-transparent outline-none"
+                className="w-full min-w-0 p-4 bg-transparent outline-none text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
               <button
                 type="submit"
-                className="bg-emerald-600 text-white px-6 py-4 font-medium hover:bg-emerald-700 transition active:scale-95"
+                className="bg-emerald-600 text-white px-4 py-4 sm:px-6 font-medium hover:bg-emerald-700 transition active:scale-95 shrink-0"
               >
                 {t("hero.searchButton")}
               </button>
@@ -128,8 +129,8 @@ export default function Home() {
 
         {/* Factories Section */}
         <div>
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-4 border-b border-slate-200 pb-2">
-            <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+          <div className="flex flex-row justify-between items-center gap-2 mb-4 border-b border-slate-200 dark:border-slate-600 pb-2">
+            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
               <span>🏭</span> {t("factories.title")}
             </h3>
             <Link
@@ -156,17 +157,17 @@ export default function Home() {
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
                   key={i}
-                  className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 animate-pulse"
+                  className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 animate-pulse"
                 >
-                  <div className="h-5 bg-slate-200 rounded w-3/4 mb-2"></div>
-                  <div className="h-4 bg-slate-200 rounded w-1/2 mb-2"></div>
-                  <div className="h-3 bg-slate-200 rounded w-1/4"></div>
+                  <div className="h-5 bg-slate-200 dark:bg-slate-600 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-1/2 mb-2"></div>
+                  <div className="h-3 bg-slate-200 dark:bg-slate-600 rounded w-1/4"></div>
                 </div>
               ))}
             </div>
           ) : factories.length === 0 ? (
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 text-center">
-              <p className="text-slate-500 mb-4">{t("factories.noResults")}</p>
+            <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 text-center">
+              <p className="text-slate-500 dark:text-slate-400 mb-4">{t("factories.noResults")}</p>
               <button
                 onClick={handleClearFilters}
                 className="text-emerald-600 font-medium hover:underline"
@@ -180,7 +181,7 @@ export default function Home() {
                 <Link
                   key={factory.id}
                   href={`/factories/${factory.id}`}
-                  className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition block group"
+                  className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 cursor-pointer hover:shadow-md transition block group"
                 >
                   <div className="flex justify-between items-start">
                     <h4 className="font-bold text-lg text-emerald-700 group-hover:text-emerald-600 line-clamp-1">
@@ -190,14 +191,14 @@ export default function Home() {
                       🇹🇭
                     </span>
                   </div>
-                  <p className="text-sm text-slate-500 mb-2">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
                     {[factory.district, factory.province]
                       .filter(Boolean)
-                      .join(", ") || "Thailand"}
+                      .join(", ") || t("factoryList.thailand")}
                   </p>
                   {factory.workers && (
-                    <p className="text-xs text-slate-400">
-                      {factory.workers.toLocaleString()} workers
+                    <p className="text-xs text-slate-400 dark:text-slate-500">
+                      {factory.workers.toLocaleString()} {t("factoryList.workers")}
                     </p>
                   )}
                 </Link>

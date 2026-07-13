@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateSuggestionStatus } from "@/lib/suggestions";
-import { verifyAdminAuth } from "@/lib/admin";
+import { getAdminSession } from "@/lib/admin-auth";
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string } > }
 ) {
-  // Verify admin authentication
-  if (!verifyAdminAuth(request)) {
+  const session = await getAdminSession();
+  if (!session?.isAdmin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
