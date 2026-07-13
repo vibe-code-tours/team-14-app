@@ -94,6 +94,88 @@ export async function getFactoryById(id: number) {
   });
 }
 
+export async function getFactoriesByUserId(userId: number, limit = 20, offset = 0) {
+  const [data, total] = await Promise.all([
+    prisma.factory.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: limit,
+      skip: offset,
+      select: {
+        id: true,
+        name: true,
+        operator: true,
+        province: true,
+        district: true,
+        status: true,
+        createdAt: true,
+      },
+    }),
+    prisma.factory.count({ where: { userId } }),
+  ]);
+
+  return { data, total, limit, offset };
+}
+
+export async function updateFactory(
+  id: number,
+  userId: number,
+  data: {
+    name?: string;
+    regNumber?: string;
+    operator?: string;
+    businessActivity?: string;
+    houseNumber?: string;
+    village?: string;
+    soi?: string;
+    road?: string;
+    subdistrict?: string;
+    district?: string;
+    province?: string;
+    postalCode?: string;
+    phone?: string;
+    type?: string;
+    workers?: number;
+    country?: string;
+  }
+) {
+  // Verify ownership
+  const factory = await prisma.factory.findUnique({
+    where: { id },
+    select: { userId: true },
+  });
+
+  if (!factory) {
+    throw new Error("Factory not found");
+  }
+
+  if (factory.userId !== userId) {
+    throw new Error("Unauthorized");
+  }
+
+  return prisma.factory.update({
+    where: { id },
+    data: {
+      name: data.name,
+      regNumber: data.regNumber || null,
+      operator: data.operator || null,
+      businessActivity: data.businessActivity || null,
+      houseNumber: data.houseNumber || null,
+      village: data.village || null,
+      soi: data.soi || null,
+      road: data.road || null,
+      subdistrict: data.subdistrict || null,
+      district: data.district || null,
+      province: data.province || null,
+      postalCode: data.postalCode || null,
+      phone: data.phone || null,
+      type: data.type || null,
+      workers: data.workers || null,
+      country: data.country || "Thailand",
+    },
+  });
+}
+
 export async function getFactoryReviews(factoryId: number) {
   const [reviews, stats] = await Promise.all([
     prisma.review.findMany({
@@ -271,6 +353,7 @@ export async function createPublicFactory(data: {
   type?: string;
   workers?: number;
   country?: string;
+  userId?: number;
 }) {
   return prisma.factory.create({
     data: {
@@ -291,6 +374,7 @@ export async function createPublicFactory(data: {
       workers: data.workers || null,
       country: data.country || "Thailand",
       status: "pending",
+      userId: data.userId || null,
     },
   });
 }
