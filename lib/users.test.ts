@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("./prisma", () => ({
   prisma: {
-    user: { findUnique: vi.fn(), create: vi.fn(), update: vi.fn() },
+    user: { findUnique: vi.fn(), findFirst: vi.fn(), create: vi.fn(), update: vi.fn(), updateMany: vi.fn() },
     verificationToken: { create: vi.fn(), findUnique: vi.fn(), delete: vi.fn() },
     passwordResetToken: { create: vi.fn(), findUnique: vi.fn(), deleteMany: vi.fn() },
   },
@@ -51,7 +51,7 @@ describe("registerUser", () => {
   });
 
   it("rejects duplicate emails", async () => {
-    (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({ id: "1" });
+    (prisma.user.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue({ id: "1" });
 
     await expect(
       registerUser({ email: "a@b.com", password: "longenough", fullName: "Aye Aye" })
@@ -59,7 +59,7 @@ describe("registerUser", () => {
   });
 
   it("creates a user without requiring a nickname", async () => {
-    (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+    (prisma.user.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
     (prisma.user.create as ReturnType<typeof vi.fn>).mockResolvedValue({
       id: "1",
       email: "a@b.com",
@@ -83,7 +83,7 @@ describe("registerUser", () => {
   });
 
   it("treats an empty-string nickname the same as an omitted one", async () => {
-    (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+    (prisma.user.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
     (prisma.user.create as ReturnType<typeof vi.fn>).mockResolvedValue({
       id: "1",
       email: "a@b.com",
