@@ -12,7 +12,7 @@ export default function NewFactoryPage() {
   const { t } = useLanguage();
 
   const handleSuccess = () => {
-    router.push("/factories/mine");
+    router.push("/my-factories");
   };
 
   return (

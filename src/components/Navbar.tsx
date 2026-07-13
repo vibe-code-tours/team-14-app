@@ -173,7 +173,7 @@ export function Navbar() {
                 </div>
               </div>
               <Link
-                href="/factories/mine"
+                href="/my-factories"
                 onClick={() => setMenuOpen(false)}
                 className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
               >

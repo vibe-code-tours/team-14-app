@@ -59,7 +59,7 @@ export default function EditFactoryPage() {
   }, [factoryId]);
 
   const handleSuccess = () => {
-    router.push("/factories/mine");
+    router.push("/my-factories");
   };
 
   return (
@@ -69,7 +69,7 @@ export default function EditFactoryPage() {
         <main className="flex-1 max-w-3xl mx-auto w-full p-4">
           {/* Back Link */}
           <Link
-            href="/factories/mine"
+            href="/my-factories"
             className="inline-flex items-center text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 mb-4 transition"
           >
             {t("editFactory.back")}
@@ -100,7 +100,7 @@ export default function EditFactoryPage() {
               <div className="text-4xl mb-4">❌</div>
               <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
               <Link
-                href="/factories/mine"
+                href="/my-factories"
                 className="inline-block px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition text-sm font-medium"
               >
                 {t("editFactory.back")}
