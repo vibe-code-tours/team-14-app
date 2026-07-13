@@ -336,12 +336,12 @@ export default function AdminContactsPage() {
                     Mark Unread
                   </button>
                 )}
-                {selectedMessage.status !== "replied" && (
+                {selectedMessage.status === "unread" && (
                   <button
-                    onClick={() => handleStatusUpdate(selectedMessage.id, "replied")}
+                    onClick={() => handleStatusUpdate(selectedMessage.id, "read")}
                     className="px-3 py-1.5 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition"
                   >
-                    Mark Replied
+                    Mark Read
                   </button>
                 )}
               </div>
