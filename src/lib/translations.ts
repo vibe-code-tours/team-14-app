@@ -45,6 +45,7 @@ export const translations: Record<string, TranslationEntry> = {
     en: "Page {page} of {total}",
     my: "စာမျက်နှာ {total} အနက် {page}",
   },
+  "myFactories.newFactory": { en: "+ New Factory", my: "+ စက်ရုံအသစ်" },
 
   // Edit Factory
   "editFactory.title": { en: "✏️ Edit Factory", my: "✏️ စက်ရုံ ပြင်ဆင်ရန်" },

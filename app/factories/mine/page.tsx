@@ -101,7 +101,7 @@ export default function MyFactoriesPage() {
               href="/factories/new"
               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition text-sm font-medium"
             >
-              + New Factory
+              {t("myFactories.newFactory")}
             </Link>
           </div>
 
