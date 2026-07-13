@@ -144,10 +144,10 @@ export default function AdminReviewsPage() {
                     ID
                   </th>
                   <th className="text-left p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    Reviewer
+                    Review
                   </th>
                   <th className="text-left p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    Creator
+                    Reviewer
                   </th>
                   <th className="text-left p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     Country
