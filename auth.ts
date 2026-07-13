@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { verifyCredentials } from "./lib/users";
 import { checkRateLimit } from "./lib/rate-limit";
 import authConfig from "./auth.config";
+import { prisma } from "./lib/prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -43,7 +44,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.role = user.role;
         token.isAdmin = (user as any).isAdmin ?? false;
         token.isSuperAdmin = (user as any).isSuperAdmin ?? false;
-        token.image = (user as any).image ?? null;
       }
       return token;
     },
@@ -53,7 +53,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.role = token.role as string;
         session.user.isAdmin = token.isAdmin as boolean;
         session.user.isSuperAdmin = token.isSuperAdmin as boolean;
-        session.user.image = token.image as string | null;
+
+        // Fetch image from database (too large for JWT)
+        try {
+          const user = await prisma.user.findUnique({
+            where: { id: parseInt(token.id as string) },
+            select: { image: true },
+          });
+          session.user.image = user?.image ?? null;
+        } catch {
+          session.user.image = null;
+        }
       }
       return session;
     },
