@@ -254,6 +254,15 @@ export const translations: Record<string, TranslationEntry> = {
     my: "← စက်ရုံအားလုံးသို့ ပြန်သွားရန်",
   },
 
+  // Factory Address Fields
+  "factoryDetail.address.houseNumber": { en: "No.", my: "အိမ်အမှတ်" },
+  "factoryDetail.address.village": { en: "Village", my: "ကျေးရွာ" },
+  "factoryDetail.address.soi": { en: "Soi", my: "ဆိုင်း" },
+  "factoryDetail.address.road": { en: "Road", my: "လမ်း" },
+  "factoryDetail.address.subdistrict": { en: "Subdistrict", my: "မြို့နယ်" },
+  "factoryDetail.address.district": { en: "District", my: "ခရိုင်" },
+  "factoryDetail.address.province": { en: "Province", my: "ပြည်နယ်" },
+
   // About Us
   "about.title": { en: "About WorkerVoice", my: "WorkerVoice အကြောင်း" },
   "about.p1": {
