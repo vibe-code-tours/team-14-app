@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { AlertModal } from "./AlertModal";
+import { useLanguage } from "@/src/contexts/LanguageContext";
 
 interface Factory {
   id: number;
@@ -25,6 +27,7 @@ export function ReviewModal({
   factoryName,
   onReviewSubmitted,
 }: ReviewModalProps) {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     workerRole: "",
     countryFrom: "Myanmar",
@@ -132,25 +135,6 @@ export function ReviewModal({
       }
 
       setSuccess(true);
-      setTimeout(() => {
-        onClose();
-        setSuccess(false);
-        setFormData({
-          workerRole: "",
-          countryFrom: "Myanmar",
-          ratingSalary: 5,
-          ratingOt: 5,
-          ratingHousing: 5,
-          reviewText: "",
-        });
-        if (!factoryId) {
-          setSelectedFactoryId(null);
-          setSelectedFactoryName("");
-          setFactorySearch("");
-          setFactories([]);
-        }
-        onReviewSubmitted();
-      }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -181,6 +165,7 @@ export function ReviewModal({
   if (!isOpen) return null;
 
   return (
+    <>
     <dialog
       open={isOpen}
       onClose={handleClose}
@@ -222,17 +207,6 @@ export function ReviewModal({
               </div>
             </div>
 
-          {success ? (
-            <div className="p-8 text-center">
-              <div className="text-4xl mb-4">✅</div>
-              <p className="text-emerald-600 dark:text-emerald-400 font-medium">
-                ကျေးဇူးတင်ပါသည်။ သုံးသပ်ချက် အောင်မြင်စွာ တင်သွင်းပြီးပါပြီ။
-              </p>
-              <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">
-                Thank you! Review submitted successfully.
-              </p>
-            </div>
-          ) : (
             <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
             {/* Factory Selector — only shown when no factory is pre-selected */}
             {!isFactoryPreselected && (
@@ -432,10 +406,24 @@ export function ReviewModal({
               </button>
             </div>
           </form>
-        )}
           </div>
         </div>
       </div>
     </dialog>
+
+    <AlertModal
+      isOpen={success}
+      onClose={() => {
+        setSuccess(false);
+        onClose();
+        onReviewSubmitted();
+      }}
+      title={t("review.successTitle")}
+      message={t("review.successMessage")}
+      confirmLabel="OK"
+      variant="success"
+      hideCancel
+    />
+    </>
   );
 }

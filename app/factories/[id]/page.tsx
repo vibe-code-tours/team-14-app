@@ -2,9 +2,12 @@
 
 import { useState, useEffect, useCallback, use } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
 import { ReviewModal } from "@/src/components/ReviewModal";
+import { AlertModal } from "@/src/components/AlertModal";
 import { StarRating } from "@/src/components/StarRating";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/src/components/Tabs";
 import { useLanguage } from "@/src/contexts/LanguageContext";
@@ -55,10 +58,13 @@ export default function FactoryDetailPage({
 }) {
   const { id } = use(params);
   const { t } = useLanguage();
+  const router = useRouter();
+  const { status } = useSession();
   const [factory, setFactory] = useState<Factory | null>(null);
   const [reviewsData, setReviewsData] = useState<ReviewsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [loginAlertOpen, setLoginAlertOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("about");
 
   const fetchFactoryData = useCallback(async () => {
@@ -92,6 +98,14 @@ export default function FactoryDetailPage({
 
   const handleReviewSubmitted = () => {
     fetchFactoryData();
+  };
+
+  const handleWriteReviewClick = () => {
+    if (status !== "authenticated") {
+      setLoginAlertOpen(true);
+      return;
+    }
+    setShowReviewModal(true);
   };
 
   const getCountryFlag = (country: string) => {
@@ -304,7 +318,7 @@ export default function FactoryDetailPage({
                 </span>
               </h2>
               <button
-                onClick={() => setShowReviewModal(true)}
+                onClick={handleWriteReviewClick}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-sm transition hover:shadow-md active:scale-95 flex items-center gap-1.5"
               >
                 ✏️ {t("nav.writeReview")}
@@ -399,6 +413,18 @@ export default function FactoryDetailPage({
         factoryId={parseInt(id)}
         factoryName={factory.name}
         onReviewSubmitted={handleReviewSubmitted}
+      />
+
+      <AlertModal
+        isOpen={loginAlertOpen}
+        onClose={(confirmed) => {
+          setLoginAlertOpen(false);
+          if (confirmed) router.push("/login");
+        }}
+        title={t("nav.login")}
+        message={t("auth.loginRequired")}
+        confirmLabel={t("nav.login")}
+        cancelLabel="Cancel"
       />
     </div>
   );
