@@ -14,6 +14,7 @@ declare module "next-auth" {
       role: string;
       isAdmin: boolean;
       isSuperAdmin: boolean;
+      image: string | null;
     };
   }
 }
