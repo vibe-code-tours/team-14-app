@@ -8,6 +8,7 @@ import { SuccessModal } from "@/src/components/SuccessModal";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 
 interface PublicFactoryFormData {
+  id?: number;
   name: string;
   regNumber: string;
   operator: string;
@@ -96,8 +97,8 @@ export function PublicFactoryForm({
         workers: formData.workers ? parseInt(formData.workers) : null,
       };
 
-      const url = mode === "edit" && initialData?.name
-        ? `/api/factories/${(initialData as unknown as { id: number }).id}`
+      const url = mode === "edit" && formData.id
+        ? `/api/factories/${formData.id}`
         : "/api/factories";
 
       const res = await fetch(url, {
