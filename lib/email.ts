@@ -50,3 +50,61 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
     console.error("Failed to send password reset email:", error.message);
   }
 }
+
+export async function sendContactEmail({
+  name,
+  email,
+  subject,
+  message,
+}: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.log(
+      `[DEV] Skipping contact email. From: ${name} <${email}>, Subject: ${subject}`
+    );
+    return;
+  }
+
+  const toAddress = process.env.CONTACT_EMAIL_TO || "support@workervoice.example";
+
+  const { error } = await getResendClient().emails.send({
+    from: FROM,
+    to: toAddress,
+    replyTo: email,
+    subject: `[WorkerVoice Contact] ${subject}`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #059669;">New Contact Form Submission</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 8px 0; font-weight: bold; color: #64748b; width: 120px;">Name</td>
+            <td style="padding: 8px 0; color: #1e293b;">${name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; font-weight: bold; color: #64748b;">Email</td>
+            <td style="padding: 8px 0; color: #1e293b;"><a href="mailto:${email}">${email}</a></td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; font-weight: bold; color: #64748b;">Subject</td>
+            <td style="padding: 8px 0; color: #1e293b;">${subject}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; font-weight: bold; color: #64748b; vertical-align: top;">Message</td>
+            <td style="padding: 8px 0; color: #1e293b; white-space: pre-wrap;">${message}</td>
+          </tr>
+        </table>
+        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;" />
+        <p style="font-size: 12px; color: #94a3b8;">Sent from WorkerVoice contact form</p>
+      </div>
+    `,
+  });
+
+  if (error) {
+    console.error("Failed to send contact email:", error.message);
+  }
+}

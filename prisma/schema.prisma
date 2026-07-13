@@ -214,3 +214,26 @@ model Review {
   @@index([organizationId])
   @@map("reviews")
 }
+
+// Contact form submissions
+enum ContactMessageStatus {
+  unread
+  read
+  replied
+}
+
+model ContactMessage {
+  id        Int                 @id @default(autoincrement())
+  name      String              @db.VarChar(255)
+  email     String              @db.VarChar(255)
+  subject   String              @db.VarChar(500)
+  message   String              @db.Text
+  status    ContactMessageStatus @default(unread)
+  ip        String?             @db.VarChar(45)
+  createdAt DateTime            @default(now()) @map("created_at")
+  updatedAt DateTime            @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_messages")
+}
