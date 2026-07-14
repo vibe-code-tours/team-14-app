@@ -5,6 +5,7 @@ import { signIn, signOut } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Input } from "./Input";
+import { PasswordInput } from "./PasswordInput";
 import { Button } from "./Button";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 
@@ -61,9 +62,8 @@ export function LoginForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <Input
+      <PasswordInput
         label={t("login.password")}
-        type="password"
         required
         value={password}
         onChange={(e) => setPassword(e.target.value)}

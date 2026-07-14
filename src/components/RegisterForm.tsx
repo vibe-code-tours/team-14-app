@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "./Input";
+import { PasswordInput } from "./PasswordInput";
 import { Button } from "./Button";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 
@@ -81,9 +82,8 @@ export function RegisterForm() {
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
       />
 
-      <Input
+      <PasswordInput
         label={t("login.password")}
-        type="password"
         required
         minLength={8}
         value={formData.password}

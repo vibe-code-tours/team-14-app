@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { PasswordInput } from "@/src/components/PasswordInput";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -108,17 +109,13 @@ export default function AdminLoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-white mb-1.5">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
+              <PasswordInput
+                label="Password"
+                name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="Enter your password"
-                className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
 

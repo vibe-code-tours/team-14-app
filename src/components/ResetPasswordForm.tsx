@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Input } from "./Input";
+import { PasswordInput } from "./PasswordInput";
 import { Button } from "./Button";
 
 // Request form: worker enters their email to receive a reset link.
@@ -111,9 +112,8 @@ export function ConfirmResetForm({ token }: { token: string }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <Input
+      <PasswordInput
         label="New password"
-        type="password"
         required
         minLength={8}
         value={newPassword}
