@@ -205,7 +205,7 @@ export default function FactoryDetailPage({
               </div>
 
               <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100">
                   {factory.name}
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1 text-sm">

@@ -124,7 +124,7 @@ export default function MyFactoriesPage() {
           {/* Empty State */}
           {!loading && factories.length === 0 && (
             <div className="bg-white dark:bg-slate-800 rounded-xl p-8 border border-slate-100 dark:border-slate-700 text-center">
-              <div className="text-4xl mb-4">🏭</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl mb-4">🏭</div>
               <p className="text-slate-600 dark:text-slate-300 mb-4">
                 {t("myFactories.empty")}
               </p>
