@@ -307,6 +307,77 @@ export const translations: Record<string, TranslationEntry> = {
     en: "← Back to home",
     my: "← ပင်မစာမျက်နှာသို့ ပြန်သွားရန်",
   },
+  "contact.form.title": {
+    en: "Send us a message",
+    my: "ကျွန်တော်တို့ထံ မက်ဆေ့ချ်တစ်ခု ပေးပို့ပါ",
+  },
+  "contact.form.subtitle": {
+    en: "Fill out the form below and we will get back to you as soon as possible.",
+    my: "အောက်ပါဖောင်ကို ဖြည့်ပြီး ကျွန်တော်တို့ ဖြစ်နိုင်သမျှ အမြန်ဆုံး ပြန်လည်ဆက်သွယ်ပါမည်။",
+  },
+  "contact.form.name": { en: "Your Name", my: "သင့်အမည်" },
+  "contact.form.email": { en: "Email Address", my: "အီးမေးလ်လိပ်စာ" },
+  "contact.form.subject": { en: "Subject", my: "ခေါင်းစဉ်" },
+  "contact.form.message": { en: "Message", my: "မက်ဆေ့ချ်" },
+  "contact.form.namePlaceholder": { en: "Enter your name", my: "သင့်အမည်ကို ထည့်ပါ" },
+  "contact.form.emailPlaceholder": {
+    en: "Enter your email",
+    my: "သင့်အီးမေးလ်ကို ထည့်ပါ",
+  },
+  "contact.form.subjectPlaceholder": {
+    en: "What is this about?",
+    my: "ဘာအတွက်လဲ",
+  },
+  "contact.form.messagePlaceholder": {
+    en: "Write your message here...",
+    my: "သင့်မက်ဆေ့ချ်ကို ဒီမှာ ရေးပါ...",
+  },
+  "contact.form.nameRequired": {
+    en: "Name is required",
+    my: "အမည် လိုအပ်ပါသည်",
+  },
+  "contact.form.emailRequired": {
+    en: "Email is required",
+    my: "အီးမေးလ် လိုအပ်ပါသည်",
+  },
+  "contact.form.emailInvalid": {
+    en: "Please enter a valid email",
+    my: "မှန်ကန်သော အီးမေးလ်ကို ထည့်ပါ",
+  },
+  "contact.form.subjectRequired": {
+    en: "Subject is required",
+    my: "ခေါင်းစဉ် လိုအပ်ပါသည်",
+  },
+  "contact.form.messageRequired": {
+    en: "Message is required",
+    my: "မက်ဆေ့ချ် လိုအပ်ပါသည်",
+  },
+  "contact.form.submit": { en: "Send Message", my: "မက်ဆေ့ချ် ပေးပို့ရန်" },
+  "contact.form.sending": {
+    en: "Sending...",
+    my: "ပေးပို့နေသည်...",
+  },
+  "contact.form.successTitle": {
+    en: "Message sent!",
+    my: "မက်ဆေ့ချ် ပေးပို့ပြီးပါပြီ!",
+  },
+  "contact.form.successMessage": {
+    en: "Thank you for reaching out. We will get back to you shortly.",
+    my: "ဆက်သွယ်ပေးတဲ့အတွက် ကျေးဇူးတင်ပါတယ်။ ကျွန်တော်တို့ မကြာမီ ပြန်လည်ဆက်သွယ်ပါမည်။",
+  },
+  "contact.form.errorTitle": {
+    en: "Something went wrong",
+    my: "တစ်ခုခု မှားသွားပါပြီ",
+  },
+  "contact.form.errorMessage": {
+    en: "Could not send your message. Please try again later.",
+    my: "သင့်မက်ဆေ့ချ်ကို ပေးပို့မရပါ။ နောက်မှ ထပ်ကြိုးစားပါ။",
+  },
+  "contact.form.retry": { en: "Try again", my: "ထပ်ကြိုးစားရန်" },
+  "contact.channels.title": {
+    en: "Other ways to reach us",
+    my: "ကျွန်တော်တို့ထံ ဆက်သွယ်နည်းများ",
+  },
 
   // Footer
   "footer.brand": {
