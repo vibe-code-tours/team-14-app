@@ -1,5 +1,15 @@
 import { prisma } from "./prisma";
+import bcrypt from "bcryptjs";
 import type { UserStatus } from "@/src/generated/prisma/enums";
+
+function generatePassword(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+  let password = "";
+  for (let i = 0; i < 12; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return password;
+}
 
 export interface AdminUserSearchParams {
   search?: string;
@@ -104,4 +114,48 @@ export async function updateUserAdminStatus(id: number, isAdmin: boolean) {
       role: isAdmin ? "administrator" : "user",
     },
   });
+}
+
+export async function createAdmin(input: {
+  email: string;
+  fullName: string;
+  nickname?: string;
+}) {
+  const email = input.email.trim().toLowerCase();
+
+  const existing = await prisma.user.findFirst({
+    where: { email, isAdmin: true },
+  });
+  if (existing) {
+    throw new Error("An admin account with this email already exists");
+  }
+
+  const password = generatePassword();
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  const user = await prisma.user.create({
+    data: {
+      email,
+      passwordHash,
+      fullName: input.fullName,
+      nickname: input.nickname || null,
+      isAdmin: true,
+      isSuperAdmin: false,
+      role: "administrator",
+      emailVerified: new Date(),
+    },
+    select: {
+      id: true,
+      email: true,
+      fullName: true,
+      nickname: true,
+      isAdmin: true,
+      isSuperAdmin: true,
+      role: true,
+      status: true,
+      createdAt: true,
+    },
+  });
+
+  return { user, password };
 }

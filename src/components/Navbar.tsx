@@ -2,19 +2,31 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 import { ReviewModal } from "./ReviewModal";
+import { AlertModal } from "./AlertModal";
 import { UserAvatar } from "./UserAvatar";
 import { UserMenu } from "./UserMenu";
 
 export function Navbar() {
   const { t } = useLanguage();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [loginAlertOpen, setLoginAlertOpen] = useState(false);
   const { data: session, status } = useSession();
+
+  const handleWriteReviewClick = () => {
+    if (status !== "authenticated") {
+      setLoginAlertOpen(true);
+      return;
+    }
+    setReviewModalOpen(true);
+  };
 
   const handleReviewSubmitted = () => {
     // Could trigger a toast or refresh if needed
@@ -48,7 +60,7 @@ export function Navbar() {
           <LanguageSwitcher />
           <ThemeToggle />
           <button
-            onClick={() => setReviewModalOpen(true)}
+            onClick={handleWriteReviewClick}
             className="bg-white text-emerald-600 px-4 py-1.5 rounded-full font-semibold shadow-sm hover:bg-gray-100 transition"
           >
             ✏️ {t("nav.writeReview")}
@@ -123,7 +135,7 @@ export function Navbar() {
             <ThemeToggle />
           </div>
           <button
-            onClick={() => { setReviewModalOpen(true); setMenuOpen(false); }}
+            onClick={() => { handleWriteReviewClick(); setMenuOpen(false); }}
             className="block w-full text-left py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
           >
             ✏️ {t("nav.writeReview")}
@@ -173,7 +185,7 @@ export function Navbar() {
                 </div>
               </div>
               <Link
-                href="/factories/new"
+                href="/my-factories"
                 onClick={() => setMenuOpen(false)}
                 className="block py-2 px-2 rounded-lg hover:bg-white/10 transition text-sm"
               >
@@ -203,6 +215,18 @@ export function Navbar() {
       isOpen={reviewModalOpen}
       onClose={() => setReviewModalOpen(false)}
       onReviewSubmitted={handleReviewSubmitted}
+    />
+
+    <AlertModal
+      isOpen={loginAlertOpen}
+      onClose={(confirmed) => {
+        setLoginAlertOpen(false);
+        if (confirmed) router.push("/login");
+      }}
+      title={t("nav.login")}
+      message={t("auth.loginRequired")}
+      confirmLabel={t("nav.login")}
+      cancelLabel="Cancel"
     />
     </>
   );

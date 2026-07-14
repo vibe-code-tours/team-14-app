@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 
 interface Admin {
   id: string;
@@ -16,8 +15,18 @@ interface Admin {
   createdAt: string;
 }
 
+interface AdminSession {
+  user?: {
+    id?: number;
+    email?: string;
+    name?: string;
+    isAdmin?: boolean;
+    isSuperAdmin?: boolean;
+  } | null;
+}
+
 export default function AdminAdminsPage() {
-  const { data: session } = useSession();
+  const [session, setSession] = useState<AdminSession | null>(null);
   const [admins, setAdmins] = useState<Admin[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -25,11 +34,12 @@ export default function AdminAdminsPage() {
   const [total, setTotal] = useState(0);
   const limit = 10;
 
-  const [confirmModal, setConfirmModal] = useState<{
-    isOpen: boolean;
-    userId: string;
-    userName: string;
-  }>({ isOpen: false, userId: "", userName: "" });
+  useEffect(() => {
+    fetch("/api/admin/auth/session")
+      .then((res) => res.json())
+      .then((data) => setSession(data))
+      .catch(() => setSession(null));
+  }, []);
 
   const fetchAdmins = useCallback(async () => {
     setLoading(true);
@@ -58,32 +68,26 @@ export default function AdminAdminsPage() {
     fetchAdmins();
   }, [fetchAdmins]);
 
-  const handleDemote = async (userId: string) => {
-    try {
-      const res = await fetch(`/api/admin/users/${userId}/admin`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isAdmin: false }),
-      });
-
-      if (res.ok) {
-        fetchAdmins();
-      }
-    } catch (error) {
-      console.error("Error demoting admin:", error);
-    }
-  };
-
   const totalPages = Math.ceil(total / limit);
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">🛡️ Admins</h1>
-        <p className="text-slate-500 dark:text-slate-400 text-sm">
-          Manage administrator accounts
-        </p>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">🛡️ Admins</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">
+            Manage administrator accounts
+          </p>
+        </div>
+        {session?.user?.isSuperAdmin && (
+          <Link
+            href="/admin/admins/new"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2 rounded-lg transition text-sm inline-flex items-center gap-2"
+          >
+            <span>➕</span> Create Admin
+          </Link>
+        )}
       </div>
 
       {/* Filters */}
@@ -179,24 +183,12 @@ export default function AdminAdminsPage() {
                       </span>
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center justify-center gap-2">
+                      <div className="flex items-center justify-center">
                         <Link href={`/admin/admins/${admin.id}/view`}>
                           <button className="text-xs font-medium text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-3 py-1.5 rounded-lg transition" title="View detail">
                             👁️
                           </button>
                         </Link>
-                        {!admin.isSuperAdmin && admin.email !== session?.user?.email && (
-                          <button
-                            onClick={() => setConfirmModal({
-                              isOpen: true,
-                              userId: admin.id,
-                              userName: admin.nickname || admin.fullName,
-                            })}
-                            className="text-xs font-medium text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-900/50 px-3 py-1.5 rounded-lg transition"
-                          >
-                            ⬇️ Demote
-                          </button>
-                        )}
                       </div>
                     </td>
                   </tr>
@@ -232,42 +224,6 @@ export default function AdminAdminsPage() {
           </div>
         )}
       </div>
-
-      {/* Confirm Modal */}
-      {confirmModal.isOpen && (
-        <div className="fixed z-50 top-24 left-1/2 -translate-x-1/2 w-full max-w-sm">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden mx-4">
-            <div className="px-3 py-2 bg-linear-to-r from-amber-500 to-orange-500">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">⬇️</span>
-                <h3 className="text-sm font-bold text-white">Demote Admin</h3>
-              </div>
-            </div>
-            <div className="px-3 py-2">
-              <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
-                {`Are you sure you want to demote "${confirmModal.userName}"? They will lose admin access and become a regular user.`}
-              </p>
-            </div>
-            <div className="px-3 pb-3 flex gap-2 justify-end">
-              <button
-                onClick={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
-                className="px-2 py-1 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-                  handleDemote(confirmModal.userId);
-                }}
-                className="px-2 py-1 text-xs font-medium text-white bg-amber-600 hover:bg-amber-700 rounded transition"
-              >
-                Demote
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
