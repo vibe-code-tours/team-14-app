@@ -80,6 +80,7 @@ export async function verifyAdminCredentials(email: string, password: string) {
 
   if (!user || !user.passwordHash) return null;
   if (!user.isAdmin) return null;
+  if (user.status === "blocked") return null;
 
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) return null;
