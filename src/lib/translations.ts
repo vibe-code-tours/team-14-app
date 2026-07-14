@@ -299,6 +299,18 @@ export const translations: Record<string, TranslationEntry> = {
     en: "Social Media",
     my: "လူမှုကွန်ယက်များ",
   },
+  "contact.channels.title": {
+    en: "Other Ways to Reach Us",
+    my: "ကျွန်တော်တို့ထံ ဆက်သွယ်နည်းများ",
+  },
+  "contact.channels.description": {
+    en: "Follow us on social media for the latest updates, announcements, and community support.",
+    my: "နောက်ဆုံးရသတင်းများ၊ ကြေညာချက်များနှင့် အသိုက်အဝန်းပံ့ပိုးမှုများအတွက် လူမှုကွန်ယက်များတွင် ကြည့်ရှုနိုင်ပါသည်။",
+  },
+  "contact.privacyTitle": {
+    en: "Privacy",
+    my: "လုံခြုံရေး",
+  },
   "contact.privacy": {
     en: "WorkerVoice will never ask you to contact us through unofficial channels. For your safety, please only use the contact form and official social media links on this page.",
     my: "WorkerVoice သည် တရားဝင်မဟုတ်သော လမ်းကြောင်းများမှတစ်ဆင့် ဆက်သွယ်ရန် ဘယ်သောအခါမှ တောင်းဆိုမည်မဟုတ်ပါ။ သင့်လုံခြုံရေးအတွက် ဤစာမျက်နှာရှိ ဆက်သွယ်ရန်ဖောင်နှင့် တရားဝင် လူမှုကွန်ယက်လင့်ခ်များကိုသာ အသုံးပြုပါ။",
@@ -374,10 +386,6 @@ export const translations: Record<string, TranslationEntry> = {
     my: "သင့်မက်ဆေ့ချ်ကို ပေးပို့မရပါ။ နောက်မှ ထပ်ကြိုးစားပါ။",
   },
   "contact.form.retry": { en: "Try again", my: "ထပ်ကြိုးစားရန်" },
-  "contact.channels.title": {
-    en: "Other ways to reach us",
-    my: "ကျွန်တော်တို့ထံ ဆက်သွယ်နည်းများ",
-  },
 
   // Footer
   "footer.brand": {
