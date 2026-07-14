@@ -34,7 +34,53 @@ bot.command("language", langCommand);
 bot.callbackQuery("search_company", async (ctx) => {
   await ctx.answerCallbackQuery();
   const locale = getUserLocale(ctx.chat?.id || 0);
-  await ctx.reply(t(locale, "searchPrompt"));
+
+  // Show region selection keyboard
+  const regionKeyboard = {
+    inline_keyboard: [
+      [{ text: "🌏 အားလုံး", callback_data: "region_all" }],
+      [
+        { text: "🏙️ Bangkok & Central", callback_data: "region_Bangkok_and_Central" },
+      ],
+      [{ text: "🌅 Eastern", callback_data: "region_Eastern" }],
+      [{ text: "🌿 Northern", callback_data: "region_Northern" }],
+      [{ text: "🌾 Northeastern", callback_data: "region_Northeastern" }],
+      [{ text: "🌊 Western", callback_data: "region_Western" }],
+      [{ text: "🏝️ Southern", callback_data: "region_Southern" }],
+    ],
+  };
+
+  await ctx.reply("🌏 <b>ဒေသရွေးချယ်ပါ</b>\n\nဘယ်ဒေသက ကုမ္ပဏီတွေကို ရှာဖွေချင်ပါသလဲ?", {
+    parse_mode: "HTML",
+    reply_markup: regionKeyboard,
+  });
+});
+
+// Region selection handlers
+const regionNames: Record<string, string> = {
+  region_all: "အားလုံး",
+  region_Bangkok_and_Central: "Bangkok & Central",
+  region_Eastern: "Eastern",
+  region_Northern: "Northern",
+  region_Northeastern: "Northeastern",
+  region_Western: "Western",
+  region_Southern: "Southern",
+};
+
+bot.callbackQuery(/^region_(.+)$/, async (ctx) => {
+  await ctx.answerCallbackQuery();
+  const region = ctx.match?.[1];
+  const regionName = regionNames[`region_${region}`] || region;
+
+  const searchPrompt =
+    `🔍 <b>${regionName}</b> ဒေသအတွင်း ကုမ္ပဏီ ရှာဖွေရန်\n\n` +
+    `ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပြီး ရှာဖွေပါ။\n\n` +
+    `ဥပမာများ:\n` +
+    `/company စက်ရုံ\n` +
+    `/company ဘန်ကောက်\n` +
+    `/company စမွတ်ပရာကန်`;
+
+  await ctx.reply(searchPrompt, { parse_mode: "HTML" });
 });
 
 bot.callbackQuery("search_agency", async (ctx) => {

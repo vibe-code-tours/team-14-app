@@ -80,9 +80,9 @@ const translations = {
     searchPrompt:
       '🔍 ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပြီး ရှာဖွေပါ။\n\n' +
       'ဥပမာများ:\n' +
-      '/company โรงงาน\n' +
-      '/company กรุงเทพ\n' +
-      '/company สมุทรปราการ',
+      '/company စက်ရုံ\n' +
+      '/company ဘန်ကောက်\n' +
+      '/company စမွတ်ပရာကန်',
 
     searchResults: (query: string) =>
       `🔍 <b>"${query}" အတွက် ရှာဖွေမှု ရလဒ်များ</b>\n\n`,

@@ -17,9 +17,15 @@ export async function companyCommand(ctx: Context): Promise<void> {
   const locale = getUserLocale(chatId);
   const query = ctx.match;
 
-  // If no query, show search prompt
+  // If no query, show search prompt with Burmese examples
   if (!query || typeof query !== "string") {
-    await ctx.reply(t(locale, "searchPrompt"));
+    const searchPrompt =
+      "🔍 ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပြီး ရှာဖွေပါ။\n\n" +
+      "ဥပမာများ:\n" +
+      "/company စက်ရုံ\n" +
+      "/company ဘန်ကောက်\n" +
+      "/company စမွတ်ပရာကန်";
+    await ctx.reply(searchPrompt);
     return;
   }
 

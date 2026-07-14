@@ -44,8 +44,8 @@ export default function FactoriesPage() {
       params.set("offset", ((page - 1) * limit).toString());
       const res = await fetch(`/api/factories?${params}`);
       const data: FactoryResponse = await res.json();
-      setFactories(data.data);
-      setTotal(data.total);
+      setFactories(data.data ?? []);
+      setTotal(data.total ?? 0);
     } catch (error) {
       console.error("Error fetching factories:", error);
     } finally {
