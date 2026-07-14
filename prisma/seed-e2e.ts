@@ -13,7 +13,7 @@ async function main() {
   const passwordHash = hashSync(E2E_USER.password, 10);
 
   const user = await prisma.user.upsert({
-    where: { email: E2E_USER.email },
+    where: { email_isAdmin: { email: E2E_USER.email, isAdmin: false } },
     update: { emailVerified: new Date() },
     create: {
       email: E2E_USER.email,

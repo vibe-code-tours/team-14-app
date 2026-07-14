@@ -1,42 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
-import { SuggestModal } from "@/src/components/SuggestModal";
+import { ContactLinks } from "@/src/components/ContactLinks";
+import { ContactForm } from "@/src/components/ContactForm";
 import { useLanguage } from "@/src/contexts/LanguageContext";
-
-const socialLinks = [
-  {
-    key: "telegram" as const,
-    icon: "📱",
-    url: "#",
-    color: "bg-blue-500 hover:bg-blue-600",
-  },
-  {
-    key: "facebook" as const,
-    icon: "📘",
-    url: "#",
-    color: "bg-blue-600 hover:bg-blue-700",
-  },
-  {
-    key: "youtube" as const,
-    icon: "🎬",
-    url: "#",
-    color: "bg-red-500 hover:bg-red-600",
-  },
-  {
-    key: "line" as const,
-    icon: "💬",
-    url: "#",
-    color: "bg-green-500 hover:bg-green-600",
-  },
-];
 
 export default function ContactPage() {
   const { t } = useLanguage();
-  const [showSuggestModal, setShowSuggestModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
@@ -46,46 +18,40 @@ export default function ContactPage() {
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">
-            📱 {t("contact.title")}
+            {t("contact.title")}
           </h1>
-          <p className="text-slate-500 dark:text-slate-400">Contact Us</p>
+          <p className="text-slate-500 dark:text-slate-400">
+            {t("contact.subtitle")}
+          </p>
         </div>
 
-        {/* Social Links */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 md:p-8 space-y-6">
-          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">
-            {t("contact.socialMedia")}
+        {/* Contact Form */}
+        <ContactForm />
+
+        {/* Social Channels */}
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 md:p-8">
+          <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-4">
+            {t("contact.channels.title")}
           </h2>
-
-          <div className="grid gap-4">
-            {socialLinks.map((link) => (
-              <a
-                key={link.key}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`${link.color} text-white p-4 rounded-xl flex items-center gap-4 transition hover:shadow-md active:scale-[0.98]`}
-              >
-                <span className="text-2xl">{link.icon}</span>
-                <div>
-                  <div className="font-bold">{t(`contact.${link.key}`)}</div>
-                </div>
-              </a>
-            ))}
-          </div>
+          <ContactLinks />
         </div>
 
-        {/* Info */}
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-100 rounded-2xl p-6 text-sm text-amber-800">
-          <p className="font-semibold mb-2">🔒 Privacy</p>
+        {/* Privacy Notice */}
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800/30 rounded-2xl p-6 text-sm text-amber-800 dark:text-amber-200">
+          <p className="font-semibold mb-2 flex items-center gap-2">
+            <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            Privacy
+          </p>
           <p>{t("contact.privacy")}</p>
         </div>
 
         {/* Back Link */}
-        <div className="text-center">
+        <div className="text-center pb-4">
           <Link
             href="/"
-            className="text-emerald-600 hover:underline text-sm font-medium"
+            className="text-emerald-600 dark:text-emerald-400 hover:underline text-sm font-medium"
           >
             {t("contact.backHome")}
           </Link>
@@ -93,11 +59,6 @@ export default function ContactPage() {
       </main>
 
       <Footer />
-
-      <SuggestModal
-        isOpen={showSuggestModal}
-        onClose={() => setShowSuggestModal(false)}
-      />
     </div>
   );
 }

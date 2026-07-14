@@ -74,8 +74,8 @@ export function setAdminSessionCookie(token: string) {
 }
 
 export async function verifyAdminCredentials(email: string, password: string) {
-  const user = await prisma.user.findUnique({
-    where: { email: email.trim().toLowerCase() },
+  const user = await prisma.user.findFirst({
+    where: { email: email.trim().toLowerCase(), isAdmin: true },
   });
 
   if (!user || !user.passwordHash) return null;

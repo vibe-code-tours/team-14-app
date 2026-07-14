@@ -48,7 +48,7 @@ export async function registerUser(input: RegisterUserInput) {
   }
   const { email, password, fullName, nickname } = parsed.data;
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const existing = await prisma.user.findFirst({ where: { email, isAdmin: false } });
   if (existing) {
     throw new Error("An account with this email already exists");
   }
@@ -85,7 +85,7 @@ export async function registerUser(input: RegisterUserInput) {
   // Auto-verify in dev mode (no Resend API key)
   if (!process.env.RESEND_API_KEY) {
     await prisma.user.update({
-      where: { email },
+      where: { id: user.id },
       data: { emailVerified: new Date() },
     });
     await prisma.verificationToken.delete({
@@ -97,8 +97,8 @@ export async function registerUser(input: RegisterUserInput) {
 }
 
 export async function verifyCredentials(email: string, password: string) {
-  const user = await prisma.user.findUnique({
-    where: { email: email.trim().toLowerCase() },
+  const user = await prisma.user.findFirst({
+    where: { email: email.trim().toLowerCase(), isAdmin: false },
   });
 
   if (!user || !user.passwordHash) return null;
@@ -132,7 +132,7 @@ export async function verifyEmail(rawToken: string, email: string) {
     throw new Error("Verification link is invalid or has expired");
   }
 
-  await prisma.user.update({
+  await prisma.user.updateMany({
     where: { email: record.identifier },
     data: { emailVerified: new Date() },
   });
@@ -144,7 +144,7 @@ export async function verifyEmail(rawToken: string, email: string) {
 
 export async function requestPasswordReset(email: string) {
   const normalized = email.trim().toLowerCase();
-  const user = await prisma.user.findUnique({ where: { email: normalized } });
+  const user = await prisma.user.findFirst({ where: { email: normalized, isAdmin: false } });
 
   // Enumeration-safe: silently no-op if the account doesn't exist.
   if (!user) return;

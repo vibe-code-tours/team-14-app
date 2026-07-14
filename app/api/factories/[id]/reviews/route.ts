@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getFactoryReviews } from "@/lib/factories";
 import { createReview } from "@/lib/reviews";
+import { auth } from "@/auth";
 
 export async function GET(
   request: NextRequest,
@@ -36,8 +37,12 @@ export async function POST(
       return NextResponse.json({ error: "Ratings must be 1-5" }, { status: 400 });
     }
 
+    const session = await auth();
+    const userId = session?.user?.id ? parseInt(session.user.id) : undefined;
+
     const result = await createReview({
       factoryId: parseInt(id),
+      userId,
       workerRole: worker_role,
       countryFrom: country_from,
       ratingSalary: rating_salary,
