@@ -300,8 +300,8 @@ export const translations: Record<string, TranslationEntry> = {
     my: "လူမှုကွန်ယက်များ",
   },
   "contact.privacy": {
-    en: "We will never ask you to contact us directly. Only reach us through our social media pages.",
-    my: "WorkerVoice မှ သင့်အား ဆက်သွယ်ရန် ဘယ်သောအခါမှ မတောင်းဆိုပါ။ ကျွန်တော်တို့၏ လူမှုကွန်ယက်စာမျက်နှာများမှသာ ဆက်သွယ်ပါ။",
+    en: "WorkerVoice will never ask you to contact us through unofficial channels. For your safety, please only use the contact form and official social media links on this page.",
+    my: "WorkerVoice သည် တရားဝင်မဟုတ်သော လမ်းကြောင်းများမှတစ်ဆင့် ဆက်သွယ်ရန် ဘယ်သောအခါမှ တောင်းဆိုမည်မဟုတ်ပါ။ သင့်လုံခြုံရေးအတွက် ဤစာမျက်နှာရှိ ဆက်သွယ်ရန်ဖောင်နှင့် တရားဝင် လူမှုကွန်ယက်လင့်ခ်များကိုသာ အသုံးပြုပါ။",
   },
   "contact.backHome": {
     en: "← Back to home",
