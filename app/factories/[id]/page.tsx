@@ -17,12 +17,19 @@ interface Factory {
   name: string;
   operator: string | null;
   businessActivity: string | null;
+  houseNumber: string | null;
+  village: string | null;
+  soi: string | null;
+  road: string | null;
+  subdistrict: string | null;
   district: string | null;
   province: string | null;
+  postalCode: string | null;
   workers: number | null;
   country: string;
   type: string | null;
   phone: string | null;
+  regNumber: string | null;
 }
 
 interface Review {
@@ -127,6 +134,24 @@ export default function FactoryDetailPage({
     });
   };
 
+  const formatAddress = (f: Factory) => {
+    const parts = [
+      f.houseNumber && `${t("factoryDetail.address.houseNumber")} ${f.houseNumber}`,
+      f.village && `${t("factoryDetail.address.village")} ${f.village}`,
+      f.soi && `${t("factoryDetail.address.soi")} ${f.soi}`,
+      f.road && `${t("factoryDetail.address.road")} ${f.road}`,
+      f.subdistrict && `${t("factoryDetail.address.subdistrict")} ${f.subdistrict}`,
+      f.district && `${t("factoryDetail.address.district")} ${f.district}`,
+      f.province && `${t("factoryDetail.address.province")} ${f.province}`,
+      f.postalCode && f.postalCode,
+    ];
+    return parts.filter(Boolean).join(", ");
+  };
+
+  const formatAddressShort = (f: Factory) => {
+    return [f.district, f.province].filter(Boolean).join(", ") || "Thailand";
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
@@ -184,7 +209,7 @@ export default function FactoryDetailPage({
                   {factory.name}
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1 text-sm">
-                  📍 {[factory.district, factory.province].filter(Boolean).join(", ") || "Thailand"}
+                  📍 {formatAddressShort(factory)}
                 </p>
               </div>
 
@@ -280,10 +305,10 @@ export default function FactoryDetailPage({
             <section className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-3">
               <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm">{t("factoryDetail.detailsSection")}</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
+                <div className="col-span-2">
                   <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.location")}</span>
                   <p className="text-slate-700 dark:text-slate-200 font-medium">
-                    {[factory.district, factory.province].filter(Boolean).join(", ") || "Thailand"}
+                    {formatAddress(factory) || "Thailand"}
                   </p>
                 </div>
                 <div>

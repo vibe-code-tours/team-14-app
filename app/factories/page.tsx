@@ -88,7 +88,7 @@ export default function FactoriesPage() {
             href="/factories/new"
             className="inline-flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald-700 transition text-sm whitespace-nowrap"
           >
-            ➕ Submit Factory
+            {t("factoryList.submitFactory")}
           </Link>
         </div>
 

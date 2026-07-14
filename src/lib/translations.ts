@@ -86,7 +86,7 @@ export const translations: Record<string, TranslationEntry> = {
   "factorySubmitted.ok": { en: "OK", my: "OK" },
 
   // New Factory Page
-  "newFactory.title": { en: "➕ Submit a Factory", my: "➕ စက်ရုံ တင်သွင်းရန်" },
+  "newFactory.title": { en: "+ New Factory", my: "+ စက်ရုံအသစ်" },
   "newFactory.subtitle": {
     en: "Help other workers by sharing factory information",
     my: "စက်ရုံ အချက်အလက်များကို မျှဝေခြင်းဖြင့် အခြားအလုပ်သမားများကို ကူညီပါ",
@@ -202,6 +202,7 @@ export const translations: Record<string, TranslationEntry> = {
     en: "Suggest a factory →",
     my: "စက်ရုံ အကြံပြုရန် →",
   },
+  "factoryList.submitFactory": { en: "➕ Submit Factory", my: "➕ စက်ရုံ တင်သွင်းရန်" },
   "factoryList.workers": { en: "workers", my: "အလုပ်သမားများ" },
   "factoryList.thailand": { en: "Thailand", my: "ထိုင်း" },
   "factoryList.previous": { en: "Previous", my: "နောက်သို့" },
@@ -265,6 +266,15 @@ export const translations: Record<string, TranslationEntry> = {
     en: "← Back to all factories",
     my: "← စက်ရုံအားလုံးသို့ ပြန်သွားရန်",
   },
+
+  // Factory Address Fields
+  "factoryDetail.address.houseNumber": { en: "No.", my: "အိမ်အမှတ်" },
+  "factoryDetail.address.village": { en: "Village", my: "ကျေးရွာ" },
+  "factoryDetail.address.soi": { en: "Soi", my: "ဆိုင်း" },
+  "factoryDetail.address.road": { en: "Road", my: "လမ်း" },
+  "factoryDetail.address.subdistrict": { en: "Subdistrict", my: "မြို့နယ်" },
+  "factoryDetail.address.district": { en: "District", my: "ခရိုင်" },
+  "factoryDetail.address.province": { en: "Province", my: "ပြည်နယ်" },
 
   // About Us
   "about.title": { en: "About WorkerVoice", my: "WorkerVoice အကြောင်း" },
