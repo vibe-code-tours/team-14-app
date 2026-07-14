@@ -3,14 +3,24 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "@/src/contexts/ThemeContext";
+
+interface AdminSession {
+  user?: {
+    id?: number;
+    email?: string;
+    name?: string;
+    isAdmin?: boolean;
+    isSuperAdmin?: boolean;
+  } | null;
+}
 
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
   { href: "/admin/factories", label: "Factories", icon: "🏭" },
   { href: "/admin/reviews", label: "Reviews", icon: "💬" },
+  { href: "/admin/contacts", label: "Messages", icon: "✉️" },
   { href: "/admin/users", label: "Users", icon: "👥" },
   { href: "/admin/admins", label: "Admins", icon: "🛡️" },
 ];
@@ -18,8 +28,8 @@ const navItems = [
 export function AdminNavbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session } = useSession();
   const { theme, toggleTheme } = useTheme();
+  const [session, setSession] = useState<AdminSession | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -27,6 +37,11 @@ export function AdminNavbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    fetch("/api/admin/auth/session")
+      .then((res) => res.json())
+      .then((data) => setSession(data))
+      .catch(() => {});
+
     fetch("/api/admin/profile")
       .then((res) => res.json())
       .then((data) => setProfileImage(data.image))

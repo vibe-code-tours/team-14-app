@@ -10,19 +10,32 @@ export function RequestResetForm() {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    setError("");
 
-    await fetch("/api/auth/request-password-reset", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
+    try {
+      const res = await fetch("/api/auth/request-password-reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
-    setSubmitting(false);
-    setSubmitted(true);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to send reset link");
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -42,6 +55,9 @@ export function RequestResetForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
+      {error && (
+        <div className="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-3 rounded-lg text-sm">{error}</div>
+      )}
       <Button type="submit" isLoading={submitting} className="w-full">
         Send reset link
       </Button>

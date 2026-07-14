@@ -13,8 +13,8 @@ export interface AdminProfile {
 }
 
 export async function getAdminProfile(email: string): Promise<AdminProfile | null> {
-  const user = await prisma.user.findUnique({
-    where: { email },
+  const user = await prisma.user.findFirst({
+    where: { email, isAdmin: true },
     select: {
       id: true,
       email: true,
@@ -46,8 +46,14 @@ export async function updateAdminProfile(
     updateData.image = data.image;
   }
 
+  const existing = await prisma.user.findFirst({
+    where: { email, isAdmin: true },
+    select: { id: true },
+  });
+  if (!existing) throw new Error("Admin not found");
+
   const user = await prisma.user.update({
-    where: { email },
+    where: { id: existing.id },
     data: updateData,
     select: {
       id: true,
@@ -73,9 +79,9 @@ export async function changeAdminPassword(
     throw new Error("Password must be at least 8 characters");
   }
 
-  const user = await prisma.user.findUnique({
-    where: { email },
-    select: { passwordHash: true },
+  const user = await prisma.user.findFirst({
+    where: { email, isAdmin: true },
+    select: { id: true, passwordHash: true },
   });
 
   if (!user || !user.passwordHash) {
@@ -89,7 +95,7 @@ export async function changeAdminPassword(
 
   const passwordHash = await bcrypt.hash(newPassword, 12);
   await prisma.user.update({
-    where: { email },
+    where: { id: user.id },
     data: { passwordHash },
   });
 }

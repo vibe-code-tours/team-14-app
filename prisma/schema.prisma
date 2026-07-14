@@ -42,7 +42,7 @@ enum UserStatus {
 // Registered platform users (auth)
 model User {
   id            Int       @id @default(autoincrement())
-  email         String    @unique @db.VarChar(255)
+  email         String    @db.VarChar(255)
   passwordHash  String?   @map("password_hash") @db.VarChar(255)
   // Real name, captured for admin audit trails only — never exposed via any public API.
   fullName      String    @map("full_name") @db.VarChar(255)
@@ -64,6 +64,7 @@ model User {
   factories           Factory[]
   reviews             Review[]
 
+  @@unique([email, isAdmin])
   @@map("users")
 }
 
@@ -213,4 +214,27 @@ model Review {
   @@index([factoryId])
   @@index([organizationId])
   @@map("reviews")
+}
+
+// Contact form submissions
+enum ContactMessageStatus {
+  unread
+  read
+  replied
+}
+
+model ContactMessage {
+  id        Int                 @id @default(autoincrement())
+  name      String              @db.VarChar(255)
+  email     String              @db.VarChar(255)
+  subject   String              @db.VarChar(500)
+  message   String              @db.Text
+  status    ContactMessageStatus @default(unread)
+  ip        String?             @db.VarChar(45)
+  createdAt DateTime            @default(now()) @map("created_at")
+  updatedAt DateTime            @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_messages")
 }
