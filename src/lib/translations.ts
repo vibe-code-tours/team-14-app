@@ -421,8 +421,12 @@ export const translations: Record<string, TranslationEntry> = {
   "login.email": { en: "Email", my: "အီးမေးလ်" },
   "login.password": { en: "Password", my: "စကားဝှက်" },
   "login.invalidCredentials": {
-    en: "Invalid email or password, or your email is not yet verified.",
-    my: "အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားနေပါသည်၊ သို့မဟုတ် သင့်အီးမေးလ်ကို မစစ်ဆေးရသေးပါ။",
+    en: "Invalid email or password.",
+    my: "အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားနေပါသည်။",
+  },
+  "login.emailNotVerified": {
+    en: "Email not verified. A verification link has been sent to your email.",
+    my: "အီးမေးလ် စစ်ဆေးခြင်း မပြုရသေးပါ။ စစ်ဆေးရန်လင့်ခ်ကို သင့်အီးမေးလ်သို့ ပေးပို့ပြီးပါပြီ။",
   },
   "login.forgotPassword": {
     en: "Forgot your password?",
@@ -441,6 +445,10 @@ export const translations: Record<string, TranslationEntry> = {
   "register.checkEmail": {
     en: "Check your email to verify your account before logging in.",
     my: "ဝင်ရောက်မီး သင့်အကောင့်ကို စစ်ဆေးရန် သင့်အီးမေးလ်ကို စစ်ဆေးပါ။",
+  },
+  "register.verificationResent": {
+    en: "A new verification link has been sent to your email. Please verify your account.",
+    my: "စစ်ဆေးရန်လင့်ခ်အသစ်ကို သင့်အီးမေးလ်သို့ ပေးပို့ပြီးပါပြီ။ သင့်အကောင့်ကို စစ်ဆေးပါ။",
   },
   "register.createAccount": { en: "Create account", my: "အကောင့်ဖန်တီးရန်" },
 };
