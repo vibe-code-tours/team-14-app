@@ -43,8 +43,8 @@ export function Navbar() {
           <span>🌏</span> WorkerVoice
         </Link>
 
-        {/* Desktop links */}
-        <div className="hidden sm:flex items-center gap-3 md:gap-4 text-sm">
+        {/* Desktop links — visible at md (768px+) and up */}
+        <div className="hidden md:flex items-center gap-3 md:gap-4 text-sm">
           <Link href="/" className="hover:text-emerald-200 transition py-1">
             {t("nav.home")}
           </Link>
@@ -53,7 +53,7 @@ export function Navbar() {
           </Link>
           <Link
             href="/contact"
-            className="hover:text-emerald-200 transition hidden sm:inline"
+            className="hover:text-emerald-200 transition hidden md:inline"
           >
             {t("nav.contact")}
           </Link>
@@ -90,7 +90,7 @@ export function Navbar() {
         {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="sm:hidden p-1 -mr-1 hover:text-emerald-200 transition"
+          className="md:hidden p-1 -mr-1 hover:text-emerald-200 transition"
           aria-label="Toggle menu"
           aria-expanded={menuOpen}
         >
@@ -108,7 +108,7 @@ export function Navbar() {
 
       {/* Mobile dropdown */}
       {menuOpen && (
-        <div className="sm:hidden mt-3 pb-1 space-y-1 border-t border-white/20 pt-3 animate-fade-in">
+        <div className="md:hidden mt-3 pb-1 space-y-1 border-t border-white/20 pt-3 animate-fade-in">
           <Link
             href="/"
             onClick={() => setMenuOpen(false)}
