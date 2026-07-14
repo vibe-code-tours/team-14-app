@@ -103,6 +103,7 @@ export async function verifyCredentials(email: string, password: string) {
 
   if (!user || !user.passwordHash) return null;
   if (!user.emailVerified) return null;
+  if (user.status === "blocked") return null;
 
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) return null;
@@ -146,8 +147,9 @@ export async function requestPasswordReset(email: string) {
   const normalized = email.trim().toLowerCase();
   const user = await prisma.user.findFirst({ where: { email: normalized, isAdmin: false } });
 
-  // Enumeration-safe: silently no-op if the account doesn't exist.
-  if (!user) return;
+  if (!user) {
+    throw new Error("Email does not exist");
+  }
 
   const rawToken = generateToken();
   await prisma.passwordResetToken.create({
