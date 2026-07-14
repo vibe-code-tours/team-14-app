@@ -188,7 +188,7 @@ export async function updateFactory(
 export async function getFactoryReviews(factoryId: number) {
   const [reviews, stats] = await Promise.all([
     prisma.review.findMany({
-      where: { factoryId },
+      where: { factoryId, isVisible: true },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -202,7 +202,7 @@ export async function getFactoryReviews(factoryId: number) {
       },
     }),
     prisma.review.aggregate({
-      where: { factoryId },
+      where: { factoryId, isVisible: true },
       _count: true,
       _avg: {
         ratingSalary: true,
