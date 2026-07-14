@@ -50,3 +50,34 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
     console.error("Failed to send password reset email:", error.message);
   }
 }
+
+export async function sendAdminCredentialsEmail(
+  to: string,
+  fullName: string,
+  password: string,
+  loginUrl: string
+) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.log(
+      `[DEV] Skipping admin credentials email. To: ${to}, Password: ${password}, Login: ${loginUrl}`
+    );
+    return;
+  }
+  const { error } = await getResendClient().emails.send({
+    from: FROM,
+    to,
+    subject: "Your WorkerVoice Admin Account",
+    html: `
+      <p>Hi ${fullName},</p>
+      <p>An admin account has been created for you on WorkerVoice.</p>
+      <p><strong>Login credentials:</strong></p>
+      <p>Email: ${to}<br/>Password: ${password}</p>
+      <p><a href="${loginUrl}">Click here to login</a></p>
+      <p>Please change your password after your first login for security.</p>
+    `,
+  });
+  if (error) {
+    console.error("Failed to send admin credentials email:", error.message);
+  }
+}

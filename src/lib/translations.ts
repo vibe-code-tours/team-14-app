@@ -18,6 +18,18 @@ export const translations: Record<string, TranslationEntry> = {
   "nav.loggingOut": { en: "Logging out...", my: "ထွက်နေသည်..." },
   "nav.profile": { en: "My Profile", my: "ကျွန်ုပ်၏ ပရိုဖိုင်" },
   "nav.changePassword": { en: "Change Password", my: "စကားဝှက် ပြောင်းရန်" },
+  "auth.loginRequired": {
+    en: "You need to log in first to write a review. Go to login page?",
+    my: "သုံးသပ်ချက် ရေးရန် အရင် ဝင်ရောက်ပါ။ ဝင်ရောက်ရန် စာမျက်နှာသို့ သွားမလား?",
+  },
+  "review.successTitle": {
+    en: "Review Submitted",
+    my: "သုံးသပ်ချက် တင်သွင်းပြီးပါပြီ",
+  },
+  "review.successMessage": {
+    en: "Your review has been submitted successfully. It will be visible after admin approval.",
+    my: "သင့်သုံးသပ်ချက်ကို အောင်မြင်စွာ တင်သွင်းပြီးပါပြီ။ စီမံခန့်ခွဲသူ အတည်ပြုပြီးနောက်မှ မြင်ရမည်ဖြစ်ပါသည်။",
+  },
 
   // My Factories
   "myFactories.title": { en: "🏭 My Factories", my: "🏭 ကျွန်ုပ်၏ စက်ရုံများ" },

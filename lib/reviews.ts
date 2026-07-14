@@ -3,6 +3,7 @@ import { prisma } from "./prisma";
 export interface CreateReviewInput {
   factoryId?: number;
   organizationId?: number;
+  userId?: number;
   workerRole: string;
   countryFrom: string;
   ratingSalary: number;
@@ -40,6 +41,8 @@ export async function createReview(input: CreateReviewInput) {
     data: {
       factoryId: input.factoryId || null,
       organizationId: input.organizationId || null,
+      userId: input.userId || null,
+      isVisible: false,
       workerRole: input.workerRole.trim(),
       countryFrom: input.countryFrom.trim(),
       ratingSalary: input.ratingSalary,
