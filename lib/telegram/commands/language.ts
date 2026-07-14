@@ -18,6 +18,7 @@ export async function langCommand(ctx: Context): Promise<void> {
   const keyboard = getLanguageKeyboard();
 
   await ctx.reply(text, {
+    parse_mode: "HTML",
     reply_markup: keyboard,
   });
 }
@@ -47,8 +48,12 @@ export async function languageCallback(ctx: Context): Promise<void> {
 
   setUserLocale(chatId, locale);
 
-  // Send confirmation and help
-  await ctx.reply(t(locale, "languageSet"));
+  // Send confirmation with consistent formatting
+  const confirmation =
+    `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `${t(locale, "languageSet")}\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━`;
+  await ctx.reply(confirmation);
 
   const helpText = t(locale, "help");
   await ctx.reply(helpText, { parse_mode: "HTML" });

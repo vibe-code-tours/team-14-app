@@ -3,7 +3,7 @@
  */
 
 import { Context } from "grammy";
-import { tParams, getUserLocale, setUserLocale, detectLocale } from "../i18n";
+import { t, tParams, getUserLocale, setUserLocale, detectLocale } from "../i18n";
 import { getMainMenuKeyboard } from "../keyboards/main-menu";
 import { getCompanyUrl } from "../bot";
 import { prisma } from "@/lib/prisma";
@@ -19,7 +19,7 @@ export async function startCommand(ctx: Context): Promise<void> {
   const userLanguage = ctx.from?.language_code;
   const savedLocale = getUserLocale(chatId);
 
-  // Use saved locale, or detect from Telegram language_code, default to en
+  // Use saved locale, or detect from Telegram language_code, default to my
   const locale = savedLocale || detectLocale(userLanguage);
   setUserLocale(chatId, locale);
 
@@ -59,7 +59,7 @@ async function handleDeepLink(
   const id = parseInt(idStr, 10);
 
   if (isNaN(id)) {
-    await ctx.reply("❌ Invalid link. Please try again.");
+    await ctx.reply(t(locale, "deepLinkInvalid"));
     return;
   }
 
@@ -77,26 +77,37 @@ async function handleDeepLink(
       });
 
       if (!company) {
-        await ctx.reply("❌ Company not found.");
+        await ctx.reply(t(locale, "deepLinkCompanyNotFound"));
         return;
       }
 
       const websiteUrl = getCompanyUrl(company.id);
 
-      // Send message with URL button
-      await ctx.reply(`🏭 <b>${company.name}</b>\n\nView details on our website:`, {
+      // Build message with consistent formatting
+      const location = [company.district, company.province].filter(Boolean).join(", ");
+      let message = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      message += `🏭 <b>${company.name}</b>\n`;
+      message += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      if (location) {
+        message += `📍 ${location}\n`;
+      }
+      if (company.workers) {
+        message += `👥 ${company.workers.toLocaleString()} ယောက်`;
+      }
+
+      await ctx.reply(message, {
         parse_mode: "HTML",
         reply_markup: {
-          inline_keyboard: [[{ text: "🌐 View on Website", url: websiteUrl }]],
+          inline_keyboard: [[{ text: t(locale, "deepLinkViewOnWebsite"), url: websiteUrl }]],
         },
       });
     } catch (error) {
       console.error("Deep link company error:", error);
-      await ctx.reply("❌ Something went wrong. Please try again.");
+      await ctx.reply(t(locale, "error"));
     }
   } else if (type === "agency") {
-    await ctx.reply("🚧 Agency details coming soon!");
+    await ctx.reply(t(locale, "deepLinkAgencyComingSoon"));
   } else {
-    await ctx.reply("❌ Unknown link type.");
+    await ctx.reply(t(locale, "deepLinkUnknown"));
   }
 }

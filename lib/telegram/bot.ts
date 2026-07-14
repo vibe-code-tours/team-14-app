@@ -36,10 +36,11 @@ export async function ensureBotInitialized(): Promise<void> {
 // ============================================================
 
 /**
- * Get the base URL for the WorkerVoice site
+ * Get the base URL for the WorkerVoice site (trailing slash stripped)
  */
 export function getSiteUrl(): string {
-  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const url = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  return url.endsWith("/") ? url.slice(0, -1) : url;
 }
 
 /**

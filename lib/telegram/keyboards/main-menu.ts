@@ -3,6 +3,7 @@
  */
 
 import { type Locale } from "../i18n";
+import { getSiteUrl } from "../bot";
 import { InlineKeyboardButton } from "grammy/types";
 
 /**
@@ -11,7 +12,7 @@ import { InlineKeyboardButton } from "grammy/types";
  */
 export function getMainMenuKeyboard(locale: Locale) {
   const isMyanmar = locale === "my";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
 
   const keyboard: InlineKeyboardButton[][] = [
     [{ text: isMyanmar ? "🔍 ကုမ္ပဏီ ရှာဖွေရန်" : "🔍 Search Company", callback_data: "search_company" }],

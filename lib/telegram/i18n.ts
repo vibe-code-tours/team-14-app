@@ -12,13 +12,17 @@ export type Locale = "en" | "my";
 const translations = {
   en: {
     welcome: (name: string) =>
-      `👋 Welcome, <b>${name}</b>!\n\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `👋 Welcome, <b>${name}</b>!\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
       `I'm the <b>WorkerVoice Bot</b>. I help you find trustworthy workplace information.\n\n` +
       `🔍 <b>Search for a company</b> to see reviews and ratings.\n\n` +
       `Use the menu below or type a command to get started.`,
 
     help:
-      `📖 <b>WorkerVoice Bot Commands</b>\n\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `📖 <b>WorkerVoice Bot Commands</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
       `/start - Start the bot\n` +
       `/help - Show this help\n` +
       `/company - Search for a company\n` +
@@ -26,17 +30,26 @@ const translations = {
       `💡 <b>Tip:</b> You can also search by typing a company name directly.`,
 
     searchPrompt:
-      '🔍 Please enter a company name or location to search.\n\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━\n' +
+      '🔍 <b>Search Company</b>\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+      'Please enter a company name or location to search.\n\n' +
       'Examples:\n' +
-      '/company โรงงาน\n' +
-      '/company กรุงเทพ\n' +
-      '/company สมุทรปราการ',
+      '/company စက်ရုံ\n' +
+      '/company ဘန်ကောက်\n' +
+      '/company စမွတ်ပရာကန်',
 
     searchResults: (query: string) =>
-      `🔍 <b>Search results for "${query}"</b>\n\n`,
+      `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `🔍 <b>Search results for "${query}"</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n\n`,
 
     noResults: (query: string) =>
-      `🔍 No companies found for "<b>${query}</b>"\n\nTry a different search term.`,
+      `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `🔍 <b>No Results</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `No companies found for "<b>${query}</b>"\n\n` +
+      `Try a different search term.`,
 
     foundCompanies: (count: number) => `Found ${count} companies`,
 
@@ -47,10 +60,31 @@ const translations = {
     error: "❌ Sorry, something went wrong. Please try again later.",
 
     languagePrompt:
-      '🌐 Please select your language:\n\n' +
-      'English or မြန်မာ',
+      '━━━━━━━━━━━━━━━━━━━━━━━\n' +
+      '🌐 <b>Select Language</b>\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+      'Please select your language:',
 
     languageSet: "✅ Language set to English",
+
+    deepLinkViewOnWebsite: "🌐 View on Website",
+
+    deepLinkCompanyNotFound: "❌ Company not found.",
+
+    deepLinkInvalid: "❌ Invalid link. Please try again.",
+
+    deepLinkAgencyComingSoon: "🚧 Agency details coming soon!",
+
+    deepLinkUnknown: "❌ Unknown link type.",
+
+    regionPrompt: (region: string) =>
+      `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `🌏 <b>${region}</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `Search for companies in this region.\n\n` +
+      `Enter a company name or location:`,
+
+    agencyComingSoon: "🚧 Agency search coming soon!",
 
     location: "📍",
     workers: "👥",
@@ -62,15 +96,18 @@ const translations = {
 
   my: {
     welcome: (name: string) =>
-      `👋 ကြိုဆိုပါတယ် <b>${name}</b>\n\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `👋 ကြိုဆိုပါတယ် <b>${name}</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
       `ကျွန်တော်တို့ <b>WorkerVoice Bot</b> ဖြစ်ပါတယ်။\n` +
       `ယုံကြည်ရတဲ့ အလုပ်ခွင် အချက်အလက်တွေ ရှာဖွေဖို့ ကူညီပေးပါတယ်။\n\n` +
       `🔍 ကုမ္ပဏီတွေကို ရှာဖွေပြီး သုံးသပ်ချက်တွေ၊ အဆင့်သတ်မှတ်ချက်တွေကို ကြည့်ရှုနိုင်ပါတယ်။\n\n` +
-      `အောက်ပါ မီနူးကို အသုံးပြုပါ သို့မဟုတ် စတင်ဖို့ command ရိုက်ထည့်ပါ။\n\n` +
-      `━━━━━━━━━━━━━━━━━━━━━━━`,
+      `အောက်ပါ မီနူးကို အသုံးပြုပါ သို့မဟုတ် စတင်ဖို့ command ရိုက်ထည့်ပါ။`,
 
     help:
-      `📖 <b>WorkerVoice Bot ကွန်မန့်များ</b>\n\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `📖 <b>WorkerVoice Bot ကွန်မန့်များ</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
       `/start - Bot စတင်ရန်\n` +
       `/help - အကူအညီ ပြသရန်\n` +
       `/company - ကုမ္ပဏီ ရှာဖွေရန်\n` +
@@ -78,17 +115,26 @@ const translations = {
       `💡 <b>အကြံပြုချက်:</b> ကုမ္ပဏီ အမည် တိုက်ရိုက် ရိုက်ထည့်ပြီး ရှာဖွေနိုင်ပါတယ်။`,
 
     searchPrompt:
-      '🔍 ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပြီး ရှာဖွေပါ။\n\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━\n' +
+      '🔍 <b>ကုမ္ပဏီ ရှာဖွေရန်</b>\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+      'ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပြီး ရှာဖွေပါ။\n\n' +
       'ဥပမာများ:\n' +
       '/company စက်ရုံ\n' +
       '/company ဘန်ကောက်\n' +
       '/company စမွတ်ပရာကန်',
 
     searchResults: (query: string) =>
-      `🔍 <b>"${query}" အတွက် ရှာဖွေမှု ရလဒ်များ</b>\n\n`,
+      `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `🔍 <b>"${query}" အတွက် ရှာဖွေမှု ရလဒ်များ</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n\n`,
 
     noResults: (query: string) =>
-      `🔍 "<b>${query}</b>" အတွက် ကုမ္ပဏီ မတွေ့ပါ။\n\nအခြား ရှာဖွေမှု စကားလုံး ထည့်ပါ။`,
+      `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `🔍 <b>ရလဒ်မရှိပါ</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `"<b>${query}</b>" အတွက် ကုမ္ပဏီ မတွေ့ပါ။\n\n` +
+      `အခြား ရှာဖွေမှု စကားလုံး ထည့်ပါ။`,
 
     foundCompanies: (count: number) => `ကုမ္ပဏီ ${count} ခု တွေ့ပါသည်`,
 
@@ -99,10 +145,31 @@ const translations = {
     error: "❌ ဝမ်းနည်းပါတယ်၊ တစ်ခုခု မှားယွင်းသွားပါတယ်။ နောက်မှ ထပ်ကြိုးစားပါ။",
 
     languagePrompt:
-      '🌐 ဘာသာစကား ရွေးချယ်ပါ:\n\n' +
-      'English or မြန်မာ',
+      '━━━━━━━━━━━━━━━━━━━━━━━\n' +
+      '🌐 <b>ဘာသာစကား ရွေးချယ်ပါ</b>\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+      'ဘာသာစကား ရွေးချယ်ပါ:',
 
     languageSet: "✅ ဘာသာစကားကို မြန်မာ သို့ ပြောင်းလဲပြီးပါပြီ",
+
+    deepLinkViewOnWebsite: "🌐 ဝဘ်ဆိုက်တွင် ကြည့်ရန်",
+
+    deepLinkCompanyNotFound: "❌ ကုမ္ပဏီ မတွေ့ပါ။",
+
+    deepLinkInvalid: "❌ လင့်ခ် မမှန်ကန်ပါ။ ထပ်ကြိုးစားပါ။",
+
+    deepLinkAgencyComingSoon: "🚧 အေဂျင်စီ အသေးစိတ်ကို မကြာမီ ထည့်သွင်းပါမည်။",
+
+    deepLinkUnknown: "❌ မသိသော link type ဖြစ်ပါသည်။",
+
+    regionPrompt: (region: string) =>
+      `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `🌏 <b>${region}</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `ဒီဒေသထဲက ကုမ္ပဏီတွေကို ရှာဖွေပါ။\n\n` +
+      `ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပါ:`,
+
+    agencyComingSoon: "🚧 Agency search coming soon!",
 
     location: "📍",
     workers: "👥",

@@ -17,15 +17,9 @@ export async function companyCommand(ctx: Context): Promise<void> {
   const locale = getUserLocale(chatId);
   const query = ctx.match;
 
-  // If no query, show search prompt with Burmese examples
+  // If no query, show search prompt using i18n
   if (!query || typeof query !== "string") {
-    const searchPrompt =
-      "🔍 ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပြီး ရှာဖွေပါ။\n\n" +
-      "ဥပမာများ:\n" +
-      "/company စက်ရုံ\n" +
-      "/company ဘန်ကောက်\n" +
-      "/company စမွတ်ပရာကန်";
-    await ctx.reply(searchPrompt);
+    await ctx.reply(t(locale, "searchPrompt"), { parse_mode: "HTML" });
     return;
   }
 
@@ -108,27 +102,25 @@ async function searchCompanies(
             ) / 10
           : null;
 
-      // Build message with better format
+      // Build message with consistent card format
+      const location = [company.district, company.province].filter(Boolean).join(", ");
       let message = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
       message += `🏭 <b>${escapeHtml(company.name)}</b>\n`;
-      message += `━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-
-      const location = [company.district, company.province].filter(Boolean).join(", ");
+      message += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
       if (location) {
-        message += `📍 <b>နေရာ:</b> ${escapeHtml(location)}\n`;
+        message += `📍 နေရာ: ${escapeHtml(location)}\n`;
       }
       if (company.workers) {
-        message += `👥 <b>လုပ်သား:</b> ${company.workers.toLocaleString()} ယောက်\n`;
+        message += `👥 လုပ်သား: ${company.workers.toLocaleString()} ယောက်\n`;
       }
 
       if (stats._count > 0) {
-        message += `\n📊 <b>သုံးသပ်ချက်:</b> ${stats._count} ခု\n`;
+        message += `📊 သုံးသပ်ချက်: ${stats._count} ခု\n`;
         if (avgOverall !== null) {
-          const stars = "⭐".repeat(Math.round(avgOverall));
-          message += `${stars} <b>${avgOverall}/5</b>\n`;
+          message += `⭐ အဆင့်: ${avgOverall}/5\n`;
         }
       } else {
-        message += `\n📊 <b>သုံးသပ်ချက်:</b> မရှိသေးပါ\n`;
+        message += `📊 သုံးသပ်ချက်: မရှိသေးပါ\n`;
       }
 
       await ctx.reply(message, {
@@ -140,23 +132,25 @@ async function searchCompanies(
       return;
     }
 
-    // Multiple results - show list with better format
+    // Multiple results - send header then individual cards
     let header = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
     header += `🔍 <b>"${escapeHtml(query)}" ရှာဖွေမှု ရလဒ် ${companies.length} ခု</b>\n`;
     header += `━━━━━━━━━━━━━━━━━━━━━━━`;
     await ctx.reply(header, { parse_mode: "HTML" });
 
-    // Send each result as a separate message with its own detail button
+    // Send each result as a separate card with its own detail button
     for (const company of companies) {
       const location = [company.district, company.province]
         .filter(Boolean)
         .join(", ");
-      let result = `🏭 <b>${escapeHtml(company.name)}</b>\n`;
+      let result = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      result += `🏭 <b>${escapeHtml(company.name)}</b>\n`;
+      result += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
       if (location) {
-        result += `📍 ${escapeHtml(location)}\n`;
+        result += `📍 နေရာ: ${escapeHtml(location)}\n`;
       }
       if (company.workers) {
-        result += `👥 ${company.workers.toLocaleString()} ယောက်`;
+        result += `👥 လုပ်သား: ${company.workers.toLocaleString()} ယောက်`;
       }
 
       await ctx.reply(result, {

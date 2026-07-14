@@ -17,7 +17,7 @@ import {
   langCommand,
   languageCallback,
 } from "@/lib/telegram";
-import { t, getUserLocale } from "@/lib/telegram/i18n";
+import { t, tParams, getUserLocale } from "@/lib/telegram/i18n";
 
 // ============================================================
 // Register bot commands and handlers
@@ -50,7 +50,13 @@ bot.callbackQuery("search_company", async (ctx) => {
     ],
   };
 
-  await ctx.reply("🌏 <b>ဒေသရွေးချယ်ပါ</b>\n\nဘယ်ဒေသက ကုမ္ပဏီတွေကို ရှာဖွေချင်ပါသလဲ?", {
+  const regionPrompt =
+    `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `🌏 <b>ဒေသရွေးချယ်ပါ</b>\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+    `ဘယ်ဒေသက ကုမ္ပဏီတွေကို ရှာဖွေချင်ပါသလဲ?`;
+
+  await ctx.reply(regionPrompt, {
     parse_mode: "HTML",
     reply_markup: regionKeyboard,
   });
@@ -71,21 +77,15 @@ bot.callbackQuery(/^region_(.+)$/, async (ctx) => {
   await ctx.answerCallbackQuery();
   const region = ctx.match?.[1];
   const regionName = regionNames[`region_${region}`] || region;
+  const locale = getUserLocale(ctx.chat?.id || 0);
 
-  const searchPrompt =
-    `🔍 <b>${regionName}</b> ဒေသအတွင်း ကုမ္ပဏီ ရှာဖွေရန်\n\n` +
-    `ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပြီး ရှာဖွေပါ။\n\n` +
-    `ဥပမာများ:\n` +
-    `/company စက်ရုံ\n` +
-    `/company ဘန်ကောက်\n` +
-    `/company စမွတ်ပရာကန်`;
-
-  await ctx.reply(searchPrompt, { parse_mode: "HTML" });
+  await ctx.reply(tParams(locale, "regionPrompt", regionName), { parse_mode: "HTML" });
 });
 
 bot.callbackQuery("search_agency", async (ctx) => {
   await ctx.answerCallbackQuery();
-  await ctx.reply("🚧 Agency search coming soon!");
+  const locale = getUserLocale(ctx.chat?.id || 0);
+  await ctx.reply(t(locale, "agencyComingSoon"));
 });
 
 bot.callbackQuery("help", async (ctx) => {
