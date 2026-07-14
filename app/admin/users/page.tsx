@@ -35,7 +35,7 @@ export default function AdminUsersPage() {
     isOpen: boolean;
     userId: string;
     userName: string;
-    action: "active" | "blocked" | "promote";
+    action: "active" | "blocked";
   }>({ isOpen: false, userId: "", userName: "", action: "active" });
 
   const fetchUsers = useCallback(async () => {
@@ -79,22 +79,6 @@ export default function AdminUsersPage() {
       }
     } catch (error) {
       console.error("Error updating user status:", error);
-    }
-  };
-
-  const handlePromote = async (userId: string) => {
-    try {
-      const res = await fetch(`/api/admin/users/${userId}/admin`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isAdmin: true }),
-      });
-
-      if (res.ok) {
-        fetchUsers();
-      }
-    } catch (error) {
-      console.error("Error promoting user:", error);
     }
   };
 
@@ -228,19 +212,6 @@ export default function AdminUsersPage() {
                             👁️
                           </button>
                         </Link>
-                        {!user.isAdmin && (
-                          <button
-                            onClick={() => setConfirmModal({
-                              isOpen: true,
-                              userId: user.id,
-                              userName: user.nickname || user.fullName,
-                              action: "promote",
-                            })}
-                            className="text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 px-3 py-1.5 rounded-lg transition"
-                          >
-                            ⬆️ Promote
-                          </button>
-                        )}
                         {user.status === "active" ? (
                           <button
                             onClick={() => setConfirmModal({
@@ -307,16 +278,14 @@ export default function AdminUsersPage() {
         <div className="fixed z-50 top-24 left-1/2 -translate-x-1/2 w-full max-w-sm">
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden mx-4">
             <div className={`px-3 py-2 ${
-              confirmModal.action === "blocked" ? "bg-linear-to-r from-red-500 to-rose-500" :
-              confirmModal.action === "promote" ? "bg-linear-to-r from-emerald-500 to-teal-500" :
-              "bg-linear-to-r from-emerald-500 to-teal-500"
+              confirmModal.action === "blocked" ? "bg-linear-to-r from-red-500 to-rose-500" : "bg-linear-to-r from-emerald-500 to-teal-500"
             }`}>
               <div className="flex items-center gap-2">
                 <span className="text-lg">
-                  {confirmModal.action === "blocked" ? "⚠️" : confirmModal.action === "promote" ? "⬆️" : "✅"}
+                  {confirmModal.action === "blocked" ? "⚠️" : "✅"}
                 </span>
                 <h3 className="text-sm font-bold text-white">
-                  {confirmModal.action === "blocked" ? "Block User" : confirmModal.action === "promote" ? "Promote to Admin" : "Unblock User"}
+                  {confirmModal.action === "blocked" ? "Block User" : "Unblock User"}
                 </h3>
               </div>
             </div>
@@ -324,8 +293,6 @@ export default function AdminUsersPage() {
               <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
                 {confirmModal.action === "blocked"
                   ? `Are you sure you want to block "${confirmModal.userName}"? They won't be able to log in.`
-                  : confirmModal.action === "promote"
-                  ? `Are you sure you want to promote "${confirmModal.userName}" to admin? They will have full admin access.`
                   : `Are you sure you want to unblock "${confirmModal.userName}"?`}
               </p>
             </div>
@@ -339,11 +306,7 @@ export default function AdminUsersPage() {
               <button
                 onClick={() => {
                   setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-                  if (confirmModal.action === "promote") {
-                    handlePromote(confirmModal.userId);
-                  } else {
-                    handleStatusChange(confirmModal.userId, confirmModal.action);
-                  }
+                  handleStatusChange(confirmModal.userId, confirmModal.action);
                 }}
                 className={`px-2 py-1 text-xs font-medium text-white rounded transition ${
                   confirmModal.action === "blocked"
@@ -351,7 +314,7 @@ export default function AdminUsersPage() {
                     : "bg-emerald-600 hover:bg-emerald-700"
                 }`}
               >
-                {confirmModal.action === "blocked" ? "Block" : confirmModal.action === "promote" ? "Promote" : "Unblock"}
+                {confirmModal.action === "blocked" ? "Block" : "Unblock"}
               </button>
             </div>
           </div>
