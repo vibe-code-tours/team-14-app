@@ -14,7 +14,7 @@ export default function ContactPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
       <Navbar />
 
-      <main className="flex-grow max-w-3xl mx-auto p-4 md:p-8 mt-6 w-full space-y-8 animate-fade-in">
+      <main className="flex-grow max-w-5xl mx-auto p-4 md:p-8 mt-6 w-full space-y-8 animate-fade-in">
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">
@@ -25,15 +25,21 @@ export default function ContactPage() {
           </p>
         </div>
 
-        {/* Contact Form */}
-        <ContactForm />
+        {/* Two Column Layout: Form + Social */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Contact Form */}
+          <ContactForm />
 
-        {/* Social Channels */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 md:p-8">
-          <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-4">
-            {t("contact.channels.title")}
-          </h2>
-          <ContactLinks />
+          {/* Social Channels */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 md:p-8">
+            <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4">
+              {t("contact.channels.title")}
+            </h2>
+            <ContactLinks />
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-6">
+              {t("contact.channels.description")}
+            </p>
+          </div>
         </div>
 
         {/* Privacy Notice */}
