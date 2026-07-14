@@ -62,6 +62,7 @@ export async function PUT(
       type: body.type,
       workers: body.workers,
       country: body.country,
+      image: body.image,
     });
 
     return NextResponse.json(factory);

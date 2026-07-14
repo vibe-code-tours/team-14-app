@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, use } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -30,6 +31,7 @@ interface Factory {
   type: string | null;
   phone: string | null;
   regNumber: string | null;
+  image: string | null;
 }
 
 interface Review {
@@ -73,6 +75,7 @@ export default function FactoryDetailPage({
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [loginAlertOpen, setLoginAlertOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("about");
+  const [showLightbox, setShowLightbox] = useState(false);
 
   const fetchFactoryData = useCallback(async () => {
     setLoading(true);
@@ -198,6 +201,20 @@ export default function FactoryDetailPage({
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-4">
+              {/* Factory Image */}
+              {factory.image && (
+                <div
+                  className="w-full h-48 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-700 cursor-pointer hover:shadow-md transition"
+                  onClick={() => setShowLightbox(true)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={factory.image}
+                    alt={factory.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 px-3 py-1 rounded-full">
                   {t("factoryDetail.thailand")}
@@ -451,6 +468,35 @@ export default function FactoryDetailPage({
         confirmLabel={t("nav.login")}
         cancelLabel="Cancel"
       />
+
+      {showLightbox &&
+        factory.image &&
+        createPortal(
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 9999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              backgroundColor: "rgba(0,0,0,0.8)",
+            }}
+            onClick={() => setShowLightbox(false)}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={factory.image}
+              alt={factory.name}
+              style={{ maxWidth: "90vw", maxHeight: "90vh", objectFit: "contain" }}
+            />
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

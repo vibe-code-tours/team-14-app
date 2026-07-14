@@ -129,6 +129,13 @@ export const translations: Record<string, TranslationEntry> = {
   "factoryForm.postalCodePlaceholder": { en: "e.g. 10110", my: "ဥပမာ။ 10110" },
   "factoryForm.submitFactory": { en: "Submit Factory", my: "စက်ရုံ တင်သွင်းရန်" },
   "factoryForm.saveChanges": { en: "Save Changes", my: "ပြောင်းလဲမှုများ သိမ်းဆည်းရန်" },
+  "factoryForm.factoryImage": { en: "🏭 Factory Image", my: "🏭 စက်ရုံ ပုံ" },
+  "factoryForm.uploadImage": { en: "Upload Image", my: "ပုံ တင်ရန်" },
+  "factoryForm.removeImage": { en: "Remove", my: "ဖျက်ရန်" },
+  "factoryForm.imageHint": {
+    en: "JPG or PNG, recommended 400×400px",
+    my: "JPG သို့မဟုတ် PNG၊ 400×400px အကြံပြုထားသည်",
+  },
 
   // Privacy Banner
   "privacy.title": {

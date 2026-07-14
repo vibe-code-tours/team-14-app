@@ -16,6 +16,7 @@ interface Factory {
   workers: number | null;
   country: string;
   type: string | null;
+  image: string | null;
 }
 
 interface FactoryResponse {
@@ -175,6 +176,16 @@ export default function FactoriesPage() {
                 href={`/factories/${factory.id}`}
                 className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition block group"
               >
+                {factory.image && (
+                  <div className="w-full h-32 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 mb-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={factory.image}
+                      alt={factory.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-bold text-emerald-700 group-hover:text-emerald-600 line-clamp-2">
                     {factory.name}
