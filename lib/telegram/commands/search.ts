@@ -79,7 +79,7 @@ async function searchCompanies(
       return;
     }
 
-    // If only one result, show detailed view with URL button
+    // If only one result, show detailed view
     if (companies.length === 1) {
       const company = companies[0];
       const websiteUrl = getCompanyUrl(company.id);
@@ -102,53 +102,57 @@ async function searchCompanies(
             ) / 10
           : null;
 
-      // Build message
-      let message = `🏭 <b>${escapeHtml(company.name)}</b>\n`;
+      // Build message with better format
+      let message = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      message += `🏭 <b>${escapeHtml(company.name)}</b>\n`;
+      message += `━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
 
       const location = [company.district, company.province].filter(Boolean).join(", ");
       if (location) {
-        message += `📍 ${escapeHtml(location)}\n`;
+        message += `📍 <b>နေရာ:</b> ${escapeHtml(location)}\n`;
       }
       if (company.workers) {
-        message += `👥 ${company.workers.toLocaleString()} workers\n`;
+        message += `👥 <b>လုပ်သား:</b> ${company.workers.toLocaleString()} ယောက်\n`;
       }
 
       if (stats._count > 0) {
-        message += `\n📊 <b>Reviews:</b> ${stats._count}\n`;
+        message += `\n📊 <b>သုံးသပ်ချက်:</b> ${stats._count} ခု\n`;
         if (avgOverall !== null) {
-          message += `⭐ ${avgOverall}/5\n`;
+          const stars = "⭐".repeat(Math.round(avgOverall));
+          message += `${stars} <b>${avgOverall}/5</b>\n`;
         }
+      } else {
+        message += `\n📊 <b>သုံးသပ်ချက်:</b> မရှိသေးပါ\n`;
       }
 
-      // Send with URL button (only if HTTPS)
-      const isHttps = websiteUrl.startsWith("https://");
+      message += `\n🔗 အသေးစိတ်ကြည့်ရန်: ${websiteUrl}`;
+
       await ctx.reply(message, {
         parse_mode: "HTML",
-        reply_markup: isHttps ? {
-          inline_keyboard: [
-            [{ text: "🌐 View on Website", url: websiteUrl }],
-            [{ text: "✍️ Write Review", url: `${websiteUrl}#write-review` }],
-          ],
-        } : undefined,
       });
       return;
     }
 
-    // Multiple results - show list
-    let message = tParams(locale, "searchResults", query);
+    // Multiple results - show list with better format
+    let message = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `🔍 <b>"${escapeHtml(query)}" ရှာဖွေမှု ရလဒ် ${companies.length} ခု</b>\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
 
     companies.forEach((company, index) => {
       const location = [company.district, company.province]
         .filter(Boolean)
         .join(", ");
-      message += `${index + 1}. <b>${escapeHtml(company.name)}</b>\n`;
+      message += `<b>${index + 1}. ${escapeHtml(company.name)}</b>\n`;
       if (location) {
         message += `   📍 ${escapeHtml(location)}\n`;
       }
-      message += `\n`;
+      if (company.workers) {
+        message += `   👥 ${company.workers.toLocaleString()} ယောက်\n`;
+      }
+      message += `   🔗 ${getCompanyUrl(company.id)}\n\n`;
     });
 
-    message += `\n${t(locale, "visitWebsite")}`;
+    message += `💡 အသေးစိတ်ကြည့်ရန် link ကို click ပါ`;
 
     await ctx.reply(message, { parse_mode: "HTML" });
   } catch (error) {
