@@ -19,7 +19,19 @@ function getInitialTheme(): Theme {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const [theme, setTheme] = useState<Theme>("light");
+
+  // Read saved preference after hydration to avoid SSR/client mismatch.
+  // setState here is intentional — it syncs localStorage preference into React
+  // state once on mount, which is the recommended pattern for hydration-safe
+  // external store reads in Next.js App Router.
+  useEffect(() => {
+    const saved = getInitialTheme();
+    if (saved !== theme) {
+      setTheme(saved); // eslint-disable-line react-hooks/set-state-in-effect
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Sync theme to DOM and localStorage (side effect only, no state derivation)
   useEffect(() => {
