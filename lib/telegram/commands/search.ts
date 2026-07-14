@@ -131,36 +131,41 @@ async function searchCompanies(
         message += `\n📊 <b>သုံးသပ်ချက်:</b> မရှိသေးပါ\n`;
       }
 
-      message += `\n🔗 အသေးစိတ်ကြည့်ရန်: ${websiteUrl}`;
-
       await ctx.reply(message, {
         parse_mode: "HTML",
+        reply_markup: {
+          inline_keyboard: [[{ text: "🔗 အသေးစိတ်ကြည့်ရန်", url: websiteUrl }]],
+        },
       });
       return;
     }
 
     // Multiple results - show list with better format
-    let message = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
-    message += `🔍 <b>"${escapeHtml(query)}" ရှာဖွေမှု ရလဒ် ${companies.length} ခု</b>\n`;
-    message += `━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+    let header = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    header += `🔍 <b>"${escapeHtml(query)}" ရှာဖွေမှု ရလဒ် ${companies.length} ခု</b>\n`;
+    header += `━━━━━━━━━━━━━━━━━━━━━━━`;
+    await ctx.reply(header, { parse_mode: "HTML" });
 
-    companies.forEach((company, index) => {
+    // Send each result as a separate message with its own detail button
+    for (const company of companies) {
       const location = [company.district, company.province]
         .filter(Boolean)
         .join(", ");
-      message += `<b>${index + 1}. ${escapeHtml(company.name)}</b>\n`;
+      let result = `🏭 <b>${escapeHtml(company.name)}</b>\n`;
       if (location) {
-        message += `   📍 ${escapeHtml(location)}\n`;
+        result += `📍 ${escapeHtml(location)}\n`;
       }
       if (company.workers) {
-        message += `   👥 ${company.workers.toLocaleString()} ယောက်\n`;
+        result += `👥 ${company.workers.toLocaleString()} ယောက်`;
       }
-      message += `   🔗 ${getCompanyUrl(company.id)}\n\n`;
-    });
 
-    message += `💡 အသေးစိတ်ကြည့်ရန် link ကို click ပါ`;
-
-    await ctx.reply(message, { parse_mode: "HTML" });
+      await ctx.reply(result, {
+        parse_mode: "HTML",
+        reply_markup: {
+          inline_keyboard: [[{ text: "🔗 အသေးစိတ်ကြည့်ရန်", url: getCompanyUrl(company.id) }]],
+        },
+      });
+    }
   } catch (error) {
     console.error("Company search error:", error);
     await ctx.reply(t(locale, "error"));
