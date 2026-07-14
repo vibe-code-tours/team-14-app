@@ -42,7 +42,7 @@ enum UserStatus {
 // Registered platform users (auth)
 model User {
   id            Int       @id @default(autoincrement())
-  email         String    @unique @db.VarChar(255)
+  email         String    @db.VarChar(255)
   passwordHash  String?   @map("password_hash") @db.VarChar(255)
   // Real name, captured for admin audit trails only — never exposed via any public API.
   fullName      String    @map("full_name") @db.VarChar(255)
@@ -64,6 +64,7 @@ model User {
   factories           Factory[]
   reviews             Review[]
 
+  @@unique([email, isAdmin])
   @@map("users")
 }
 

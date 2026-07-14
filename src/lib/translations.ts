@@ -14,10 +14,121 @@ export const translations: Record<string, TranslationEntry> = {
   "nav.logout": { en: "Log out", my: "ထွက်ရန်" },
   "nav.user": { en: "User", my: "အသုံးပြုသူ" },
   "nav.adminDashboard": { en: "Admin Dashboard", my: "Admin Dashboard" },
-  "nav.createFactory": { en: "Create Factory", my: "စက်ရုံ ဖန်တီးရန်" },
+  "nav.createFactory": { en: "My Factory", my: "ကျွန်ုပ်၏ စက်ရုံ" },
   "nav.loggingOut": { en: "Logging out...", my: "ထွက်နေသည်..." },
   "nav.profile": { en: "My Profile", my: "ကျွန်ုပ်၏ ပရိုဖိုင်" },
   "nav.changePassword": { en: "Change Password", my: "စကားဝှက် ပြောင်းရန်" },
+  "auth.loginRequired": {
+    en: "You need to log in first to write a review. Go to login page?",
+    my: "သုံးသပ်ချက် ရေးရန် အရင် ဝင်ရောက်ပါ။ ဝင်ရောက်ရန် စာမျက်နှာသို့ သွားမလား?",
+  },
+  "review.successTitle": {
+    en: "Review Submitted",
+    my: "သုံးသပ်ချက် တင်သွင်းပြီးပါပြီ",
+  },
+  "review.successMessage": {
+    en: "Your review has been submitted successfully. It will be visible after admin approval.",
+    my: "သင့်သုံးသပ်ချက်ကို အောင်မြင်စွာ တင်သွင်းပြီးပါပြီ။ စီမံခန့်ခွဲသူ အတည်ပြုပြီးနောက်မှ မြင်ရမည်ဖြစ်ပါသည်။",
+  },
+
+  // My Factories
+  "myFactories.title": { en: "🏭 My Factories", my: "🏭 ကျွန်ုပ်၏ စက်ရုံများ" },
+  "myFactories.subtitle": {
+    en: "Factories you have submitted",
+    my: "သင်တင်သွင်းထားသည့် စက်ရုံများ",
+  },
+  "myFactories.empty": {
+    en: "You haven't submitted any factories yet",
+    my: "သင်သည် စက်ရုံများ မတင်သွင်းရသေးပါ",
+  },
+  "myFactories.createFirst": {
+    en: "Submit your first factory →",
+    my: "ပထမဆုံး စက်ရုံကို တင်သွင်းရန် →",
+  },
+  "myFactories.edit": { en: "Edit", my: "ပြင်ဆင်ရန်" },
+  "myFactories.view": { en: "View", my: "ကြည့်ရှုရန်" },
+  "myFactories.status.pending": { en: "Pending Review", my: "စစ်ဆေးဆဲ" },
+  "myFactories.status.approved": { en: "Approved", my: "အတည်ပြုပြီး" },
+  "myFactories.status.declined": { en: "Declined", my: "ငြင်းပယ်ပြီး" },
+  "myFactories.loading": { en: "Loading your factories...", my: "သင့်စက်ရုံများကို ဆွဲနေသည်..." },
+  "myFactories.previous": { en: "Previous", my: "နောက်သို့" },
+  "myFactories.next": { en: "Next", my: "ရှေ့သို့" },
+  "myFactories.pageOf": {
+    en: "Page {page} of {total}",
+    my: "စာမျက်နှာ {total} အနက် {page}",
+  },
+  "myFactories.newFactory": { en: "+ New Factory", my: "+ စက်ရုံအသစ်" },
+
+  // Edit Factory
+  "editFactory.title": { en: "✏️ Edit Factory", my: "✏️ စက်ရုံ ပြင်ဆင်ရန်" },
+  "editFactory.subtitle": {
+    en: "Update your factory information",
+    my: "သင့်စက်ရုံ အချက်အလက်များကို ပြင်ဆင်ပါ",
+  },
+  "editFactory.success": {
+    en: "Factory updated successfully!",
+    my: "စက်ရုံကို အောင်မြင်စွာ ပြင်ဆင်ပြီးပါပြီ!",
+  },
+  "editFactory.back": {
+    en: "← Back to My Factories",
+    my: "← ကျွန်ုပ်၏ စက်ရုံများသို့ ပြန်ရန်",
+  },
+
+  // Factory Submitted Modal
+  "factorySubmitted.title": {
+    en: "Factory Submitted",
+    my: "စက်ရုံ တင်သွင်းပြီးပါပြီ",
+  },
+  "factorySubmitted.message": {
+    en: "Your factory has been submitted successfully! It will appear on the site after admin review.",
+    my: "သင့်စက်ရုံကို အောင်မြင်စွာ တင်သွင်းပြီးပါပြီ! စီမံခန့်ခွဲသူ စစ်ဆေးပြီးနောက် စာမျက်နှာပေါ်တွင် ပေါ်လာမည်ဖြစ်ပါသည်။",
+  },
+  "factorySubmitted.ok": { en: "OK", my: "OK" },
+
+  // New Factory Page
+  "newFactory.title": { en: "➕ Submit a Factory", my: "➕ စက်ရုံ တင်သွင်းရန်" },
+  "newFactory.subtitle": {
+    en: "Help other workers by sharing factory information",
+    my: "စက်ရုံ အချက်အလက်များကို မျှဝေခြင်းဖြင့် အခြားအလုပ်သမားများကို ကူညီပါ",
+  },
+  "newFactory.notice": {
+    en: "📝 Your submission will be reviewed by an admin before appearing publicly.",
+    my: "📝 သင့်တင်သွင်းမှုကို အများပြည်သူထံ ပေါ်လာမီးမတိုင်မီ စီမံခန့်ခွဲသူက စစ်ဆေးပါမည်။",
+  },
+
+  // Factory Form Fields
+  "factoryForm.basicInfo": { en: "📋 Basic Information", my: "📋 အခြေခံ အချက်အလက်များ" },
+  "factoryForm.address": { en: "📍 Address", my: "📍 လိပ်စာ" },
+  "factoryForm.factoryName": { en: "Factory Name *", my: "စက်ရုံ အမည် *" },
+  "factoryForm.factoryNamePlaceholder": { en: "Enter factory name", my: "စက်ရုံ အမည်ထည့်ပါ" },
+  "factoryForm.regNumber": { en: "Registration Number", my: "မှတ်ပုံတင် အမှတ်" },
+  "factoryForm.regNumberPlaceholder": { en: "e.g. 0105519000001", my: "ဥပမာ။ 0105519000001" },
+  "factoryForm.operator": { en: "Operator", my: "လုပ်ငန်းရှင်" },
+  "factoryForm.operatorPlaceholder": { en: "Company operator name", my: "ကုမ္ပဏီ လုပ်ငန်းရှင် အမည်" },
+  "factoryForm.businessActivity": { en: "Business Activity", my: "စီးပွားဖြစ် လုပ်ငန်း" },
+  "factoryForm.businessActivityPlaceholder": { en: "e.g. Textile manufacturing", my: "ဥပမာ။ အထည်ထုတ်လုပ်ရေး" },
+  "factoryForm.phone": { en: "Phone", my: "ဖုန်း" },
+  "factoryForm.phonePlaceholder": { en: "Contact phone number", my: "ဆက်သွယ်ရန် ဖုန်းနံပါတ်" },
+  "factoryForm.workers": { en: "Number of Workers", my: "အလုပ်သမား အရေအတွက်" },
+  "factoryForm.workersPlaceholder": { en: "e.g. 500", my: "ဥပမာ။ 500" },
+  "factoryForm.houseNumber": { en: "House Number", my: "အိမ်အမှတ်" },
+  "factoryForm.houseNumberPlaceholder": { en: "House/Building number", my: "အိမ်/အဆောက်အအုံ အမှတ်" },
+  "factoryForm.village": { en: "Village", my: "ကျေးရွာ" },
+  "factoryForm.villagePlaceholder": { en: "Village/Moo", my: "ကျေးရွာ/မွှေ" },
+  "factoryForm.soi": { en: "Soi", my: "ဆိုင်း" },
+  "factoryForm.soiPlaceholder": { en: "Soi", my: "ဆိုင်း" },
+  "factoryForm.road": { en: "Road", my: "လမ်း" },
+  "factoryForm.roadPlaceholder": { en: "Road name", my: "လမ်းအမည်" },
+  "factoryForm.subdistrict": { en: "Subdistrict", my: "ရပ်ကွက်" },
+  "factoryForm.subdistrictPlaceholder": { en: "Subdistrict (Tambon)", my: "ရပ်ကွက် (တံတား)" },
+  "factoryForm.district": { en: "District", my: "မြို့နယ်" },
+  "factoryForm.districtPlaceholder": { en: "District (Amphoe)", my: "မြို့နယ် (အမ်ဖို့)" },
+  "factoryForm.province": { en: "Province", my: "ပြည်နယ်" },
+  "factoryForm.provincePlaceholder": { en: "Select province", my: "ပြည်နယ် ရွေးပါ" },
+  "factoryForm.postalCode": { en: "Postal Code", my: "စာပို့ ကုဒ်" },
+  "factoryForm.postalCodePlaceholder": { en: "e.g. 10110", my: "ဥပမာ။ 10110" },
+  "factoryForm.submitFactory": { en: "Submit Factory", my: "စက်ရုံ တင်သွင်းရန်" },
+  "factoryForm.saveChanges": { en: "Save Changes", my: "ပြောင်းလဲမှုများ သိမ်းဆည်းရန်" },
 
   // Privacy Banner
   "privacy.title": {
