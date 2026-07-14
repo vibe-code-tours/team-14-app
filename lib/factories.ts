@@ -27,6 +27,9 @@ export async function searchFactories(params: FactorySearchParams) {
 
   const where: Record<string, unknown> = {};
 
+  // Only show approved factories on public site
+  where.status = "approved";
+
   if (search) {
     where.OR = [
       { name: { contains: search, mode: "insensitive" } },
@@ -91,6 +94,12 @@ export async function searchFactories(params: FactorySearchParams) {
 export async function getFactoryById(id: number) {
   return prisma.factory.findUnique({
     where: { id },
+  });
+}
+
+export async function getPublicFactoryById(id: number) {
+  return prisma.factory.findUnique({
+    where: { id, status: "approved" },
   });
 }
 
