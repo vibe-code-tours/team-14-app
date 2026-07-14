@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -23,8 +24,7 @@ export default function NewAdminPage() {
   const [nickname, setNickname] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [createdPassword, setCreatedPassword] = useState<string | null>(null);
-  const [createdEmail, setCreatedEmail] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     fetch("/api/admin/auth/session")
@@ -75,59 +75,13 @@ export default function NewAdminPage() {
         throw new Error(data.error || "Failed to create admin");
       }
 
-      setCreatedPassword(data.password);
-      setCreatedEmail(data.user.email);
+      setShowSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setSubmitting(false);
     }
   };
-
-  if (createdPassword) {
-    return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-            ✅ Admin Created
-          </h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm">
-            Credentials have been sent to {createdEmail}
-          </p>
-        </div>
-
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">
-            🔑 Generated Password
-          </h3>
-          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg p-4 mb-4">
-            <p className="text-xs text-amber-700 dark:text-amber-400 mb-2 font-medium">
-              ⚠️ Save this password — it will not be shown again.
-            </p>
-            <code className="block text-lg font-mono font-bold text-amber-900 dark:text-amber-200 bg-white dark:bg-slate-900 px-4 py-3 rounded-lg border border-amber-200 dark:border-amber-700 select-all">
-              {createdPassword}
-            </code>
-          </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            The admin can login at{" "}
-            <Link href="/admin/login" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-              /admin/login
-            </Link>{" "}
-            and should change their password after first login.
-          </p>
-        </div>
-
-        <div className="flex justify-end">
-          <Link
-            href="/admin/admins"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 py-2.5 rounded-lg transition"
-          >
-            Back to Admins
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -227,6 +181,34 @@ export default function NewAdminPage() {
           </button>
         </div>
       </form>
+
+      {/* Success Modal */}
+      {showSuccess && createPortal(
+        <div className="fixed z-50 top-24 left-1/2 -translate-x-1/2 w-full max-w-sm">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden mx-4">
+            <div className="px-3 py-2 bg-linear-to-r from-emerald-500 to-teal-500">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">✅</span>
+                <h3 className="text-sm font-bold text-white">Admin Created</h3>
+              </div>
+            </div>
+            <div className="px-3 py-2">
+              <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
+                Credentials have been sent to the admin&apos;s email. They can login and should change their password after first login.
+              </p>
+            </div>
+            <div className="px-3 pb-3 flex gap-2 justify-end">
+              <button
+                onClick={() => router.push("/admin/admins")}
+                className="px-2 py-1 text-xs font-medium text-white rounded transition bg-emerald-600 hover:bg-emerald-700"
+              >
+                Back to Admins
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }
