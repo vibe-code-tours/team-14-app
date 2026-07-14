@@ -44,9 +44,13 @@ export default function Home() {
       if (selectedRegion) params.set("region", selectedRegion);
 
       const res = await fetch(`/api/factories?${params}`);
+      if (!res.ok) {
+        setFactories([]);
+        return;
+      }
       const data: FactoryResponse = await res.json();
 
-      let filtered = data.data;
+      let filtered = data?.data ?? [];
 
       // Apply worker range filter client-side
       if (selectedWorkerRange) {
@@ -100,7 +104,7 @@ export default function Home() {
       <main className="flex-grow max-w-5xl mx-auto p-4 mt-6 w-full space-y-8 animate-fade-in">
         {/* Search Hero */}
         <div className="bg-white dark:bg-slate-800 p-8 md:p-12 rounded-2xl shadow-sm text-center border border-slate-100 dark:border-slate-700">
-          <h2 className="text-3xl font-extrabold mb-8 text-slate-800 dark:text-slate-100">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold mb-8 text-slate-800 dark:text-slate-100">
             {t("hero.title")}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mb-6">{t("hero.subtitle")}</p>

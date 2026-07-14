@@ -27,7 +27,7 @@ export default function AgenciesPage() {
 
         {/* Coming Soon Section */}
         <div className="bg-white dark:bg-slate-800 p-8 md:p-12 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 text-center">
-          <div className="text-5xl mb-4">🚧</div>
+          <div className="text-3xl sm:text-4xl md:text-5xl mb-4">🚧</div>
           <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">
             Coming Soon
           </h2>
