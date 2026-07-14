@@ -12,24 +12,16 @@
  */
 
 import { config } from "dotenv";
-import { setWebhook, getWebhookInfo, deleteWebhook } from "../lib/telegram";
+import { bot, getSiteUrl } from "../lib/telegram";
 
 // Load environment variables
 config();
 
 async function main() {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || getSiteUrl();
+  const secretToken = process.env.TELEGRAM_WEBHOOK_SECRET;
 
-  if (!token || token === "your-telegram-bot-token") {
-    console.error("❌ TELEGRAM_BOT_TOKEN is not configured");
-    console.error("   Get a token from @BotFather on Telegram");
-    console.error("   Add it to .env file");
-    process.exit(1);
-  }
-
-  if (!secret || secret === "your-webhook-secret") {
+  if (!secretToken) {
     console.error("❌ TELEGRAM_WEBHOOK_SECRET is not configured");
     console.error("   Generate one with: openssl rand -hex 32");
     console.error("   Add it to .env file");
@@ -65,36 +57,27 @@ async function main() {
 
   // Check current webhook status
   console.log("📋 Current webhook status:");
-  const currentInfo = await getWebhookInfo();
-  if (currentInfo.ok && currentInfo.result) {
-    console.log(`   URL: ${currentInfo.result.url || "Not set"}`);
-    console.log(`   Custom certificate: ${currentInfo.result.has_custom_certificate}`);
-  }
+  const webhookInfo = await bot.api.getWebhookInfo();
+  console.log(`   URL: ${webhookInfo.url || "Not set"}`);
+  console.log(`   Pending updates: ${webhookInfo.pending_update_count}`);
   console.log("");
 
   // Delete existing webhook if any
   console.log("🗑️  Clearing existing webhook...");
-  await deleteWebhook();
+  await bot.api.deleteWebhook();
 
-  // Set new webhook
+  // Set new webhook with secret token
   console.log("🔗 Setting new webhook...");
-  const result = await setWebhook(webhookUrl, secret);
+  await bot.api.setWebhook(webhookUrl, {
+    secret_token: secretToken,
+    allowed_updates: ["message", "callback_query"],
+  });
 
-  if (result.ok) {
-    console.log("✅ Webhook set successfully!\n");
-
-    // Verify
-    console.log("📋 Verifying webhook...");
-    const verifyInfo = await getWebhookInfo();
-    if (verifyInfo.ok && verifyInfo.result) {
-      console.log(`   URL: ${verifyInfo.result.url}`);
-      console.log(`   Status: ${verifyInfo.result.url === webhookUrl ? "✅ Correct" : "❌ Mismatch"}`);
-    }
-  } else {
-    console.error("❌ Failed to set webhook:");
-    console.error(`   ${result.description}`);
-    process.exit(1);
-  }
+  // Verify
+  console.log("📋 Verifying webhook...");
+  const verifyInfo = await bot.api.getWebhookInfo();
+  console.log(`   URL: ${verifyInfo.url}`);
+  console.log(`   Status: ${verifyInfo.url === webhookUrl ? "✅ Correct" : "❌ Mismatch"}`);
 
   console.log("\n🎉 Setup complete!");
   console.log("\nNext steps:");

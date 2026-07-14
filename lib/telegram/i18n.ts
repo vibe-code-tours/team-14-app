@@ -11,14 +11,12 @@ export type Locale = "en" | "my";
 
 const translations = {
   en: {
-    // Welcome
     welcome: (name: string) =>
       `👋 Welcome, <b>${name}</b>!\n\n` +
       `I'm the <b>WorkerVoice Bot</b>. I help you find trustworthy workplace information.\n\n` +
       `🔍 <b>Search for a company</b> to see reviews and ratings.\n\n` +
       `Use the menu below or type a command to get started.`,
 
-    // Help
     help:
       `📖 <b>WorkerVoice Bot Commands</b>\n\n` +
       `/start - Start the bot\n` +
@@ -27,7 +25,6 @@ const translations = {
       `/lang - Change language\n\n` +
       `💡 <b>Tip:</b> You can also search by typing a company name directly.`,
 
-    // Company Search
     searchPrompt:
       '🔍 Please enter a company name or location to search.\n\n' +
       'Examples:\n' +
@@ -47,25 +44,14 @@ const translations = {
 
     visitWebsite: "💡 Visit the website to view company details and reviews",
 
-    // Errors
     error: "❌ Sorry, something went wrong. Please try again later.",
 
-    // Language
     languagePrompt:
       '🌐 Please select your language:\n\n' +
       'English or မြန်မာ',
 
     languageSet: "✅ Language set to English",
 
-    // Menu
-    menu: {
-      searchCompany: "🔍 Search Company",
-      searchAgency: "📋 Search Agency",
-      help: "❓ Help",
-      language: "🌐 Language",
-    },
-
-    // Location labels
     location: "📍",
     workers: "👥",
     reviews: "📊",
@@ -75,14 +61,12 @@ const translations = {
   },
 
   my: {
-    // Welcome
     welcome: (name: string) =>
       `👋 ကြိုဆိုပါတယ် <b>${name}</b>\n\n` +
       `ကျွန်တော်တို့ <b>WorkerVoice Bot</b> ဖြစ်ပါတယ်။ ယုံကြည်ရတဲ့ အလုပ်ခွင် အချက်အလက်တွေ ရှာဖွေဖို့ ကူညီပေးပါတယ်။\n\n` +
       `🔍 <b>ကုမ္ပဏီ ရှာဖွေပြီး</b> သုံးသပ်ချက်တွေနဲ့ အဆင့်သတ်မှတ်ချက်တွေ ကြည့်ပါ။\n\n` +
       `အောက်ပါ မီနူးကို အသုံးပြုပါ သို့မဟုတ် စတင်ဖို့ ကွန်မန့် ရိုက်ထည့်ပါ။`,
 
-    // Help
     help:
       `📖 <b>WorkerVoice Bot ကွန်မန့်များ</b>\n\n` +
       `/start - Bot စတင်ရန်\n` +
@@ -91,7 +75,6 @@ const translations = {
       `/lang - ဘာသာစကား ပြောင်းလဲရန်\n\n` +
       `💡 <b>အကြံပြုချက်:</b> ကုမ္ပဏီ အမည် တိုက်ရိုက် ရိုက်ထည့်ပြီး ရှာဖွေနိုင်ပါတယ်။`,
 
-    // Company Search
     searchPrompt:
       '🔍 ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပြီး ရှာဖွေပါ။\n\n' +
       'ဥပမာများ:\n' +
@@ -111,25 +94,14 @@ const translations = {
 
     visitWebsite: "💡 ကုမ္ပဏီ အသေးစိတ်နဲ့ သုံးသပ်ချက်တွေ ကြည့်ဖို့ ဝဘ်ဆိုက်သို့ သွားပါ",
 
-    // Errors
     error: "❌ ဝမ်းနည်းပါတယ်၊ တစ်ခုခု မှားယွင်းသွားပါတယ်။ နောက်မှ ထပ်ကြိုးစားပါ။",
 
-    // Language
     languagePrompt:
       '🌐 ဘာသာစကား ရွေးချယ်ပါ:\n\n' +
       'English or မြန်မာ',
 
     languageSet: "✅ ဘာသာစကားကို မြန်မာ သို့ ပြောင်းလဲပြီးပါပြီ",
 
-    // Menu
-    menu: {
-      searchCompany: "🔍 ကုမ္ပဏီ ရှာဖွေရန်",
-      searchAgency: "📋 အေဂျင်စီ ရှာဖွေရန်",
-      help: "❓ အကူအညီ",
-      language: "🌐 ဘာသာစကား",
-    },
-
-    // Location labels
     location: "📍",
     workers: "👥",
     reviews: "📊",
@@ -140,7 +112,7 @@ const translations = {
 } as const;
 
 // ============================================================
-// Translation Function
+// Translation Functions
 // ============================================================
 
 /**
@@ -175,58 +147,36 @@ export function tParams(locale: Locale, key: string, ...args: unknown[]): string
   return key;
 }
 
-/**
- * Get nested translation (for menu items)
- */
-export function tMenu(locale: Locale, key: string): string {
-  const lang = translations[locale] || translations.en;
-  const menu = (lang as Record<string, unknown>).menu as Record<string, string>;
-  return menu?.[key] || key;
-}
+// ============================================================
+// User Locale Management (in-memory)
+// ============================================================
 
-/**
- * Get user locale from chat_id (stored in memory for now)
- */
 const userLocales = new Map<number, Locale>();
 
+/**
+ * Get user locale from chat_id
+ * Default: Myanmar (my)
+ */
 export function getUserLocale(chatId: number): Locale {
-  return userLocales.get(chatId) || "en";
+  return userLocales.get(chatId) || "my";
 }
 
+/**
+ * Set user locale
+ */
 export function setUserLocale(chatId: number, locale: Locale): void {
   userLocales.set(chatId, locale);
 }
 
 /**
- * Detect locale from text (simple heuristic)
+ * Detect locale from Telegram language_code
+ * Default: Myanmar (my)
  */
-export function detectLocale(text: string): Locale {
-  // Check for Myanmar script
-  const myanmarRegex = /[က-႟]/;
-  if (myanmarRegex.test(text)) {
+export function detectLocale(languageCode?: string): Locale {
+  // If user's Telegram is set to Myanmar, use Myanmar
+  if (languageCode?.startsWith("my")) {
     return "my";
   }
-  return "en";
-}
-
-/**
- * Format company with locale-specific labels
- */
-export function formatCompanyInfo(
-  locale: Locale,
-  name: string,
-  location?: string | null,
-  workers?: number | null
-): string {
-  let message = `🏭 <b>${name}</b>\n`;
-
-  if (location) {
-    message += `${t(locale, "location")} ${location}\n`;
-  }
-
-  if (workers) {
-    message += `${t(locale, "workers")} ${workers.toLocaleString()}\n`;
-  }
-
-  return message;
+  // Default to Myanmar for this project (Myanmar migrant workers)
+  return "my";
 }

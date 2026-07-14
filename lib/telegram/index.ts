@@ -1,60 +1,20 @@
 /**
  * Telegram Bot Module
- * Export all Telegram-related utilities
+ * Using grammy framework
  */
 
-// Bot API utilities
-export {
-  sendMessage,
-  sendMessageWithWebsiteButton,
-  sendMessageWithKeyboard,
-  sendTypingAction,
-  setBotCommands,
-  setWebhook,
-  getWebhookInfo,
-  deleteWebhook,
-  getSiteUrl,
-  getCompanyUrl,
-  getAgencyUrl,
-  buildDeepLink,
-} from "./bot";
+// Bot instance and helpers
+export { bot, getSiteUrl, getCompanyUrl, getAgencyUrl, escapeHtml } from "./bot";
 
-// Types
-export type {
-  TelegramMessage,
-  TelegramUpdate,
-  InlineKeyboardButton,
-  InlineKeyboardMarkup,
-} from "./bot";
+// Commands
+export { startCommand } from "./commands/start";
+export { helpCommand } from "./commands/help";
+export { companyCommand, textSearchHandler } from "./commands/search";
+export { langCommand, languageCallback } from "./commands/language";
 
-// Message formatters
-export {
-  formatCompanyMessage,
-  formatCompanyWithReviews,
-  formatSearchResults,
-  formatWelcomeMessage,
-  formatHelpMessage,
-  getMainMenuButtons,
-  getCompanyActionButtons,
-} from "./formatters";
+// Keyboards
+export { getMainMenuKeyboard } from "./keyboards/main-menu";
+export { getLanguageKeyboard } from "./keyboards/language";
 
-export type { CompanyData, ReviewStats } from "./formatters";
-
-// Internationalization (i18n)
-export {
-  type Locale,
-  t,
-  tParams,
-  tMenu,
-  getUserLocale,
-  setUserLocale,
-  detectLocale,
-  formatCompanyInfo,
-} from "./i18n";
-
-// Verification and security
-export {
-  verifyWebhookSecret,
-  isValidTelegramUpdate,
-  checkRateLimit,
-} from "./verify";
+// i18n
+export { type Locale, t, tParams, getUserLocale, setUserLocale, detectLocale } from "./i18n";
