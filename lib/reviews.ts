@@ -57,7 +57,7 @@ export async function createReview(input: CreateReviewInput) {
 export async function getReviewsByOrganization(organizationId: number) {
   const [reviews, stats] = await Promise.all([
     prisma.review.findMany({
-      where: { organizationId },
+      where: { organizationId, isVisible: true },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -71,7 +71,7 @@ export async function getReviewsByOrganization(organizationId: number) {
       },
     }),
     prisma.review.aggregate({
-      where: { organizationId },
+      where: { organizationId, isVisible: true },
       _count: true,
       _avg: {
         ratingSalary: true,

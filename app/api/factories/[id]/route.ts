@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getFactoryById, updateFactory } from "@/lib/factories";
+import { getPublicFactoryById, updateFactory } from "@/lib/factories";
 import { auth } from "@/auth";
 
 export async function GET(
@@ -9,7 +9,7 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const factory = await getFactoryById(parseInt(id));
+    const factory = await getPublicFactoryById(parseInt(id));
 
     if (!factory) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
