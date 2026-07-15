@@ -68,7 +68,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(factory, { status: 201 });
   } catch (error) {
-    console.error("Error creating factory:", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Server error";
+    const status = message.includes("already exists") ? 409 : 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }

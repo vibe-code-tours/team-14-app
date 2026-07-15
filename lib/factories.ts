@@ -375,10 +375,23 @@ export async function createPublicFactory(data: {
   userId?: number;
   image?: string | null;
 }) {
+  // Normalize empty strings to null
+  const regNumber = data.regNumber?.trim() || null;
+
+  // Check for duplicate registration number
+  if (regNumber) {
+    const existing = await prisma.factory.findUnique({
+      where: { regNumber },
+    });
+    if (existing) {
+      throw new Error("A factory with this registration number already exists");
+    }
+  }
+
   return prisma.factory.create({
     data: {
       name: data.name,
-      regNumber: data.regNumber || null,
+      regNumber,
       operator: data.operator || null,
       businessActivity: data.businessActivity || null,
       houseNumber: data.houseNumber || null,
