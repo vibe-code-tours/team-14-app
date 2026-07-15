@@ -1,25 +1,38 @@
 "use client";
 
 import { useState, useEffect, useCallback, use } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
 import { ReviewModal } from "@/src/components/ReviewModal";
+import { AlertModal } from "@/src/components/AlertModal";
 import { StarRating } from "@/src/components/StarRating";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/src/components/Tabs";
 import { useLanguage } from "@/src/contexts/LanguageContext";
+import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
 
 interface Factory {
   id: number;
   name: string;
   operator: string | null;
   businessActivity: string | null;
+  houseNumber: string | null;
+  village: string | null;
+  soi: string | null;
+  road: string | null;
+  subdistrict: string | null;
   district: string | null;
   province: string | null;
+  postalCode: string | null;
   workers: number | null;
   country: string;
   type: string | null;
   phone: string | null;
+  regNumber: string | null;
+  image: string | null;
 }
 
 interface Review {
@@ -55,11 +68,15 @@ export default function FactoryDetailPage({
 }) {
   const { id } = use(params);
   const { t } = useLanguage();
+  const router = useRouter();
+  const { status } = useSession();
   const [factory, setFactory] = useState<Factory | null>(null);
   const [reviewsData, setReviewsData] = useState<ReviewsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [loginAlertOpen, setLoginAlertOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("about");
+  const [showLightbox, setShowLightbox] = useState(false);
 
   const fetchFactoryData = useCallback(async () => {
     setLoading(true);
@@ -94,6 +111,14 @@ export default function FactoryDetailPage({
     fetchFactoryData();
   };
 
+  const handleWriteReviewClick = () => {
+    if (status !== "authenticated") {
+      setLoginAlertOpen(true);
+      return;
+    }
+    setShowReviewModal(true);
+  };
+
   const getCountryFlag = (country: string) => {
     const flags: Record<string, string> = {
       Myanmar: "🇲🇲",
@@ -111,6 +136,24 @@ export default function FactoryDetailPage({
       month: "short",
       day: "numeric",
     });
+  };
+
+  const formatAddress = (f: Factory) => {
+    const parts = [
+      f.houseNumber && `${t("factoryDetail.address.houseNumber")} ${f.houseNumber}`,
+      f.village && `${t("factoryDetail.address.village")} ${f.village}`,
+      f.soi && `${t("factoryDetail.address.soi")} ${f.soi}`,
+      f.road && `${t("factoryDetail.address.road")} ${f.road}`,
+      f.subdistrict && `${t("factoryDetail.address.subdistrict")} ${f.subdistrict}`,
+      f.district && `${t("factoryDetail.address.district")} ${f.district}`,
+      f.province && `${t("factoryDetail.address.province")} ${f.province}`,
+      f.postalCode && f.postalCode,
+    ];
+    return parts.filter(Boolean).join(", ");
+  };
+
+  const formatAddressShort = (f: Factory) => {
+    return [f.district, f.province].filter(Boolean).join(", ") || "Thailand";
   };
 
   if (loading) {
@@ -159,6 +202,24 @@ export default function FactoryDetailPage({
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-4">
+              {/* Factory Image */}
+              <div
+                className={`w-full h-48 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-700 transition flex items-center justify-center ${
+                  factory.image ? "cursor-pointer hover:shadow-md" : ""
+                }`}
+                onClick={() => factory.image && setShowLightbox(true)}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={factory.image || DEFAULT_FACTORY_IMAGE}
+                  alt={factory.name}
+                  className={
+                    factory.image
+                      ? "w-full h-full object-cover"
+                      : "w-16 h-16 opacity-40"
+                  }
+                />
+              </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 px-3 py-1 rounded-full">
                   {t("factoryDetail.thailand")}
@@ -166,11 +227,11 @@ export default function FactoryDetailPage({
               </div>
 
               <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100">
                   {factory.name}
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1 text-sm">
-                  📍 {[factory.district, factory.province].filter(Boolean).join(", ") || "Thailand"}
+                  📍 {formatAddressShort(factory)}
                 </p>
               </div>
 
@@ -266,10 +327,10 @@ export default function FactoryDetailPage({
             <section className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-3">
               <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm">{t("factoryDetail.detailsSection")}</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
+                <div className="col-span-2">
                   <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.location")}</span>
                   <p className="text-slate-700 dark:text-slate-200 font-medium">
-                    {[factory.district, factory.province].filter(Boolean).join(", ") || "Thailand"}
+                    {formatAddress(factory) || "Thailand"}
                   </p>
                 </div>
                 <div>
@@ -304,7 +365,7 @@ export default function FactoryDetailPage({
                 </span>
               </h2>
               <button
-                onClick={() => setShowReviewModal(true)}
+                onClick={handleWriteReviewClick}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-sm transition hover:shadow-md active:scale-95 flex items-center gap-1.5"
               >
                 ✏️ {t("nav.writeReview")}
@@ -400,6 +461,47 @@ export default function FactoryDetailPage({
         factoryName={factory.name}
         onReviewSubmitted={handleReviewSubmitted}
       />
+
+      <AlertModal
+        isOpen={loginAlertOpen}
+        onClose={(confirmed) => {
+          setLoginAlertOpen(false);
+          if (confirmed) router.push("/login");
+        }}
+        title={t("nav.login")}
+        message={t("auth.loginRequired")}
+        confirmLabel={t("nav.login")}
+        cancelLabel="Cancel"
+      />
+
+      {showLightbox &&
+        factory.image &&
+        createPortal(
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 9999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              backgroundColor: "rgba(0,0,0,0.8)",
+            }}
+            onClick={() => setShowLightbox(false)}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={factory.image}
+              alt={factory.name}
+              style={{ maxWidth: "90vw", maxHeight: "90vh", objectFit: "contain" }}
+            />
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

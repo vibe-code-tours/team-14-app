@@ -6,6 +6,7 @@ import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
 import { SuggestModal } from "@/src/components/SuggestModal";
 import { useLanguage } from "@/src/contexts/LanguageContext";
+import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
 
 interface Factory {
   id: number;
@@ -16,6 +17,7 @@ interface Factory {
   workers: number | null;
   country: string;
   type: string | null;
+  image: string | null;
 }
 
 interface FactoryResponse {
@@ -43,9 +45,14 @@ export default function FactoriesPage() {
       params.set("limit", limit.toString());
       params.set("offset", ((page - 1) * limit).toString());
       const res = await fetch(`/api/factories?${params}`);
+      if (!res.ok) {
+        setFactories([]);
+        setTotal(0);
+        return;
+      }
       const data: FactoryResponse = await res.json();
-      setFactories(data.data);
-      setTotal(data.total);
+      setFactories(data?.data ?? []);
+      setTotal(data?.total ?? 0);
     } catch (error) {
       console.error("Error fetching factories:", error);
     } finally {
@@ -83,7 +90,7 @@ export default function FactoriesPage() {
             href="/factories/new"
             className="inline-flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald-700 transition text-sm whitespace-nowrap"
           >
-            ➕ Submit Factory
+            {t("factoryList.submitFactory")}
           </Link>
         </div>
 
@@ -170,6 +177,18 @@ export default function FactoriesPage() {
                 href={`/factories/${factory.id}`}
                 className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition block group"
               >
+                <div className="w-full h-32 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 mb-3 flex items-center justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={factory.image || DEFAULT_FACTORY_IMAGE}
+                    alt={factory.name}
+                    className={
+                      factory.image
+                        ? "w-full h-full object-cover"
+                        : "w-10 h-10 opacity-40"
+                    }
+                  />
+                </div>
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-bold text-emerald-700 group-hover:text-emerald-600 line-clamp-2">
                     {factory.name}

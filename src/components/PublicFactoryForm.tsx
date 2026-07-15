@@ -1,11 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Input } from "@/src/components/Input";
 import { Select } from "@/src/components/Select";
 import { Button } from "@/src/components/Button";
+import { SuccessModal } from "@/src/components/SuccessModal";
+import { useLanguage } from "@/src/contexts/LanguageContext";
+import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
 
 interface PublicFactoryFormData {
+  id?: number;
   name: string;
   regNumber: string;
   operator: string;
@@ -22,6 +27,13 @@ interface PublicFactoryFormData {
   type: string;
   workers: string;
   country: string;
+  image?: string | null;
+}
+
+interface PublicFactoryFormProps {
+  initialData?: Partial<PublicFactoryFormData>;
+  mode?: "create" | "edit";
+  onSuccess?: () => void;
 }
 
 const provinceOptions = [
@@ -55,16 +67,55 @@ const initialFormData: PublicFactoryFormData = {
   country: "Thailand",
 };
 
-export function PublicFactoryForm() {
+export function PublicFactoryForm({
+  initialData,
+  mode = "create",
+  onSuccess,
+}: PublicFactoryFormProps) {
+  const { t } = useLanguage();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [formData, setFormData] = useState<PublicFactoryFormData>(initialFormData);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [image, setImage] = useState<string | null>(initialData?.image || null);
+  const [showLightbox, setShowLightbox] = useState(false);
+  const [formData, setFormData] = useState<PublicFactoryFormData>({
+    ...initialFormData,
+    ...initialData,
+  });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const size = 400;
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const scale = Math.max(size / img.width, size / img.height);
+        const x = (size - img.width * scale) / 2;
+        const y = (size - img.height * scale) / 2;
+        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+        setImage(canvas.toDataURL("image/jpeg", 0.8));
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,10 +128,15 @@ export function PublicFactoryForm() {
       const payload = {
         ...formData,
         workers: formData.workers ? parseInt(formData.workers) : null,
+        image: image || null,
       };
 
-      const res = await fetch("/api/factories", {
-        method: "POST",
+      const url = mode === "edit" && formData.id
+        ? `/api/factories/${formData.id}`
+        : "/api/factories";
+
+      const res = await fetch(url, {
+        method: mode === "edit" ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
@@ -91,7 +147,12 @@ export function PublicFactoryForm() {
       }
 
       setSuccess(true);
-      setFormData(initialFormData);
+      if (mode === "create") {
+        setFormData(initialFormData);
+        setShowSuccessModal(true);
+      } else {
+        onSuccess?.();
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -100,126 +161,175 @@ export function PublicFactoryForm() {
   };
 
   return (
+    <>
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Notice */}
-      <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200 p-4 rounded-xl text-sm">
-        📝 Your submission will be reviewed by an admin before appearing
-        publicly.
+      {mode === "create" && (
+        <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200 p-4 rounded-xl text-sm">
+          {t("newFactory.notice")}
+        </div>
+      )}
+
+      {/* Factory Image */}
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">
+          {t("factoryForm.factoryImage")}
+        </h3>
+        <div className="flex items-center gap-6">
+          <div
+            className="w-28 h-28 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-700 flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-emerald-500 transition shrink-0"
+            onClick={() => image && setShowLightbox(true)}
+          >
+            <img
+              src={image || DEFAULT_FACTORY_IMAGE}
+              alt="Factory"
+              className={image ? "w-full h-full object-cover" : "w-12 h-12 opacity-40"}
+            />
+          </div>
+          <div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageUpload}
+              accept="image/*"
+              className="hidden"
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="px-4 py-2 text-sm font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-lg transition"
+            >
+              📁 {t("factoryForm.uploadImage")}
+            </button>
+            {image && (
+              <button
+                type="button"
+                onClick={() => setImage(null)}
+                className="ml-2 px-4 py-2 text-sm font-medium text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-lg transition"
+              >
+                ✕ {t("factoryForm.removeImage")}
+              </button>
+            )}
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
+              {t("factoryForm.imageHint")}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Basic Info */}
       <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
         <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">
-          📋 Basic Information
+          {t("factoryForm.basicInfo")}
         </h3>
         <div className="grid md:grid-cols-2 gap-4">
           <Input
-            label="Factory Name *"
+            label={t("factoryForm.factoryName")}
             name="name"
             value={formData.name}
             onChange={handleChange}
             required
-            placeholder="Enter factory name"
+            placeholder={t("factoryForm.factoryNamePlaceholder")}
           />
           <Input
-            label="Registration Number"
+            label={t("factoryForm.regNumber")}
             name="regNumber"
             value={formData.regNumber}
             onChange={handleChange}
-            placeholder="e.g. 0105519000001"
+            placeholder={t("factoryForm.regNumberPlaceholder")}
           />
           <Input
-            label="Operator"
+            label={t("factoryForm.operator")}
             name="operator"
             value={formData.operator}
             onChange={handleChange}
-            placeholder="Company operator name"
+            placeholder={t("factoryForm.operatorPlaceholder")}
           />
           <Input
-            label="Business Activity"
+            label={t("factoryForm.businessActivity")}
             name="businessActivity"
             value={formData.businessActivity}
             onChange={handleChange}
-            placeholder="e.g. Textile manufacturing"
+            placeholder={t("factoryForm.businessActivityPlaceholder")}
           />
           <Input
-            label="Phone"
+            label={t("factoryForm.phone")}
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            placeholder="Contact phone number"
+            placeholder={t("factoryForm.phonePlaceholder")}
           />
           <Input
-            label="Number of Workers"
+            label={t("factoryForm.workers")}
             name="workers"
             type="number"
             value={formData.workers}
             onChange={handleChange}
-            placeholder="e.g. 500"
+            placeholder={t("factoryForm.workersPlaceholder")}
           />
         </div>
       </div>
 
       {/* Address */}
       <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
-        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">📍 Address</h3>
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">{t("factoryForm.address")}</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <Input
-            label="House Number"
+            label={t("factoryForm.houseNumber")}
             name="houseNumber"
             value={formData.houseNumber}
             onChange={handleChange}
-            placeholder="House/Building number"
+            placeholder={t("factoryForm.houseNumberPlaceholder")}
           />
           <Input
-            label="Village"
+            label={t("factoryForm.village")}
             name="village"
             value={formData.village}
             onChange={handleChange}
-            placeholder="Village/Moo"
+            placeholder={t("factoryForm.villagePlaceholder")}
           />
           <Input
-            label="Soi"
+            label={t("factoryForm.soi")}
             name="soi"
             value={formData.soi}
             onChange={handleChange}
-            placeholder="Soi"
+            placeholder={t("factoryForm.soiPlaceholder")}
           />
           <Input
-            label="Road"
+            label={t("factoryForm.road")}
             name="road"
             value={formData.road}
             onChange={handleChange}
-            placeholder="Road name"
+            placeholder={t("factoryForm.roadPlaceholder")}
           />
           <Input
-            label="Subdistrict"
+            label={t("factoryForm.subdistrict")}
             name="subdistrict"
             value={formData.subdistrict}
             onChange={handleChange}
-            placeholder="Subdistrict (Tambon)"
+            placeholder={t("factoryForm.subdistrictPlaceholder")}
           />
           <Input
-            label="District"
+            label={t("factoryForm.district")}
             name="district"
             value={formData.district}
             onChange={handleChange}
-            placeholder="District (Amphoe)"
+            placeholder={t("factoryForm.districtPlaceholder")}
           />
           <Select
-            label="Province"
+            label={t("factoryForm.province")}
             name="province"
             value={formData.province}
             onChange={handleChange}
             options={provinceOptions}
-            placeholder="Select province"
+            placeholder={t("factoryForm.provincePlaceholder")}
           />
           <Input
-            label="Postal Code"
+            label={t("factoryForm.postalCode")}
             name="postalCode"
             value={formData.postalCode}
             onChange={handleChange}
-            placeholder="e.g. 10110"
+            placeholder={t("factoryForm.postalCodePlaceholder")}
           />
         </div>
       </div>
@@ -232,15 +342,57 @@ export function PublicFactoryForm() {
 
       {success && (
         <div className="bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 p-4 rounded-xl text-sm">
-          ✅ Factory submitted successfully! It will appear after admin review.
+          ✅ {mode === "edit"
+            ? t("editFactory.success")
+            : t("factorySubmitted.message")}
         </div>
       )}
 
       <div className="flex justify-end">
         <Button type="submit" isLoading={submitting}>
-          Submit Factory
+          {mode === "edit" ? t("factoryForm.saveChanges") : t("factoryForm.submitFactory")}
         </Button>
       </div>
     </form>
+
+    <SuccessModal
+      isOpen={showSuccessModal}
+      onClose={() => {
+        setShowSuccessModal(false);
+        onSuccess?.();
+      }}
+      title={t("factorySubmitted.title")}
+      message={t("factorySubmitted.message")}
+      buttonText={t("factorySubmitted.ok")}
+    />
+
+    {showLightbox &&
+      image &&
+      createPortal(
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            backgroundColor: "rgba(0,0,0,0.8)",
+          }}
+          onClick={() => setShowLightbox(false)}
+        >
+          <img
+            src={image}
+            alt="Factory"
+            style={{ maxWidth: "90vw", maxHeight: "90vh", objectFit: "contain" }}
+          />
+        </div>,
+        document.body
+      )}
+    </>
   );
 }

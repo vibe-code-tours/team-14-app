@@ -3,6 +3,7 @@ import { prisma } from "./prisma";
 export interface CreateReviewInput {
   factoryId?: number;
   organizationId?: number;
+  userId?: number;
   workerRole: string;
   countryFrom: string;
   ratingSalary: number;
@@ -40,6 +41,8 @@ export async function createReview(input: CreateReviewInput) {
     data: {
       factoryId: input.factoryId || null,
       organizationId: input.organizationId || null,
+      userId: input.userId || null,
+      isVisible: false,
       workerRole: input.workerRole.trim(),
       countryFrom: input.countryFrom.trim(),
       ratingSalary: input.ratingSalary,
@@ -57,7 +60,7 @@ export async function createReview(input: CreateReviewInput) {
 export async function getReviewsByOrganization(organizationId: number) {
   const [reviews, stats] = await Promise.all([
     prisma.review.findMany({
-      where: { organizationId },
+      where: { organizationId, isVisible: true },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -71,7 +74,7 @@ export async function getReviewsByOrganization(organizationId: number) {
       },
     }),
     prisma.review.aggregate({
-      where: { organizationId },
+      where: { organizationId, isVisible: true },
       _count: true,
       _avg: {
         ratingSalary: true,

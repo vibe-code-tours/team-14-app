@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchFactories, createPublicFactory } from "@/lib/factories";
+import { auth } from "@/auth";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -40,6 +41,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get current user (optional - anonymous submissions allowed)
+    const session = await auth();
+    const userId = session?.user?.id ? parseInt(session.user.id) : undefined;
+
     const factory = await createPublicFactory({
       name: body.name,
       regNumber: body.regNumber,
@@ -57,6 +62,8 @@ export async function POST(request: NextRequest) {
       type: body.type,
       workers: body.workers,
       country: body.country,
+      image: body.image,
+      userId,
     });
 
     return NextResponse.json(factory, { status: 201 });

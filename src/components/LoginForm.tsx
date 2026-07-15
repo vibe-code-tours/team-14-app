@@ -5,6 +5,7 @@ import { signIn, signOut } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Input } from "./Input";
+import { PasswordInput } from "./PasswordInput";
 import { Button } from "./Button";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 
@@ -24,6 +25,7 @@ export function LoginForm() {
     setSubmitting(true);
     setError("");
 
+    // First try to sign in
     const result = await signIn("credentials", {
       email,
       password,
@@ -31,7 +33,23 @@ export function LoginForm() {
     });
 
     if (result?.error) {
-      setError(t("login.invalidCredentials"));
+      // Login failed - check if it's because email is not verified
+      try {
+        const checkRes = await fetch("/api/auth/check-email-verification", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        const checkData = await checkRes.json();
+
+        if (checkData.emailNotVerified) {
+          setError(t("login.emailNotVerified"));
+        } else {
+          setError(t("login.invalidCredentials"));
+        }
+      } catch {
+        setError(t("login.invalidCredentials"));
+      }
       setSubmitting(false);
       return;
     }
@@ -61,9 +79,8 @@ export function LoginForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <Input
+      <PasswordInput
         label={t("login.password")}
-        type="password"
         required
         value={password}
         onChange={(e) => setPassword(e.target.value)}

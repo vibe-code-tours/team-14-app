@@ -48,8 +48,22 @@ export async function registerUser(input: RegisterUserInput) {
   }
   const { email, password, fullName, nickname } = parsed.data;
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const existing = await prisma.user.findFirst({ where: { email, isAdmin: false } });
   if (existing) {
+    // If user exists but email is not verified, resend verification email
+    if (!existing.emailVerified) {
+      const rawToken = generateToken();
+      await prisma.verificationToken.create({
+        data: {
+          identifier: existing.email,
+          token: hashToken(rawToken),
+          expires: new Date(Date.now() + EMAIL_VERIFICATION_TTL_MS),
+        },
+      });
+      const verifyUrl = `${process.env.AUTH_URL || "http://localhost:3000"}/verify-email?token=${rawToken}&email=${encodeURIComponent(existing.email)}`;
+      await sendVerificationEmail(existing.email, verifyUrl);
+      return { message: "verification_resent" };
+    }
     throw new Error("An account with this email already exists");
   }
 
@@ -85,7 +99,7 @@ export async function registerUser(input: RegisterUserInput) {
   // Auto-verify in dev mode (no Resend API key)
   if (!process.env.RESEND_API_KEY) {
     await prisma.user.update({
-      where: { email },
+      where: { id: user.id },
       data: { emailVerified: new Date() },
     });
     await prisma.verificationToken.delete({
@@ -97,15 +111,34 @@ export async function registerUser(input: RegisterUserInput) {
 }
 
 export async function verifyCredentials(email: string, password: string) {
-  const user = await prisma.user.findUnique({
-    where: { email: email.trim().toLowerCase() },
+  const user = await prisma.user.findFirst({
+    where: { email: email.trim().toLowerCase(), isAdmin: false },
   });
 
   if (!user || !user.passwordHash) return null;
-  if (!user.emailVerified) return null;
+  if (user.status === "blocked") return null;
 
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) return null;
+
+  // If email is not verified, send verification email and return indicator
+  if (!user.emailVerified) {
+    try {
+      const rawToken = generateToken();
+      await prisma.verificationToken.create({
+        data: {
+          identifier: user.email,
+          token: hashToken(rawToken),
+          expires: new Date(Date.now() + EMAIL_VERIFICATION_TTL_MS),
+        },
+      });
+      const verifyUrl = `${process.env.AUTH_URL || "http://localhost:3000"}/verify-email?token=${rawToken}&email=${encodeURIComponent(user.email)}`;
+      await sendVerificationEmail(user.email, verifyUrl);
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
+    }
+    return { emailNotVerified: true };
+  }
 
   return {
     id: user.id,
@@ -132,22 +165,39 @@ export async function verifyEmail(rawToken: string, email: string) {
     throw new Error("Verification link is invalid or has expired");
   }
 
-  await prisma.user.update({
+  await prisma.user.updateMany({
     where: { email: record.identifier },
     data: { emailVerified: new Date() },
   });
 
-  await prisma.verificationToken.delete({
-    where: { identifier_token: { identifier: record.identifier, token: record.token } },
+  // Use deleteMany to avoid errors if token was already deleted
+  await prisma.verificationToken.deleteMany({
+    where: { identifier: record.identifier },
   });
 }
 
 export async function requestPasswordReset(email: string) {
   const normalized = email.trim().toLowerCase();
-  const user = await prisma.user.findUnique({ where: { email: normalized } });
+  const user = await prisma.user.findFirst({ where: { email: normalized, isAdmin: false } });
 
-  // Enumeration-safe: silently no-op if the account doesn't exist.
-  if (!user) return;
+  if (!user) {
+    throw new Error("Email does not exist");
+  }
+
+  // If email is not verified, send verification email instead
+  if (!user.emailVerified) {
+    const rawToken = generateToken();
+    await prisma.verificationToken.create({
+      data: {
+        identifier: user.email,
+        token: hashToken(rawToken),
+        expires: new Date(Date.now() + EMAIL_VERIFICATION_TTL_MS),
+      },
+    });
+    const verifyUrl = `${process.env.AUTH_URL || "http://localhost:3000"}/verify-email?token=${rawToken}&email=${encodeURIComponent(user.email)}`;
+    await sendVerificationEmail(user.email, verifyUrl);
+    throw new Error("Email not verified. A verification link has been sent to your email.");
+  }
 
   const rawToken = generateToken();
   await prisma.passwordResetToken.create({
@@ -160,6 +210,30 @@ export async function requestPasswordReset(email: string) {
 
   const resetUrl = `${process.env.AUTH_URL || "http://localhost:3000"}/reset-password/${rawToken}`;
   await sendPasswordResetEmail(normalized, resetUrl);
+}
+
+export async function resendVerificationEmail(email: string) {
+  const normalized = email.trim().toLowerCase();
+  const user = await prisma.user.findFirst({ where: { email: normalized, isAdmin: false } });
+
+  if (!user) {
+    throw new Error("Email does not exist");
+  }
+
+  if (user.emailVerified) {
+    throw new Error("Email is already verified");
+  }
+
+  const rawToken = generateToken();
+  await prisma.verificationToken.create({
+    data: {
+      identifier: user.email,
+      token: hashToken(rawToken),
+      expires: new Date(Date.now() + EMAIL_VERIFICATION_TTL_MS),
+    },
+  });
+  const verifyUrl = `${process.env.AUTH_URL || "http://localhost:3000"}/verify-email?token=${rawToken}&email=${encodeURIComponent(user.email)}`;
+  await sendVerificationEmail(user.email, verifyUrl);
 }
 
 export async function resetPassword(rawToken: string, newPassword: string) {

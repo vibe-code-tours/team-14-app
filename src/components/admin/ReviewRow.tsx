@@ -48,35 +48,35 @@ export function ReviewRow({
       style={{ animationDelay: `${index * 80}ms`, animationFillMode: "forwards" }}
     >
       <td className="p-4">
-        <span className="text-sm text-slate-500">{id}</span>
+        <span className="text-sm text-slate-500 dark:text-slate-400">{id}</span>
       </td>
       <td className="p-4">
         <div>
-          <p className="font-medium text-slate-800 text-sm">{workerRole}</p>
-          <p className="text-xs text-slate-400">
+          <p className="font-medium text-slate-800 dark:text-slate-200 text-sm">{workerRole}</p>
+          <p className="text-xs text-slate-400 dark:text-slate-500">
             {factoryName || organizationName || "Unknown"}
           </p>
         </div>
       </td>
       <td className="p-4">
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-600 dark:text-slate-300">
           {user?.nickname || user?.fullName || "—"}
         </p>
       </td>
       <td className="p-4">
-        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+        <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 px-2 py-1 rounded">
           {countryFrom}
         </span>
       </td>
       <td className="p-4">
         <div className="flex items-center gap-1.5">
           <span className="text-yellow-500 text-sm">⭐</span>
-          <span className="text-sm font-medium text-slate-700">{avgRating}</span>
-          <span className="text-xs text-slate-400">/5</span>
+          <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{avgRating}</span>
+          <span className="text-xs text-slate-400 dark:text-slate-500">/5</span>
         </div>
       </td>
       <td className="p-4 max-w-xs">
-        <p className="text-sm text-slate-600 line-clamp-2">{reviewText}</p>
+        <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2">{reviewText}</p>
       </td>
       <td className="p-4">
         <Badge variant={isVisible ? "success" : "warning"}>
@@ -88,8 +88,8 @@ export function ReviewRow({
           onClick={() => onRequestToggle(id, isVisible, factoryName || organizationName || "Unknown")}
           className={`text-xs font-medium px-3 py-1.5 rounded-lg transition ${
             isVisible
-              ? "text-amber-700 bg-amber-50 hover:bg-amber-100"
-              : "text-emerald-700 bg-emerald-50 hover:bg-emerald-100"
+              ? "text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-900/50"
+              : "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50"
           }`}
         >
           {isVisible ? "Hide" : "Show"}
