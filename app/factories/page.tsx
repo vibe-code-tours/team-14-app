@@ -177,23 +177,19 @@ export default function FactoriesPage() {
                 href={`/factories/${factory.id}`}
                 className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition block group"
               >
-                <div className="w-full h-32 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 mb-3 flex items-center justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={factory.image || DEFAULT_FACTORY_IMAGE}
-                    alt={factory.name}
-                    className={
-                      factory.image
-                        ? "w-full h-full object-cover"
-                        : "w-10 h-10 opacity-40"
-                    }
-                  />
-                </div>
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-bold text-emerald-700 group-hover:text-emerald-600 line-clamp-2">
-                    {factory.name}
-                  </h3>
-                  <span className="text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-1 rounded whitespace-nowrap ml-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={factory.image || DEFAULT_FACTORY_IMAGE}
+                      alt={factory.name}
+                      className="h-12 w-12 rounded-full object-cover flex-shrink-0"
+                    />
+                    <h3 className="font-bold text-emerald-700 group-hover:text-emerald-600 line-clamp-2">
+                      {factory.name}
+                    </h3>
+                  </div>
+                  <span className="text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 px-3 py-1 rounded-full whitespace-nowrap ml-2">
                     🇹🇭
                   </span>
                 </div>

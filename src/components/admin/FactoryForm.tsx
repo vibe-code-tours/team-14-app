@@ -160,7 +160,7 @@ export function FactoryForm({ mode, initialData, factoryId }: FactoryFormProps) 
               onClick={() => fileInputRef.current?.click()}
               className="px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition"
             >
-              📁 Upload Image
+              📁 Upload Logo
             </button>
             {image && (
               <button

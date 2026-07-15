@@ -64,7 +64,7 @@ export function Navbar() {
         aria-hidden="true"
       />
 
-      <nav className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-slate-800 dark:to-slate-900 text-white py-3 px-4 sm:py-4 sm:px-6 sticky top-0 z-50 shadow-md dark:shadow-slate-900/50">
+      <nav className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-slate-800 dark:to-slate-900 text-white px-4 sm:px-6 sticky top-0 z-50 shadow-md dark:shadow-slate-900/50">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <Link
             href="/"
