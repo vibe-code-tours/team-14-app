@@ -76,7 +76,7 @@ python3 scripts/import_factories.py
 The script reads `DATABASE_URL` from `.env`. Format:
 
 ```
-DATABASE_URL=postgresql://migrant_user:YOUR_DATABASE_PASSWORD@localhost:5433/migrant_review_db
+DATABASE_URL=postgresql://migrant_user:your-database-password@localhost:5433/migrant_review_db
 ```
 
 Port `5433` is the external Docker port for PostgreSQL.

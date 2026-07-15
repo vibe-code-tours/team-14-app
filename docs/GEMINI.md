@@ -350,7 +350,7 @@ docker compose up -d
 This starts PostgreSQL 16 on port 5432 with:
 - Database: `migrant_review_db`
 - User: `migrant_user`
-- Password: `YOUR_DATABASE_PASSWORD`
+- Password: `your-database-password`
 
 ### 2. Install Dependencies
 
@@ -363,7 +363,7 @@ npm install
 Create `.env` file:
 
 ```env
-DATABASE_URL="postgresql://migrant_user:YOUR_DATABASE_PASSWORD@localhost:5432/migrant_review_db?schema=public"
+DATABASE_URL="postgresql://migrant_user:your-database-password@localhost:5432/migrant_review_db?schema=public"
 ADMIN_KEY="your_secure_admin_key_here"
 ```
 

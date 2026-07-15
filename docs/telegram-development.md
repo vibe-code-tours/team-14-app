@@ -183,7 +183,7 @@ Open Telegram → Find your bot → Send `/start`
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `TELEGRAM_BOT_TOKEN` | Bot token from BotFather | `8769025500:AA...` |
+| `TELEGRAM_BOT_TOKEN` | Bot token from BotFather | `your-telegram-bot-token` |
 | `TELEGRAM_WEBHOOK_SECRET` | Secret for webhook verification | `ea968a84...` |
 | `NEXT_PUBLIC_SITE_URL` | Website URL for button links | `https://workervoice.help` |
 | `NEXT_PUBLIC_API_URL` | API URL for bot queries | `https://workervoice.help` |
