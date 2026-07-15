@@ -52,7 +52,7 @@ In Vercel Dashboard → Settings → Environment Variables:
 | Variable | Value | Description |
 |----------|-------|-------------|
 | `TELEGRAM_BOT_TOKEN` | `your-telegram-bot-token` | Bot token from BotFather |
-| `TELEGRAM_WEBHOOK_SECRET` | `ea968a84...` | Random secret for webhook |
+| `TELEGRAM_WEBHOOK_SECRET` | `your-webhook-secret` | Random secret for webhook |
 | `NEXT_PUBLIC_SITE_URL` | `https://your-app.vercel.app` | Your Vercel URL |
 | `DATABASE_URL` | `postgresql://...` | Your database URL |
 | `AUTH_SECRET` | `your-secret` | Auth.js secret |
