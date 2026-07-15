@@ -60,13 +60,13 @@ the build itself will fail if Prisma cannot connect to the database.
 | Variable | Value | Notes |
 |----------|-------|-------|
 | `RESEND_API_KEY` | API key from Resend dashboard | Used for verification and password reset emails. |
-| `EMAIL_FROM` | `no-reply@misehub.jp` | Must be from a verified domain in Resend. |
+| `EMAIL_FROM` | `noreply@your-domain.com` | Must be from a verified domain in Resend. |
 
 ### Admin
 
 | Variable | Value | Notes |
 |----------|-------|-------|
-| `ADMIN_KEY` | `YOUR_ADMIN_KEY` | Used for protected admin API routes. |
+| `ADMIN_KEY` | `your-admin-key` | Used for protected admin API routes. |
 
 ---
 
@@ -198,21 +198,20 @@ and redeploy.
 For convenience, here are all values to copy into Vercel:
 
 ```
-DATABASE_URL=postgresql://migrant_user:YOUR_DATABASE_PASSWORD@localhost:5432/migrant_review_db
+DATABASE_URL=postgresql://user:password@host:port/dbname
 AUTH_SECRET=generate-with-npx-auth-secret
 AUTH_URL=https://workervoice.help
 NEXT_PUBLIC_SITE_URL=https://workervoice.help
 NEXT_PUBLIC_API_URL=https://workervoice.help
-TELEGRAM_BOT_TOKEN=YOUR_TELEGRAM_BOT_TOKEN
-TELEGRAM_WEBHOOK_SECRET=YOUR_WEBHOOK_SECRET
-RESEND_API_KEY=YOUR_RESEND_API_KEY
-EMAIL_FROM=no-reply@misehub.jp
-ADMIN_KEY=YOUR_ADMIN_KEY
+TELEGRAM_BOT_TOKEN=your-telegram-bot-token
+TELEGRAM_WEBHOOK_SECRET=your-webhook-secret
+RESEND_API_KEY=your-resend-api-key
+EMAIL_FROM=noreply@your-domain.com
+ADMIN_KEY=your-admin-key
 ```
 
-> **IMPORTANT:** `DATABASE_URL` above uses `localhost` for reference only.
-> Replace with your actual hosted PostgreSQL connection string before
-> deploying to Vercel.
+> **IMPORTANT:** Replace all placeholder values with your actual
+> credentials before deploying to Vercel.
 
 ---
 
