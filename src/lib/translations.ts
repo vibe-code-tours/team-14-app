@@ -402,8 +402,8 @@ export const translations: Record<string, TranslationEntry> = {
 
   // Footer
   "footer.brand": {
-    en: "WorkerVoice — Migrant Worker Review Network",
-    my: "WorkerVoice — ရွှေ့ပြောင်းအလုပ်သမားများ ပြန်လည်သုံးသပ်ချက် ကွန်ယက်",
+    en: "- Migrant Worker Review Network",
+    my: "- ရွှေ့ပြောင်းအလုပ်သမားများ ပြန်လည်သုံးသပ်ချက် ကွန်ယက်",
   },
   "footer.tagline": {
     en: "Thailand 🇹🇭 • Helping workers find safe workplaces",
