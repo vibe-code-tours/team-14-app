@@ -12,6 +12,7 @@ import { AlertModal } from "@/src/components/AlertModal";
 import { StarRating } from "@/src/components/StarRating";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/src/components/Tabs";
 import { useLanguage } from "@/src/contexts/LanguageContext";
+import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
 
 interface Factory {
   id: number;
@@ -202,19 +203,23 @@ export default function FactoryDetailPage({
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-4">
               {/* Factory Image */}
-              {factory.image && (
-                <div
-                  className="w-full h-48 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-700 cursor-pointer hover:shadow-md transition"
-                  onClick={() => setShowLightbox(true)}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={factory.image}
-                    alt={factory.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
+              <div
+                className={`w-full h-48 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-700 transition flex items-center justify-center ${
+                  factory.image ? "cursor-pointer hover:shadow-md" : ""
+                }`}
+                onClick={() => factory.image && setShowLightbox(true)}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={factory.image || DEFAULT_FACTORY_IMAGE}
+                  alt={factory.name}
+                  className={
+                    factory.image
+                      ? "w-full h-full object-cover"
+                      : "w-16 h-16 opacity-40"
+                  }
+                />
+              </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 px-3 py-1 rounded-full">
                   {t("factoryDetail.thailand")}
