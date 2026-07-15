@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
@@ -12,6 +12,7 @@ import { AboutUs } from "@/src/components/AboutUs";
 import { ContactLinks } from "@/src/components/ContactLinks";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
+import { useDebounce } from "@/src/lib/hooks/useDebounce";
 
 interface Factory {
   id: number;
@@ -37,15 +38,22 @@ export default function Home() {
   const [showSuggestModal, setShowSuggestModal] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedWorkerRange, setSelectedWorkerRange] = useState("");
+  const debouncedQuery = useDebounce(searchQuery, 300);
+  const abortRef = useRef<AbortController | null>(null);
 
-  const fetchFactories = useCallback(async (search?: string) => {
+  const fetchFactories = useCallback(async (search: string) => {
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
     setLoading(true);
     try {
       const params = new URLSearchParams();
       if (search) params.set("search", search);
       if (selectedRegion) params.set("region", selectedRegion);
 
-      const res = await fetch(`/api/factories?${params}`);
+      const res = await fetch(`/api/factories?${params}`, {
+        signal: controller.signal,
+      });
       if (!res.ok) {
         setFactories([]);
         return;
@@ -74,16 +82,17 @@ export default function Home() {
       // Limit to 10 factories for landing page
       setFactories(filtered.slice(0, 10));
     } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
       console.error("Error fetching factories:", error);
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted) setLoading(false);
     }
   }, [selectedRegion, selectedWorkerRange]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchFactories();
-  }, [fetchFactories]);
+    fetchFactories(debouncedQuery);
+  }, [fetchFactories, debouncedQuery]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
