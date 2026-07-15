@@ -202,37 +202,27 @@ export default function FactoryDetailPage({
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-4">
-              {/* Factory Image */}
-              <div
-                className={`w-full h-48 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-700 transition flex items-center justify-center ${
-                  factory.image ? "cursor-pointer hover:shadow-md" : ""
-                }`}
-                onClick={() => factory.image && setShowLightbox(true)}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={factory.image || DEFAULT_FACTORY_IMAGE}
-                  alt={factory.name}
-                  className={
-                    factory.image
-                      ? "w-full h-full object-cover"
-                      : "w-16 h-16 opacity-40"
-                  }
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 px-3 py-1 rounded-full">
-                  {t("factoryDetail.thailand")}
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3 min-w-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={factory.image || DEFAULT_FACTORY_IMAGE}
+                    alt={factory.name}
+                    className="h-16 w-16 rounded-full object-cover flex-shrink-0 cursor-pointer hover:shadow-md transition"
+                    onClick={() => setShowLightbox(true)}
+                  />
+                  <div>
+                    <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100">
+                      {factory.name}
+                    </h1>
+                    <p className="text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1 text-sm">
+                      📍 {formatAddressShort(factory)}
+                    </p>
+                  </div>
+                </div>
+                <span className="text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 px-3 py-1 rounded-full ml-2 flex-shrink-0">
+                  🇹🇭
                 </span>
-              </div>
-
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100">
-                  {factory.name}
-                </h1>
-                <p className="text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1 text-sm">
-                  📍 {formatAddressShort(factory)}
-                </p>
               </div>
 
               <div className="flex items-center gap-3">
@@ -328,26 +318,26 @@ export default function FactoryDetailPage({
               <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm">{t("factoryDetail.detailsSection")}</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="col-span-2">
-                  <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.location")}</span>
+                  <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.location")}</span>
                   <p className="text-slate-700 dark:text-slate-200 font-medium">
                     {formatAddress(factory) || "Thailand"}
                   </p>
                 </div>
                 <div>
-                  <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.workers")}</span>
+                  <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.workers")}</span>
                   <p className="text-slate-700 dark:text-slate-200 font-medium">
                     {factory.workers?.toLocaleString() || "—"}
                   </p>
                 </div>
                 {factory.operator && (
                   <div>
-                    <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.operator")}</span>
+                    <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.operator")}</span>
                     <p className="text-slate-700 dark:text-slate-200 font-medium">{factory.operator}</p>
                   </div>
                 )}
                 {factory.type && (
                   <div>
-                    <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.type")}</span>
+                    <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.type")}</span>
                     <p className="text-slate-700 dark:text-slate-200 font-medium">{factory.type}</p>
                   </div>
                 )}

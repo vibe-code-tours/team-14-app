@@ -104,6 +104,12 @@ export async function getPublicFactoryById(id: number) {
   });
 }
 
+export async function getFactoryByIdForOwner(id: number, userId: number) {
+  return prisma.factory.findFirst({
+    where: { id, userId },
+  });
+}
+
 export async function getFactoriesByUserId(userId: number, limit = 20, offset = 0) {
   const [data, total] = await Promise.all([
     prisma.factory.findMany({
