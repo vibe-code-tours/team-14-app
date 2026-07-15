@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { AlertModal } from "./AlertModal";
 import { useLanguage } from "@/src/contexts/LanguageContext";
+import { useDebounce } from "@/src/lib/hooks/useDebounce";
 
 interface Factory {
   id: number;
@@ -51,44 +52,35 @@ export function ReviewModal({
   const [error, setError] = useState("");
 
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debouncedFactorySearch = useDebounce(factorySearch, 300);
 
   const isFactoryPreselected = !!factoryId;
 
-  // Fetch factories when searching (debounced 300ms)
-  const fetchFactories = useCallback((search: string) => {
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-
-    searchTimeoutRef.current = setTimeout(async () => {
-      setFactoriesLoading(true);
-      try {
-        const params = new URLSearchParams({ limit: "20" });
-        if (search.trim()) {
-          params.set("search", search.trim());
-        }
-        const res = await fetch(`/api/factories?${params}`);
-        if (res.ok) {
-          const data = await res.json();
-          setFactories(data.data ?? []);
-        }
-      } catch {
-        // Silently fail — user can retry
-      } finally {
-        setFactoriesLoading(false);
+  const fetchFactories = useCallback(async (search: string) => {
+    setFactoriesLoading(true);
+    try {
+      const params = new URLSearchParams({ limit: "20" });
+      if (search.trim()) {
+        params.set("search", search.trim());
       }
-    }, 300);
+      const res = await fetch(`/api/factories?${params}`);
+      if (res.ok) {
+        const data = await res.json();
+        setFactories(data.data ?? []);
+      }
+    } catch {
+      // Silently fail — user can retry
+    } finally {
+      setFactoriesLoading(false);
+    }
   }, []);
 
   useEffect(() => {
     if (!isFactoryPreselected) {
-      fetchFactories(factorySearch);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchFactories(debouncedFactorySearch);
     }
-    return () => {
-      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
-    };
-  }, [factorySearch, fetchFactories, isFactoryPreselected]);
+  }, [debouncedFactorySearch, fetchFactories, isFactoryPreselected]);
 
   // Close dropdown on outside click
   useEffect(() => {
