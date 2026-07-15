@@ -7,6 +7,7 @@ import { Select } from "@/src/components/Select";
 import { Button } from "@/src/components/Button";
 import { SuccessModal } from "@/src/components/SuccessModal";
 import { useLanguage } from "@/src/contexts/LanguageContext";
+import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
 
 interface PublicFactoryFormData {
   id?: number;
@@ -65,9 +66,6 @@ const initialFormData: PublicFactoryFormData = {
   workers: "",
   country: "Thailand",
 };
-
-const DEFAULT_FACTORY_IMAGE =
-  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjEuNSI+PHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiByeD0iMiIvPjxwYXRoIGQ9Ik04IDE3VjdoOXY2Ii8+PHBhdGggZD0iTTEyIDE3VjEwaDciLz48L3N2Zz4=";
 
 export function PublicFactoryForm({
   initialData,

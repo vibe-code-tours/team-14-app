@@ -69,4 +69,5 @@ export interface FactoryFormData {
   workers: string;
   country: string;
   status: "pending" | "approved" | "declined";
+  image?: string | null;
 }

@@ -80,6 +80,7 @@ export async function createFactory(data: {
   workers?: number;
   country?: string;
   status?: FactoryStatus;
+  image?: string | null;
 }) {
   return prisma.factory.create({
     data: {
@@ -100,6 +101,7 @@ export async function createFactory(data: {
       workers: data.workers || null,
       country: data.country || "Thailand",
       status: data.status || "pending",
+      image: data.image || null,
     },
   });
 }
@@ -124,6 +126,7 @@ export async function updateFactory(
     workers?: number;
     country?: string;
     status?: FactoryStatus;
+    image?: string | null;
   }
 ) {
   return prisma.factory.update({

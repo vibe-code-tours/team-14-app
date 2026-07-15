@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
       workers: body.workers,
       country: body.country,
       status: body.status,
+      image: body.image,
     });
 
     return NextResponse.json(factory, { status: 201 });
