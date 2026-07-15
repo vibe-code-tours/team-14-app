@@ -27,6 +27,7 @@ interface Factory {
   type: string | null;
   workers: number | null;
   country: string | null;
+  image: string | null;
 }
 
 export default function EditFactoryPage() {
@@ -130,6 +131,7 @@ export default function EditFactoryPage() {
                 type: factory.type || "",
                 workers: factory.workers ? String(factory.workers) : "",
                 country: factory.country || "Thailand",
+                image: factory.image || null,
               }}
               onSuccess={handleSuccess}
             />

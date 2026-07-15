@@ -62,6 +62,7 @@ export async function POST(request: NextRequest) {
       type: body.type,
       workers: body.workers,
       country: body.country,
+      image: body.image,
       userId,
     });
 

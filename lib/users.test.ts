@@ -50,12 +50,11 @@ describe("registerUser", () => {
     ).rejects.toThrow();
   });
 
-  it("rejects duplicate emails", async () => {
-    (prisma.user.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue({ id: "1" });
+  it("resends verification for duplicate emails", async () => {
+    (prisma.user.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue({ id: "1", emailVerified: null });
 
-    await expect(
-      registerUser({ email: "a@b.com", password: "longenough", fullName: "Aye Aye" })
-    ).rejects.toThrow("already exists");
+    const result = await registerUser({ email: "a@b.com", password: "longenough", fullName: "Aye Aye" });
+    expect(result).toEqual({ message: "verification_resent" });
   });
 
   it("creates a user without requiring a nickname", async () => {

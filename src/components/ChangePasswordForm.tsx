@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "@/src/components/Input";
+import { PasswordInput } from "@/src/components/PasswordInput";
 import { Button } from "@/src/components/Button";
 
 export function ChangePasswordForm() {
@@ -63,28 +64,25 @@ export function ChangePasswordForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <Input
+      <PasswordInput
         label="Current Password"
         name="currentPassword"
-        type="password"
         value={formData.currentPassword}
         onChange={handleChange}
         required
         placeholder="Enter current password"
       />
-      <Input
+      <PasswordInput
         label="New Password"
         name="newPassword"
-        type="password"
         value={formData.newPassword}
         onChange={handleChange}
         required
         placeholder="Enter new password (min 8 characters)"
       />
-      <Input
+      <PasswordInput
         label="Confirm New Password"
         name="confirmPassword"
-        type="password"
         value={formData.confirmPassword}
         onChange={handleChange}
         required

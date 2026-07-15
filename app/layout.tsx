@@ -30,7 +30,7 @@ export default function RootLayout({
           id="theme-init"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('user-theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()`,
+            __html: `(function(){try{var k=location.pathname.indexOf('/admin')===0?'admin-theme':'user-theme';var t=localStorage.getItem(k);if(t!=='light'){document.documentElement.classList.add('dark')}}catch(e){}})()`,
           }}
         />
       </head>

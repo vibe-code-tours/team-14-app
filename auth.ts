@@ -13,7 +13,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: {},
         password: {},
       },
-      async authorize(credentials) {
+      async authorize(credentials: any) {
         const email = credentials?.email;
         const password = credentials?.password;
         if (typeof email !== "string" || typeof password !== "string") return null;
@@ -25,14 +25,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const user = await verifyCredentials(email, password);
         if (!user) return null;
 
+        // Handle unverified email case - return null and let client handle it
+        if ("emailNotVerified" in user && user.emailNotVerified) {
+          return null;
+        }
+
+        // Type guard: ensure we have a full user object (not the emailNotVerified variant)
+        if (!("id" in user)) return null;
+
         return {
           id: String(user.id),
-          email: user.email,
-          role: user.role,
-          isAdmin: user.isAdmin,
-          isSuperAdmin: user.isSuperAdmin,
-          name: user.displayName,
-          image: user.image,
+          email: user.email ?? "",
+          role: user.role ?? "user",
+          isAdmin: user.isAdmin ?? false,
+          isSuperAdmin: user.isSuperAdmin ?? false,
+          name: user.displayName ?? "",
+          image: user.image ?? null,
         };
       },
     }),

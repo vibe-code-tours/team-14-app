@@ -70,7 +70,8 @@ export function Navbar() {
             href="/"
             className="font-bold text-xl flex items-center gap-2 hover:opacity-90 transition"
           >
-            <span>🌏</span> WorkerVoice
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="WorkerVoice" className="h-16 w-auto" />
           </Link>
 
           {/* Desktop links — visible at md (768px+) and up */}
