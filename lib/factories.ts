@@ -98,12 +98,6 @@ export async function getFactoryById(id: number) {
   });
 }
 
-export async function getPublicFactoryById(id: number) {
-  return prisma.factory.findUnique({
-    where: { id, status: "approved" },
-  });
-}
-
 export async function getFactoriesByUserId(userId: number, limit = 20, offset = 0) {
   const [data, total] = await Promise.all([
     prisma.factory.findMany({

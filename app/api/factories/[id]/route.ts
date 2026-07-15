@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPublicFactoryById, updateFactory } from "@/lib/factories";
+import { getFactoryById, updateFactory } from "@/lib/factories";
 import { auth } from "@/auth";
 
 export async function GET(
@@ -9,10 +9,20 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const factory = await getPublicFactoryById(parseInt(id));
+    const factory = await getFactoryById(parseInt(id));
 
     if (!factory) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    // Non-approved factories are only visible to their owner
+    if (factory.status !== "approved") {
+      const session = await auth();
+      const userId = session?.user?.id ? parseInt(session.user.id) : null;
+
+      if (!userId || factory.userId !== userId) {
+        return NextResponse.json({ error: "Not found" }, { status: 404 });
+      }
     }
 
     return NextResponse.json({ data: factory });
