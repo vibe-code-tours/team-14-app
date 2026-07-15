@@ -6,26 +6,32 @@
 import { Bot } from "grammy";
 
 // ============================================================
-// Bot Instance
+// Bot Instance (lazy — created on first use, not at import time)
 // ============================================================
 
-function createBot(): Bot {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  if (!token) {
-    throw new Error("TELEGRAM_BOT_TOKEN is not configured");
-  }
-  return new Bot(token);
-}
+let botInstance: Bot | null = null;
 
-// Create bot instance at module scope for serverless warm starts
-export const bot = createBot();
+/**
+ * Get the bot instance. Creates it lazily so that
+ * `next build` does not fail when TELEGRAM_BOT_TOKEN is absent.
+ */
+export function getBot(): Bot {
+  if (!botInstance) {
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    if (!token) {
+      throw new Error("TELEGRAM_BOT_TOKEN is not configured");
+    }
+    botInstance = new Bot(token);
+  }
+  return botInstance;
+}
 
 // Initialize bot (required for grammy to work)
 let botInitialized = false;
 
 export async function ensureBotInitialized(): Promise<void> {
   if (!botInitialized) {
-    await bot.init();
+    await getBot().init();
     botInitialized = true;
     console.log("✅ Bot initialized");
   }

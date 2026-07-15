@@ -4,7 +4,7 @@
  */
 
 // Bot instance and helpers
-export { bot, getSiteUrl, getCompanyUrl, getAgencyUrl, escapeHtml } from "./bot";
+export { getBot, getSiteUrl, getCompanyUrl, getAgencyUrl, escapeHtml } from "./bot";
 
 // Commands
 export { startCommand } from "./commands/start";

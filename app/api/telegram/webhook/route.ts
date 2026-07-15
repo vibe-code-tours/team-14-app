@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { bot, ensureBotInitialized } from "@/lib/telegram/bot";
+import { getBot, ensureBotInitialized } from "@/lib/telegram/bot";
 import {
   startCommand,
   helpCommand,
@@ -20,85 +20,93 @@ import {
 import { t, tParams, getUserLocale } from "@/lib/telegram/i18n";
 
 // ============================================================
-// Register bot commands and handlers
+// Register bot commands and handlers (called lazily, not at import)
 // ============================================================
 
-// Commands
-bot.command("start", startCommand);
-bot.command("help", helpCommand);
-bot.command("company", companyCommand);
-bot.command("lang", langCommand);
-bot.command("language", langCommand);
+let handlersRegistered = false;
 
-// Callback queries (inline keyboard buttons)
-bot.callbackQuery("search_company", async (ctx) => {
-  await ctx.answerCallbackQuery();
-  const locale = getUserLocale(ctx.chat?.id || 0);
+function registerHandlers() {
+  if (handlersRegistered) return;
+  handlersRegistered = true;
 
-  // Show region selection keyboard
-  const regionKeyboard = {
-    inline_keyboard: [
-      [{ text: "🌏 အားလုံး", callback_data: "region_all" }],
-      [
-        { text: "🏙️ Bangkok & Central", callback_data: "region_Bangkok_and_Central" },
+  const bot = getBot();
+
+  // Commands
+  bot.command("start", startCommand);
+  bot.command("help", helpCommand);
+  bot.command("company", companyCommand);
+  bot.command("lang", langCommand);
+  bot.command("language", langCommand);
+
+  // Callback queries (inline keyboard buttons)
+  bot.callbackQuery("search_company", async (ctx) => {
+    await ctx.answerCallbackQuery();
+    const locale = getUserLocale(ctx.chat?.id || 0);
+
+    const regionKeyboard = {
+      inline_keyboard: [
+        [{ text: "🌏 အားလုံး", callback_data: "region_all" }],
+        [
+          { text: "🏙️ Bangkok & Central", callback_data: "region_Bangkok_and_Central" },
+        ],
+        [{ text: "🌅 Eastern", callback_data: "region_Eastern" }],
+        [{ text: "🌿 Northern", callback_data: "region_Northern" }],
+        [{ text: "🌾 Northeastern", callback_data: "region_Northeastern" }],
+        [{ text: "🌊 Western", callback_data: "region_Western" }],
+        [{ text: "🏝️ Southern", callback_data: "region_Southern" }],
       ],
-      [{ text: "🌅 Eastern", callback_data: "region_Eastern" }],
-      [{ text: "🌿 Northern", callback_data: "region_Northern" }],
-      [{ text: "🌾 Northeastern", callback_data: "region_Northeastern" }],
-      [{ text: "🌊 Western", callback_data: "region_Western" }],
-      [{ text: "🏝️ Southern", callback_data: "region_Southern" }],
-    ],
+    };
+
+    const regionPrompt =
+      `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `🌏 <b>ဒေသရွေးချယ်ပါ</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `ဘယ်ဒေသက ကုမ္ပဏီတွေကို ရှာဖွေချင်ပါသလဲ?`;
+
+    await ctx.reply(regionPrompt, {
+      parse_mode: "HTML",
+      reply_markup: regionKeyboard,
+    });
+  });
+
+  // Region selection handlers
+  const regionNames: Record<string, string> = {
+    region_all: "အားလုံး",
+    region_Bangkok_and_Central: "Bangkok & Central",
+    region_Eastern: "Eastern",
+    region_Northern: "Northern",
+    region_Northeastern: "Northeastern",
+    region_Western: "Western",
+    region_Southern: "Southern",
   };
 
-  const regionPrompt =
-    `━━━━━━━━━━━━━━━━━━━━━━━\n` +
-    `🌏 <b>ဒေသရွေးချယ်ပါ</b>\n` +
-    `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-    `ဘယ်ဒေသက ကုမ္ပဏီတွေကို ရှာဖွေချင်ပါသလဲ?`;
+  bot.callbackQuery(/^region_(.+)$/, async (ctx) => {
+    await ctx.answerCallbackQuery();
+    const region = ctx.match?.[1];
+    const regionName = regionNames[`region_${region}`] || region;
+    const locale = getUserLocale(ctx.chat?.id || 0);
 
-  await ctx.reply(regionPrompt, {
-    parse_mode: "HTML",
-    reply_markup: regionKeyboard,
+    await ctx.reply(tParams(locale, "regionPrompt", regionName), { parse_mode: "HTML" });
   });
-});
 
-// Region selection handlers
-const regionNames: Record<string, string> = {
-  region_all: "အားလုံး",
-  region_Bangkok_and_Central: "Bangkok & Central",
-  region_Eastern: "Eastern",
-  region_Northern: "Northern",
-  region_Northeastern: "Northeastern",
-  region_Western: "Western",
-  region_Southern: "Southern",
-};
+  bot.callbackQuery("search_agency", async (ctx) => {
+    await ctx.answerCallbackQuery();
+    const locale = getUserLocale(ctx.chat?.id || 0);
+    await ctx.reply(t(locale, "agencyComingSoon"));
+  });
 
-bot.callbackQuery(/^region_(.+)$/, async (ctx) => {
-  await ctx.answerCallbackQuery();
-  const region = ctx.match?.[1];
-  const regionName = regionNames[`region_${region}`] || region;
-  const locale = getUserLocale(ctx.chat?.id || 0);
+  bot.callbackQuery("help", async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await helpCommand(ctx);
+  });
 
-  await ctx.reply(tParams(locale, "regionPrompt", regionName), { parse_mode: "HTML" });
-});
+  bot.callbackQuery("language", langCommand);
+  bot.callbackQuery("lang_en", languageCallback);
+  bot.callbackQuery("lang_my", languageCallback);
 
-bot.callbackQuery("search_agency", async (ctx) => {
-  await ctx.answerCallbackQuery();
-  const locale = getUserLocale(ctx.chat?.id || 0);
-  await ctx.reply(t(locale, "agencyComingSoon"));
-});
-
-bot.callbackQuery("help", async (ctx) => {
-  await ctx.answerCallbackQuery();
-  await helpCommand(ctx);
-});
-
-bot.callbackQuery("language", langCommand);
-bot.callbackQuery("lang_en", languageCallback);
-bot.callbackQuery("lang_my", languageCallback);
-
-// Plain text messages (treat as search)
-bot.on("message:text", textSearchHandler);
+  // Plain text messages (treat as search)
+  bot.on("message:text", textSearchHandler);
+}
 
 // ============================================================
 // Verify webhook secret
@@ -124,14 +132,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Ensure bot is initialized
+    // Ensure bot is initialized and handlers registered
     await ensureBotInitialized();
+    registerHandlers();
 
     // Parse the update
     const update = await req.json();
 
     // Process the update with grammy
-    await bot.handleUpdate(update);
+    await getBot().handleUpdate(update);
 
     return NextResponse.json({ ok: true });
   } catch (error) {
