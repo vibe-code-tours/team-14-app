@@ -318,26 +318,26 @@ export default function FactoryDetailPage({
               <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm">{t("factoryDetail.detailsSection")}</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="col-span-2">
-                  <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.location")}</span>
+                  <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.location")}</span>
                   <p className="text-slate-700 dark:text-slate-200 font-medium">
                     {formatAddress(factory) || "Thailand"}
                   </p>
                 </div>
                 <div>
-                  <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.workers")}</span>
+                  <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.workers")}</span>
                   <p className="text-slate-700 dark:text-slate-200 font-medium">
                     {factory.workers?.toLocaleString() || "—"}
                   </p>
                 </div>
                 {factory.operator && (
                   <div>
-                    <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.operator")}</span>
+                    <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.operator")}</span>
                     <p className="text-slate-700 dark:text-slate-200 font-medium">{factory.operator}</p>
                   </div>
                 )}
                 {factory.type && (
                   <div>
-                    <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.type")}</span>
+                    <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.type")}</span>
                     <p className="text-slate-700 dark:text-slate-200 font-medium">{factory.type}</p>
                   </div>
                 )}
