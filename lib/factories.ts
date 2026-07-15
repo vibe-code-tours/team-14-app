@@ -83,6 +83,7 @@ export async function searchFactories(params: FactorySearchParams) {
         workers: true,
         phone: true,
         type: true,
+        image: true,
       },
     }),
     prisma.factory.count({ where }),
@@ -117,6 +118,7 @@ export async function getFactoriesByUserId(userId: number, limit = 20, offset = 
         province: true,
         district: true,
         status: true,
+        image: true,
         createdAt: true,
       },
     }),
@@ -146,6 +148,7 @@ export async function updateFactory(
     type?: string;
     workers?: number;
     country?: string;
+    image?: string | null;
   }
 ) {
   // Verify ownership
@@ -181,6 +184,7 @@ export async function updateFactory(
       type: data.type || null,
       workers: data.workers || null,
       country: data.country || "Thailand",
+      image: data.image !== undefined ? data.image : undefined,
     },
   });
 }
@@ -363,6 +367,7 @@ export async function createPublicFactory(data: {
   workers?: number;
   country?: string;
   userId?: number;
+  image?: string | null;
 }) {
   return prisma.factory.create({
     data: {
@@ -382,6 +387,7 @@ export async function createPublicFactory(data: {
       type: data.type || null,
       workers: data.workers || null,
       country: data.country || "Thailand",
+      image: data.image || null,
       status: "pending",
       userId: data.userId || null,
     },

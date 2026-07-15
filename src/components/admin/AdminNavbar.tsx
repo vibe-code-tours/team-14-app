@@ -79,16 +79,15 @@ export function AdminNavbar() {
   const closeMobile = () => setMobileOpen(false);
 
   return (
-    <nav className="bg-linear-to-r from-emerald-600 to-teal-600 dark:from-slate-800 dark:to-slate-900 text-white sticky top-0 z-10 shadow-md dark:shadow-slate-900/50">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <nav className="bg-linear-to-r from-emerald-600 to-teal-600 dark:from-slate-800 dark:to-slate-900 text-white h-14 sticky top-0 z-10 shadow-md dark:shadow-slate-900/50">
+      <div className="max-w-6xl mx-auto px-4 h-full flex items-center justify-between">
         {/* Left: Logo + desktop nav */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 min-w-0">
           <Link
             href="/admin/dashboard"
             className="font-bold text-lg flex items-center gap-2 hover:opacity-90 transition shrink-0"
           >
-            <span>🌏</span>
-            <span className="hidden sm:inline">WorkerVoice</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}<img src="/logo.png" alt="WorkerVoice" className="h-16 w-auto" />
             <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full font-medium">
               {session?.user?.isSuperAdmin ? "Super Admin" : "Admin"}
             </span>
@@ -184,7 +183,7 @@ export function AdminNavbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-white/10 animate-fade-in">
+        <div className="md:hidden border-t border-white/10 bg-emerald-700 dark:bg-slate-800 animate-fade-in">
           <div className="px-4 py-3 space-y-1">
             {navItems.map((item) => (
               <Link

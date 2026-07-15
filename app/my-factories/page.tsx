@@ -14,6 +14,7 @@ interface MyFactory {
   province: string | null;
   district: string | null;
   status: "pending" | "approved" | "declined";
+  image: string | null;
   createdAt: string;
 }
 
@@ -146,6 +147,16 @@ export default function MyFactoriesPage() {
                     key={factory.id}
                     className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-100 dark:border-slate-700 hover:shadow-md transition"
                   >
+                    {factory.image && (
+                      <div className="w-full h-32 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 mb-3">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={factory.image}
+                          alt={factory.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-slate-800 dark:text-slate-100 line-clamp-1">
                         {factory.name}
