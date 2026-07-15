@@ -41,7 +41,7 @@ function registerHandlers() {
   // Callback queries (inline keyboard buttons)
   bot.callbackQuery("search_company", async (ctx) => {
     await ctx.answerCallbackQuery();
-    const locale = getUserLocale(ctx.chat?.id || 0);
+    getUserLocale(ctx.chat?.id || 0);
 
     const regionKeyboard = {
       inline_keyboard: [
