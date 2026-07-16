@@ -45,7 +45,7 @@ function registerHandlers() {
 
     const regionKeyboard = {
       inline_keyboard: [
-        [{ text: "🌏 အားလုံး", callback_data: "region_all" }],
+        [{ text: "🇹🇭 အားလုံး", callback_data: "region_all" }],
         [
           { text: "🏙️ Bangkok & Central", callback_data: "region_Bangkok_and_Central" },
         ],
@@ -59,7 +59,7 @@ function registerHandlers() {
 
     const regionPrompt =
       `━━━━━━━━━━━━━━━━━━━━━━━\n` +
-      `🌏 <b>ဒေသရွေးချယ်ပါ</b>\n` +
+      `🇹🇭 <b>ဒေသရွေးချယ်ပါ</b>\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
       `ဘယ်ဒေသက ကုမ္ပဏီတွေကို ရှာဖွေချင်ပါသလဲ?`;
 
