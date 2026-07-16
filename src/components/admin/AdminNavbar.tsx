@@ -87,7 +87,7 @@ export function AdminNavbar() {
             href="/admin/dashboard"
             className="font-bold text-lg flex items-center gap-2 hover:opacity-90 transition shrink-0"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}<img src="/images/logo.png" alt="WorkerVoice" className="h-16 w-auto" />
+            { }<img src="/images/logo.png" alt="WorkerVoice" className="h-16 w-auto" />
             <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full font-medium">
               {session?.user?.isSuperAdmin ? "Super Admin" : "Admin"}
             </span>
