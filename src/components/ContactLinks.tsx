@@ -48,7 +48,7 @@ const socialLinks: SocialLink[] = [
   {
     key: "telegram",
     label: "Telegram",
-    url: "https://t.me/",
+    url: "https://t.me/workervoice69_bot",
     color: "text-[#0088cc]",
     hoverColor: "hover:bg-[#0088cc]/10",
     icon: <TelegramIcon />,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
@@ -11,6 +11,8 @@ import { FactoryFilters } from "@/src/components/FactoryFilters";
 import { AboutUs } from "@/src/components/AboutUs";
 import { ContactLinks } from "@/src/components/ContactLinks";
 import { useLanguage } from "@/src/contexts/LanguageContext";
+import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
+import { useDebounce } from "@/src/lib/hooks/useDebounce";
 
 interface Factory {
   id: number;
@@ -20,6 +22,7 @@ interface Factory {
   province: string | null;
   workers: number | null;
   country: string;
+  image: string | null;
 }
 
 interface FactoryResponse {
@@ -35,18 +38,29 @@ export default function Home() {
   const [showSuggestModal, setShowSuggestModal] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedWorkerRange, setSelectedWorkerRange] = useState("");
+  const debouncedQuery = useDebounce(searchQuery, 300);
+  const abortRef = useRef<AbortController | null>(null);
 
-  const fetchFactories = useCallback(async (search?: string) => {
+  const fetchFactories = useCallback(async (search: string) => {
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
     setLoading(true);
     try {
       const params = new URLSearchParams();
       if (search) params.set("search", search);
       if (selectedRegion) params.set("region", selectedRegion);
 
-      const res = await fetch(`/api/factories?${params}`);
+      const res = await fetch(`/api/factories?${params}`, {
+        signal: controller.signal,
+      });
+      if (!res.ok) {
+        setFactories([]);
+        return;
+      }
       const data: FactoryResponse = await res.json();
 
-      let filtered = data.data;
+      let filtered = data?.data ?? [];
 
       // Apply worker range filter client-side
       if (selectedWorkerRange) {
@@ -68,16 +82,17 @@ export default function Home() {
       // Limit to 10 factories for landing page
       setFactories(filtered.slice(0, 10));
     } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
       console.error("Error fetching factories:", error);
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted) setLoading(false);
     }
   }, [selectedRegion, selectedWorkerRange]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchFactories();
-  }, [fetchFactories]);
+    fetchFactories(debouncedQuery);
+  }, [fetchFactories, debouncedQuery]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,7 +115,7 @@ export default function Home() {
       <main className="flex-grow max-w-5xl mx-auto p-4 mt-6 w-full space-y-8 animate-fade-in">
         {/* Search Hero */}
         <div className="bg-white dark:bg-slate-800 p-8 md:p-12 rounded-2xl shadow-sm text-center border border-slate-100 dark:border-slate-700">
-          <h2 className="text-3xl font-extrabold mb-8 text-slate-800 dark:text-slate-100">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold mb-8 text-slate-800 dark:text-slate-100">
             {t("hero.title")}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mb-6">{t("hero.subtitle")}</p>
@@ -181,20 +196,27 @@ export default function Home() {
                 <Link
                   key={factory.id}
                   href={`/factories/${factory.id}`}
-                  className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 cursor-pointer hover:shadow-md transition block group"
+                  className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition block group"
                 >
-                  <div className="flex justify-between items-start">
-                    <h4 className="font-bold text-lg text-emerald-700 group-hover:text-emerald-600 line-clamp-1">
-                      {factory.name}
-                    </h4>
-                    <span className="text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-1 rounded-full whitespace-nowrap ml-2">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={factory.image || DEFAULT_FACTORY_IMAGE}
+                        alt={factory.name}
+                        className="h-12 w-12 rounded-full object-cover flex-shrink-0"
+                      />
+                      <h3 className="font-bold text-emerald-700 group-hover:text-emerald-600 line-clamp-2">
+                        {factory.name}
+                      </h3>
+                    </div>
+                    <span className="text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 px-3 py-1 rounded-full whitespace-nowrap ml-2">
                       🇹🇭
                     </span>
                   </div>
                   <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
-                    {[factory.district, factory.province]
-                      .filter(Boolean)
-                      .join(", ") || t("factoryList.thailand")}
+                    {[factory.district, factory.province].filter(Boolean).join(", ") ||
+                      "Thailand"}
                   </p>
                   {factory.workers && (
                     <p className="text-xs text-slate-400 dark:text-slate-500">

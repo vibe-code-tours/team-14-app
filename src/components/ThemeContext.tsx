@@ -11,20 +11,24 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+function getStorageKey(): string {
+  if (typeof window === "undefined") return "user-theme";
+  return window.location.pathname.startsWith("/admin")
+    ? "admin-theme"
+    : "user-theme";
+}
+
 function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "light";
-  const stored = localStorage.getItem("user-theme") as Theme | null;
+  if (typeof window === "undefined") return "dark";
+  const key = getStorageKey();
+  const stored = localStorage.getItem(key) as Theme | null;
   if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return "dark";
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
 
-  // Read saved preference after hydration to avoid SSR/client mismatch.
-  // setState here is intentional — it syncs localStorage preference into React
-  // state once on mount, which is the recommended pattern for hydration-safe
-  // external store reads in Next.js App Router.
   useEffect(() => {
     const saved = getInitialTheme();
     if (saved !== theme) {
@@ -33,10 +37,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Sync theme to DOM and localStorage (side effect only, no state derivation)
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("user-theme", theme);
+    localStorage.setItem(getStorageKey(), theme);
   }, [theme]);
 
   const toggleTheme = useCallback(() => {

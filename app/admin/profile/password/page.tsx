@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { PasswordInput } from "@/src/components/PasswordInput";
 
 export default function ChangePasswordPage() {
   const router = useRouter();
@@ -94,57 +95,32 @@ export default function ChangePasswordPage() {
           )}
 
           <div className="space-y-4 max-w-md">
+            <PasswordInput
+              label="Current Password *"
+              name="currentPassword"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              required
+            />
             <div>
-              <label
-                htmlFor="currentPassword"
-                className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
-              >
-                Current Password *
-              </label>
-              <input
-                id="currentPassword"
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                required
-                className="mt-1 w-full text-sm text-slate-800 bg-slate-50 p-3 rounded-lg border border-slate-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="newPassword"
-                className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
-              >
-                New Password *
-              </label>
-              <input
-                id="newPassword"
-                type="password"
+              <PasswordInput
+                label="New Password *"
+                name="newPassword"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
                 minLength={8}
-                className="mt-1 w-full text-sm text-slate-800 bg-slate-50 p-3 rounded-lg border border-slate-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition"
               />
               <p className="text-xs text-slate-400 mt-1">Minimum 8 characters</p>
             </div>
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
-              >
-                Confirm New Password *
-              </label>
-              <input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                minLength={8}
-                className="mt-1 w-full text-sm text-slate-800 bg-slate-50 p-3 rounded-lg border border-slate-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition"
-              />
-            </div>
+            <PasswordInput
+              label="Confirm New Password *"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              minLength={8}
+            />
           </div>
         </div>
 

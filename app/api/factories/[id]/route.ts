@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPublicFactoryById, updateFactory } from "@/lib/factories";
+import { getPublicFactoryById, getFactoryByIdForOwner, updateFactory } from "@/lib/factories";
 import { auth } from "@/auth";
 
 export async function GET(
@@ -9,7 +9,22 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const factory = await getPublicFactoryById(parseInt(id));
+    // Check if user is authenticated and is the owner
+    const session = await auth();
+    const factoryId = parseInt(id);
+
+    let factory;
+
+    if (session?.user?.id) {
+      const userId = parseInt(session.user.id);
+      // Try to get factory where user is owner (any status)
+      factory = await getFactoryByIdForOwner(factoryId, userId);
+    }
+
+    // If not owner, get public (approved) factory
+    if (!factory) {
+      factory = await getPublicFactoryById(factoryId);
+    }
 
     if (!factory) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -62,6 +77,7 @@ export async function PUT(
       type: body.type,
       workers: body.workers,
       country: body.country,
+      image: body.image,
     });
 
     return NextResponse.json(factory);

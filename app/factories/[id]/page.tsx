@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, use } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -11,18 +12,27 @@ import { AlertModal } from "@/src/components/AlertModal";
 import { StarRating } from "@/src/components/StarRating";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/src/components/Tabs";
 import { useLanguage } from "@/src/contexts/LanguageContext";
+import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
 
 interface Factory {
   id: number;
   name: string;
   operator: string | null;
   businessActivity: string | null;
+  houseNumber: string | null;
+  village: string | null;
+  soi: string | null;
+  road: string | null;
+  subdistrict: string | null;
   district: string | null;
   province: string | null;
+  postalCode: string | null;
   workers: number | null;
   country: string;
   type: string | null;
   phone: string | null;
+  regNumber: string | null;
+  image: string | null;
 }
 
 interface Review {
@@ -66,6 +76,7 @@ export default function FactoryDetailPage({
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [loginAlertOpen, setLoginAlertOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("about");
+  const [showLightbox, setShowLightbox] = useState(false);
 
   const fetchFactoryData = useCallback(async () => {
     setLoading(true);
@@ -127,6 +138,24 @@ export default function FactoryDetailPage({
     });
   };
 
+  const formatAddress = (f: Factory) => {
+    const parts = [
+      f.houseNumber && `${t("factoryDetail.address.houseNumber")} ${f.houseNumber}`,
+      f.village && `${t("factoryDetail.address.village")} ${f.village}`,
+      f.soi && `${t("factoryDetail.address.soi")} ${f.soi}`,
+      f.road && `${t("factoryDetail.address.road")} ${f.road}`,
+      f.subdistrict && `${t("factoryDetail.address.subdistrict")} ${f.subdistrict}`,
+      f.district && `${t("factoryDetail.address.district")} ${f.district}`,
+      f.province && `${t("factoryDetail.address.province")} ${f.province}`,
+      f.postalCode && f.postalCode,
+    ];
+    return parts.filter(Boolean).join(", ");
+  };
+
+  const formatAddressShort = (f: Factory) => {
+    return [f.district, f.province].filter(Boolean).join(", ") || "Thailand";
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
@@ -173,19 +202,27 @@ export default function FactoryDetailPage({
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 px-3 py-1 rounded-full">
-                  {t("factoryDetail.thailand")}
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3 min-w-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={factory.image || DEFAULT_FACTORY_IMAGE}
+                    alt={factory.name}
+                    className="h-16 w-16 rounded-full object-cover flex-shrink-0 cursor-pointer hover:shadow-md transition"
+                    onClick={() => setShowLightbox(true)}
+                  />
+                  <div>
+                    <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100">
+                      {factory.name}
+                    </h1>
+                    <p className="text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1 text-sm">
+                      📍 {formatAddressShort(factory)}
+                    </p>
+                  </div>
+                </div>
+                <span className="text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 px-3 py-1 rounded-full ml-2 flex-shrink-0">
+                  🇹🇭
                 </span>
-              </div>
-
-              <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100">
-                  {factory.name}
-                </h1>
-                <p className="text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1 text-sm">
-                  📍 {[factory.district, factory.province].filter(Boolean).join(", ") || "Thailand"}
-                </p>
               </div>
 
               <div className="flex items-center gap-3">
@@ -280,27 +317,27 @@ export default function FactoryDetailPage({
             <section className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-3">
               <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm">{t("factoryDetail.detailsSection")}</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.location")}</span>
+                <div className="col-span-2">
+                  <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.location")}</span>
                   <p className="text-slate-700 dark:text-slate-200 font-medium">
-                    {[factory.district, factory.province].filter(Boolean).join(", ") || "Thailand"}
+                    {formatAddress(factory) || "Thailand"}
                   </p>
                 </div>
                 <div>
-                  <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.workers")}</span>
+                  <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.workers")}</span>
                   <p className="text-slate-700 dark:text-slate-200 font-medium">
                     {factory.workers?.toLocaleString() || "—"}
                   </p>
                 </div>
                 {factory.operator && (
                   <div>
-                    <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.operator")}</span>
+                    <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.operator")}</span>
                     <p className="text-slate-700 dark:text-slate-200 font-medium">{factory.operator}</p>
                   </div>
                 )}
                 {factory.type && (
                   <div>
-                    <span className="text-slate-400 dark:text-slate-500">{t("factoryDetail.type")}</span>
+                    <span className="block mb-2 text-slate-400 dark:text-slate-500">{t("factoryDetail.type")}</span>
                     <p className="text-slate-700 dark:text-slate-200 font-medium">{factory.type}</p>
                   </div>
                 )}
@@ -426,6 +463,35 @@ export default function FactoryDetailPage({
         confirmLabel={t("nav.login")}
         cancelLabel="Cancel"
       />
+
+      {showLightbox &&
+        factory.image &&
+        createPortal(
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 9999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              backgroundColor: "rgba(0,0,0,0.8)",
+            }}
+            onClick={() => setShowLightbox(false)}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={factory.image}
+              alt={factory.name}
+              style={{ maxWidth: "90vw", maxHeight: "90vh", objectFit: "contain" }}
+            />
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

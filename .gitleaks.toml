@@ -1,0 +1,8 @@
+[allowlist]
+  description = "Global allowlist"
+  commits = [
+    "8e8bad1c05f04032c134e2e7045c63035220ae07",
+  ]
+  paths = [
+    "docs/operations/telegram-deployment.md",
+  ]

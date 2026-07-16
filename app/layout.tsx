@@ -13,9 +13,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "WorkerVoice | Migrant Worker Reviews",
+  title: "WorkerVoice",
   description:
     "Find safe workplaces with real reviews from migrant workers in Thailand",
+  icons: {
+    icon: "/images/workervoice.fav",
+  },
 };
 
 export default function RootLayout({
@@ -30,7 +33,7 @@ export default function RootLayout({
           id="theme-init"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('user-theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()`,
+            __html: `(function(){try{var k=location.pathname.indexOf('/admin')===0?'admin-theme':'user-theme';var t=localStorage.getItem(k);if(t!=='light'){document.documentElement.classList.add('dark')}}catch(e){}})()`,
           }}
         />
       </head>

@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Input } from "@/src/components/Input";
 import { Select } from "@/src/components/Select";
 import { Button } from "@/src/components/Button";
 import { SuccessModal } from "@/src/components/SuccessModal";
 import { useLanguage } from "@/src/contexts/LanguageContext";
+import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
 
 interface PublicFactoryFormData {
   id?: number;
@@ -25,6 +27,7 @@ interface PublicFactoryFormData {
   type: string;
   workers: string;
   country: string;
+  image?: string | null;
 }
 
 interface PublicFactoryFormProps {
@@ -70,10 +73,13 @@ export function PublicFactoryForm({
   onSuccess,
 }: PublicFactoryFormProps) {
   const { t } = useLanguage();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [image, setImage] = useState<string | null>(initialData?.image || null);
+  const [showLightbox, setShowLightbox] = useState(false);
   const [formData, setFormData] = useState<PublicFactoryFormData>({
     ...initialFormData,
     ...initialData,
@@ -83,6 +89,33 @@ export function PublicFactoryForm({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const size = 400;
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const scale = Math.max(size / img.width, size / img.height);
+        const x = (size - img.width * scale) / 2;
+        const y = (size - img.height * scale) / 2;
+        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+        setImage(canvas.toDataURL("image/jpeg", 0.8));
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -95,6 +128,7 @@ export function PublicFactoryForm({
       const payload = {
         ...formData,
         workers: formData.workers ? parseInt(formData.workers) : null,
+        image: image || null,
       };
 
       const url = mode === "edit" && formData.id
@@ -135,6 +169,53 @@ export function PublicFactoryForm({
           {t("newFactory.notice")}
         </div>
       )}
+
+      {/* Factory Image */}
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">
+          {t("factoryForm.factoryImage")}
+        </h3>
+        <div className="flex items-center gap-6">
+          <div
+            className="w-28 h-28 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-700 flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-emerald-500 transition shrink-0"
+            onClick={() => image && setShowLightbox(true)}
+          >
+            <img
+              src={image || DEFAULT_FACTORY_IMAGE}
+              alt="Factory"
+              className={image ? "w-full h-full object-cover" : "w-12 h-12 opacity-40"}
+            />
+          </div>
+          <div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageUpload}
+              accept="image/*"
+              className="hidden"
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="px-4 py-2 text-sm font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-lg transition"
+            >
+              📁 {t("factoryForm.uploadImage")}
+            </button>
+            {image && (
+              <button
+                type="button"
+                onClick={() => setImage(null)}
+                className="ml-2 px-4 py-2 text-sm font-medium text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-lg transition"
+              >
+                ✕ {t("factoryForm.removeImage")}
+              </button>
+            )}
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
+              {t("factoryForm.imageHint")}
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Basic Info */}
       <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
@@ -284,6 +365,34 @@ export function PublicFactoryForm({
       message={t("factorySubmitted.message")}
       buttonText={t("factorySubmitted.ok")}
     />
+
+    {showLightbox &&
+      image &&
+      createPortal(
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            backgroundColor: "rgba(0,0,0,0.8)",
+          }}
+          onClick={() => setShowLightbox(false)}
+        >
+          <img
+            src={image}
+            alt="Factory"
+            style={{ maxWidth: "90vw", maxHeight: "90vh", objectFit: "contain" }}
+          />
+        </div>,
+        document.body
+      )}
     </>
   );
 }

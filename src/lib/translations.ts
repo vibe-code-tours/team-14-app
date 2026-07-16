@@ -86,7 +86,7 @@ export const translations: Record<string, TranslationEntry> = {
   "factorySubmitted.ok": { en: "OK", my: "OK" },
 
   // New Factory Page
-  "newFactory.title": { en: "➕ Submit a Factory", my: "➕ စက်ရုံ တင်သွင်းရန်" },
+  "newFactory.title": { en: "+ New Factory", my: "+ စက်ရုံအသစ်" },
   "newFactory.subtitle": {
     en: "Help other workers by sharing factory information",
     my: "စက်ရုံ အချက်အလက်များကို မျှဝေခြင်းဖြင့် အခြားအလုပ်သမားများကို ကူညီပါ",
@@ -129,6 +129,13 @@ export const translations: Record<string, TranslationEntry> = {
   "factoryForm.postalCodePlaceholder": { en: "e.g. 10110", my: "ဥပမာ။ 10110" },
   "factoryForm.submitFactory": { en: "Submit Factory", my: "စက်ရုံ တင်သွင်းရန်" },
   "factoryForm.saveChanges": { en: "Save Changes", my: "ပြောင်းလဲမှုများ သိမ်းဆည်းရန်" },
+  "factoryForm.factoryImage": { en: "🏭 Factory Image", my: "🏭 စက်ရုံ ပုံ" },
+  "factoryForm.uploadImage": { en: "Upload Image", my: "ပုံ တင်ရန်" },
+  "factoryForm.removeImage": { en: "Remove", my: "ဖျက်ရန်" },
+  "factoryForm.imageHint": {
+    en: "JPG or PNG, recommended 400×400px",
+    my: "JPG သို့မဟုတ် PNG၊ 400×400px အကြံပြုထားသည်",
+  },
 
   // Privacy Banner
   "privacy.title": {
@@ -202,6 +209,7 @@ export const translations: Record<string, TranslationEntry> = {
     en: "Suggest a factory →",
     my: "စက်ရုံ အကြံပြုရန် →",
   },
+  "factoryList.submitFactory": { en: "➕ Submit Factory", my: "➕ စက်ရုံ တင်သွင်းရန်" },
   "factoryList.workers": { en: "workers", my: "အလုပ်သမားများ" },
   "factoryList.thailand": { en: "Thailand", my: "ထိုင်း" },
   "factoryList.previous": { en: "Previous", my: "နောက်သို့" },
@@ -265,6 +273,15 @@ export const translations: Record<string, TranslationEntry> = {
     en: "← Back to all factories",
     my: "← စက်ရုံအားလုံးသို့ ပြန်သွားရန်",
   },
+
+  // Factory Address Fields
+  "factoryDetail.address.houseNumber": { en: "No.", my: "အိမ်အမှတ်" },
+  "factoryDetail.address.village": { en: "Village", my: "ကျေးရွာ" },
+  "factoryDetail.address.soi": { en: "Soi", my: "ဆိုင်း" },
+  "factoryDetail.address.road": { en: "Road", my: "လမ်း" },
+  "factoryDetail.address.subdistrict": { en: "Subdistrict", my: "မြို့နယ်" },
+  "factoryDetail.address.district": { en: "District", my: "ခရိုင်" },
+  "factoryDetail.address.province": { en: "Province", my: "ပြည်နယ်" },
 
   // About Us
   "about.title": { en: "About WorkerVoice", my: "WorkerVoice အကြောင်း" },
@@ -385,8 +402,8 @@ export const translations: Record<string, TranslationEntry> = {
 
   // Footer
   "footer.brand": {
-    en: "WorkerVoice — Migrant Worker Review Network",
-    my: "WorkerVoice — ရွှေ့ပြောင်းအလုပ်သမားများ ပြန်လည်သုံးသပ်ချက် ကွန်ယက်",
+    en: "- Migrant Worker Review Network",
+    my: "- ရွှေ့ပြောင်းအလုပ်သမားများ ပြန်လည်သုံးသပ်ချက် ကွန်ယက်",
   },
   "footer.tagline": {
     en: "Thailand 🇹🇭 • Helping workers find safe workplaces",
@@ -404,8 +421,12 @@ export const translations: Record<string, TranslationEntry> = {
   "login.email": { en: "Email", my: "အီးမေးလ်" },
   "login.password": { en: "Password", my: "စကားဝှက်" },
   "login.invalidCredentials": {
-    en: "Invalid email or password, or your email is not yet verified.",
-    my: "အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားနေပါသည်၊ သို့မဟုတ် သင့်အီးမေးလ်ကို မစစ်ဆေးရသေးပါ။",
+    en: "Invalid email or password.",
+    my: "အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားနေပါသည်။",
+  },
+  "login.emailNotVerified": {
+    en: "Email not verified. A verification link has been sent to your email.",
+    my: "အီးမေးလ် စစ်ဆေးခြင်း မပြုရသေးပါ။ စစ်ဆေးရန်လင့်ခ်ကို သင့်အီးမေးလ်သို့ ပေးပို့ပြီးပါပြီ။",
   },
   "login.forgotPassword": {
     en: "Forgot your password?",
@@ -424,6 +445,10 @@ export const translations: Record<string, TranslationEntry> = {
   "register.checkEmail": {
     en: "Check your email to verify your account before logging in.",
     my: "ဝင်ရောက်မီး သင့်အကောင့်ကို စစ်ဆေးရန် သင့်အီးမေးလ်ကို စစ်ဆေးပါ။",
+  },
+  "register.verificationResent": {
+    en: "A new verification link has been sent to your email. Please verify your account.",
+    my: "စစ်ဆေးရန်လင့်ခ်အသစ်ကို သင့်အီးမေးလ်သို့ ပေးပို့ပြီးပါပြီ။ သင့်အကောင့်ကို စစ်ဆေးပါ။",
   },
   "register.createAccount": { en: "Create account", my: "အကောင့်ဖန်တီးရန်" },
 };

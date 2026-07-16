@@ -38,6 +38,7 @@ export default function EditFactoryPage({
           workers: data.workers?.toString() || "",
           country: data.country || "Thailand",
           status: data.status || "pending",
+          image: data.image || null,
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load factory");

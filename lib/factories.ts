@@ -83,6 +83,7 @@ export async function searchFactories(params: FactorySearchParams) {
         workers: true,
         phone: true,
         type: true,
+        image: true,
       },
     }),
     prisma.factory.count({ where }),
@@ -103,6 +104,12 @@ export async function getPublicFactoryById(id: number) {
   });
 }
 
+export async function getFactoryByIdForOwner(id: number, userId: number) {
+  return prisma.factory.findFirst({
+    where: { id, userId },
+  });
+}
+
 export async function getFactoriesByUserId(userId: number, limit = 20, offset = 0) {
   const [data, total] = await Promise.all([
     prisma.factory.findMany({
@@ -117,6 +124,7 @@ export async function getFactoriesByUserId(userId: number, limit = 20, offset = 
         province: true,
         district: true,
         status: true,
+        image: true,
         createdAt: true,
       },
     }),
@@ -146,6 +154,7 @@ export async function updateFactory(
     type?: string;
     workers?: number;
     country?: string;
+    image?: string | null;
   }
 ) {
   // Verify ownership
@@ -181,6 +190,7 @@ export async function updateFactory(
       type: data.type || null,
       workers: data.workers || null,
       country: data.country || "Thailand",
+      image: data.image !== undefined ? data.image : undefined,
     },
   });
 }
@@ -363,11 +373,25 @@ export async function createPublicFactory(data: {
   workers?: number;
   country?: string;
   userId?: number;
+  image?: string | null;
 }) {
+  // Normalize empty strings to null
+  const regNumber = data.regNumber?.trim() || null;
+
+  // Check for duplicate registration number
+  if (regNumber) {
+    const existing = await prisma.factory.findUnique({
+      where: { regNumber },
+    });
+    if (existing) {
+      throw new Error("A factory with this registration number already exists");
+    }
+  }
+
   return prisma.factory.create({
     data: {
       name: data.name,
-      regNumber: data.regNumber || null,
+      regNumber,
       operator: data.operator || null,
       businessActivity: data.businessActivity || null,
       houseNumber: data.houseNumber || null,
@@ -382,6 +406,7 @@ export async function createPublicFactory(data: {
       type: data.type || null,
       workers: data.workers || null,
       country: data.country || "Thailand",
+      image: data.image || null,
       status: "pending",
       userId: data.userId || null,
     },

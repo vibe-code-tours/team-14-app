@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { PasswordInput } from "@/src/components/PasswordInput";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -79,11 +80,10 @@ export default function AdminLoginPage() {
       <div className="relative z-10 w-full max-w-md mx-4">
         {/* Logo */}
         <div className="text-center mb-8 opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-300/50 dark:bg-white/15 backdrop-blur-sm mb-4">
-            <span className="text-3xl">🌏</span>
+          <div className="inline-flex items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}<img src="/images/logo.png" alt="WorkerVoice" className="h-20 sm:h-28 md:h-36 w-auto" />
           </div>
-          <h1 className="text-3xl font-bold text-slate-800 dark:text-white">WorkerVoice</h1>
-          <p className="text-slate-700 dark:text-emerald-100 mt-1">Admin Portal</p>
+          <p className="text-slate-700 dark:text-emerald-100 -mt-2 sm:-mt-6 md:-mt-10">Admin Portal</p>
         </div>
 
         {/* Card */}
@@ -102,18 +102,15 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="admin@workervoice.com"
+                placeholder="Enter your email"
                 className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-white mb-1.5">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
+              <PasswordInput
+                label="Password"
+                name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required

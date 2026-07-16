@@ -6,6 +6,7 @@ import { useLanguage } from "@/src/contexts/LanguageContext";
 import { UserAuthGuard } from "@/src/components/UserAuthGuard";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
+import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
 
 interface MyFactory {
   id: number;
@@ -14,6 +15,7 @@ interface MyFactory {
   province: string | null;
   district: string | null;
   status: "pending" | "approved" | "declined";
+  image: string | null;
   createdAt: string;
 }
 
@@ -124,7 +126,7 @@ export default function MyFactoriesPage() {
           {/* Empty State */}
           {!loading && factories.length === 0 && (
             <div className="bg-white dark:bg-slate-800 rounded-xl p-8 border border-slate-100 dark:border-slate-700 text-center">
-              <div className="text-4xl mb-4">🏭</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl mb-4">🏭</div>
               <p className="text-slate-600 dark:text-slate-300 mb-4">
                 {t("myFactories.empty")}
               </p>
@@ -144,12 +146,20 @@ export default function MyFactoriesPage() {
                 {factories.map((factory) => (
                   <div
                     key={factory.id}
-                    className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-100 dark:border-slate-700 hover:shadow-md transition"
+                    className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition group"
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-semibold text-slate-800 dark:text-slate-100 line-clamp-1">
-                        {factory.name}
-                      </h3>
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={factory.image || DEFAULT_FACTORY_IMAGE}
+                          alt={factory.name}
+                          className="h-12 w-12 rounded-full object-cover flex-shrink-0"
+                        />
+                        <h3 className="font-bold text-emerald-700 dark:text-emerald-400 group-hover:text-emerald-600 line-clamp-2">
+                          {factory.name}
+                        </h3>
+                      </div>
                       {getStatusBadge(factory.status)}
                     </div>
                     {factory.operator && (
@@ -158,20 +168,20 @@ export default function MyFactoriesPage() {
                       </p>
                     )}
                     {(factory.district || factory.province) && (
-                      <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
                         📍 {[factory.district, factory.province].filter(Boolean).join(", ")}
                       </p>
                     )}
                     <div className="flex gap-2 mt-4">
                       <Link
                         href={`/factories/${factory.id}/edit`}
-                        className="flex-1 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg text-sm text-center transition"
+                        className="flex-1 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg text-sm text-center transition font-medium"
                       >
                         {t("myFactories.edit")}
                       </Link>
                       <Link
                         href={`/factories/${factory.id}`}
-                        className="flex-1 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm text-center transition"
+                        className="flex-1 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm text-center transition font-medium"
                       >
                         {t("myFactories.view")}
                       </Link>

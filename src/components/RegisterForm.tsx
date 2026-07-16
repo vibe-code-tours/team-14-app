@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "./Input";
+import { PasswordInput } from "./PasswordInput";
 import { Button } from "./Button";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 
@@ -15,6 +16,7 @@ export function RegisterForm() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [verificationResent, setVerificationResent] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,12 +31,18 @@ export function RegisterForm() {
         body: JSON.stringify(formData),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
         throw new Error(data.error || "Failed to register");
       }
 
-      setSuccess(true);
+      // Check if verification was resent to existing unverified account
+      if (data.data?.message === "verification_resent") {
+        setVerificationResent(true);
+      } else {
+        setSuccess(true);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -42,11 +50,22 @@ export function RegisterForm() {
     }
   };
 
+  if (verificationResent) {
+    return (
+      <div className="text-center py-8">
+        <div className="text-4xl mb-4">📧</div>
+        <p className="text-emerald-600 dark:text-emerald-400 font-medium">
+          {t("register.verificationResent")}
+        </p>
+      </div>
+    );
+  }
+
   if (success) {
     return (
       <div className="text-center py-8">
         <div className="text-4xl mb-4">✅</div>
-        <p className="text-emerald-600 font-medium">
+        <p className="text-emerald-600 dark:text-emerald-400 font-medium">
           {t("register.checkEmail")}
         </p>
       </div>
@@ -81,9 +100,8 @@ export function RegisterForm() {
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
       />
 
-      <Input
+      <PasswordInput
         label={t("login.password")}
-        type="password"
         required
         minLength={8}
         value={formData.password}
@@ -91,7 +109,7 @@ export function RegisterForm() {
       />
 
       {error && (
-        <div className="bg-red-50 text-red-800 p-3 rounded-lg text-sm">{error}</div>
+        <div className="bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-300 p-3 rounded-lg text-sm">{error}</div>
       )}
 
       <Button type="submit" isLoading={submitting} className="w-full">
