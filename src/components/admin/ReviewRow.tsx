@@ -16,11 +16,6 @@ interface ReviewRowProps {
   organizationName: string | null;
   onRequestToggle: (id: number, isVisible: boolean, name: string) => void;
   index?: number;
-  user?: {
-    id: string;
-    fullName: string;
-    nickname: string | null;
-  } | null;
 }
 
 export function ReviewRow({
@@ -37,7 +32,6 @@ export function ReviewRow({
   organizationName,
   onRequestToggle,
   index = 0,
-  user,
 }: ReviewRowProps) {
   const avgRating =
     ((ratingSalary + ratingOt + ratingHousing) / 3).toFixed(1);
@@ -60,7 +54,7 @@ export function ReviewRow({
       </td>
       <td className="p-4">
         <p className="text-sm text-slate-600 dark:text-slate-300">
-          {user?.nickname || user?.fullName || "—"}
+          Anonymous
         </p>
       </td>
       <td className="p-4">

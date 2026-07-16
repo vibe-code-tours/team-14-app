@@ -8,6 +8,7 @@ export function getClientIp(request: NextRequest): string {
 
 // Fixed-window rate limiter backed by Postgres so limits hold correctly
 // across multiple app instances (an in-memory counter would not).
+// Uses atomic operations to prevent race conditions.
 export async function checkRateLimit(
   key: string,
   limit: number,
@@ -15,25 +16,32 @@ export async function checkRateLimit(
 ): Promise<{ allowed: boolean; remaining: number }> {
   const now = new Date();
 
-  const existing = await prisma.rateLimit.findUnique({ where: { key } });
+  // Use a transaction to ensure atomic check-and-update
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.rateLimit.findUnique({ where: { key } });
 
-  if (!existing || now.getTime() - existing.windowStart.getTime() >= windowMs) {
-    await prisma.rateLimit.upsert({
+    // If no record exists or window has expired, create/reset
+    if (!existing || now.getTime() - existing.windowStart.getTime() >= windowMs) {
+      await tx.rateLimit.upsert({
+        where: { key },
+        create: { key, count: 1, windowStart: now },
+        update: { count: 1, windowStart: now },
+      });
+      return { allowed: true, remaining: limit - 1 };
+    }
+
+    // If at limit, reject
+    if (existing.count >= limit) {
+      return { allowed: false, remaining: 0 };
+    }
+
+    // Atomically increment and return new count
+    const updated = await tx.rateLimit.update({
       where: { key },
-      create: { key, count: 1, windowStart: now },
-      update: { count: 1, windowStart: now },
+      data: { count: { increment: 1 } },
+      select: { count: true },
     });
-    return { allowed: true, remaining: limit - 1 };
-  }
 
-  if (existing.count >= limit) {
-    return { allowed: false, remaining: 0 };
-  }
-
-  await prisma.rateLimit.update({
-    where: { key },
-    data: { count: existing.count + 1 },
+    return { allowed: true, remaining: Math.max(0, limit - updated.count) };
   });
-
-  return { allowed: true, remaining: limit - existing.count - 1 };
 }

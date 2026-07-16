@@ -81,7 +81,7 @@ export default function AdminLoginPage() {
         {/* Logo */}
         <div className="text-center mb-8 opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]">
           <div className="inline-flex items-center justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}<img src="/images/logo.png" alt="WorkerVoice" className="h-20 sm:h-28 md:h-36 w-auto" />
+            { }<img src="/images/logo.png" alt="WorkerVoice" className="h-20 sm:h-28 md:h-36 w-auto" />
           </div>
           <p className="text-slate-700 dark:text-emerald-100 -mt-2 sm:-mt-6 md:-mt-10">Admin Portal</p>
         </div>
