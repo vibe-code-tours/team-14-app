@@ -4,6 +4,7 @@
 import { useState, useEffect, use } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
 
 interface FactoryData {
   id: number;
@@ -127,9 +128,7 @@ export default function ViewFactoryPage({
             {factory.image ? (
               <img src={factory.image} alt={factory.name} className="w-full h-full object-cover" />
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-10 h-10 text-slate-400 dark:text-slate-500">
-                <path d="M3 21h18M3 7v1a3 3 0 006 0V7m0 1a3 3 0 006 0V7m0 1a3 3 0 006 0V7H3l2-4h14l2 4M5 21V10.87M19 21V10.87"/>
-              </svg>
+              <img src={DEFAULT_FACTORY_IMAGE} alt={factory.name} className="w-full h-full object-cover" />
             )}
           </div>
           <div>

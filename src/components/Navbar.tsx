@@ -71,7 +71,7 @@ export function Navbar() {
             className="font-bold text-xl flex items-center gap-2 hover:opacity-90 transition"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="WorkerVoice" className="h-16 w-auto" />
+            <img src="/images/logo.png" alt="WorkerVoice" className="h-16 w-auto" />
           </Link>
 
           {/* Desktop links — visible at md (768px+) and up */}
@@ -92,7 +92,7 @@ export function Navbar() {
             <ThemeToggle />
             <button
               onClick={handleWriteReviewClick}
-              className="bg-white text-emerald-600 px-4 py-1.5 rounded-full font-semibold shadow-sm hover:bg-gray-100 transition"
+              className="bg-white text-emerald-600 dark:bg-slate-700 dark:text-white px-4 py-1.5 rounded-full font-semibold shadow-sm hover:bg-gray-100 dark:hover:bg-slate-600 transition"
             >
               ✏️ {t("nav.writeReview")}
             </button>
@@ -120,8 +120,6 @@ export function Navbar() {
 
           {/* Mobile hamburger button */}
           <div className="flex items-center gap-1 py-2.5 px-3 md:hidden">
-              <LanguageSwitcher />
-              <ThemeToggle />
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="p-1 -mr-1 hover:text-emerald-200 transition"
@@ -175,6 +173,12 @@ export function Navbar() {
             >
               {t("nav.writeReview")}
             </button>
+
+            <div className="border-t border-white/20 my-1" />
+            <div className="flex items-center gap-3 px-3 py-2">
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </div>
 
             {status === "authenticated" ? (
               <>
