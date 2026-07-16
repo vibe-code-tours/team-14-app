@@ -13,9 +13,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "WorkerVoice | Migrant Worker Reviews",
+  title: "WorkerVoice",
   description:
     "Find safe workplaces with real reviews from migrant workers in Thailand",
+  icons: {
+    icon: "/images/workervoice.fav",
+  },
 };
 
 export default function RootLayout({

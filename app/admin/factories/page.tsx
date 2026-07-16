@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Badge } from "@/src/components/Badge";
+import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
 import type { AdminFactory } from "@/src/types/admin";
 
 const statusVariant: Record<string, "default" | "success" | "warning" | "error"> = {
@@ -216,14 +217,24 @@ export default function AdminFactoriesPage() {
                       <span className="text-sm text-slate-500 dark:text-slate-400">{factory.id}</span>
                     </td>
                     <td className="p-4">
-                      <p className="font-medium text-slate-800 dark:text-slate-100 text-sm">
-                        {factory.name}
-                      </p>
-                      {factory.regNumber && (
-                        <p className="text-xs text-slate-400 dark:text-slate-500">
-                          Reg: {factory.regNumber}
-                        </p>
-                      )}
+                      <div className="flex items-center gap-3">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={factory.image || DEFAULT_FACTORY_IMAGE}
+                          alt={factory.name}
+                          className="h-10 w-10 rounded-full object-cover flex-shrink-0"
+                        />
+                        <div>
+                          <p className="font-medium text-slate-800 dark:text-slate-100 text-sm">
+                            {factory.name}
+                          </p>
+                          {factory.regNumber && (
+                            <p className="text-xs text-slate-400 dark:text-slate-500">
+                              Reg: {factory.regNumber}
+                            </p>
+                          )}
+                        </div>
+                      </div>
                     </td>
                     <td className="p-4">
                       <p className="text-sm text-slate-600 dark:text-slate-300">
