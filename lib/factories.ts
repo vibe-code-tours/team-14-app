@@ -92,12 +92,6 @@ export async function searchFactories(params: FactorySearchParams) {
   return { data, total, limit, offset };
 }
 
-export async function getFactoryById(id: number) {
-  return prisma.factory.findUnique({
-    where: { id },
-  });
-}
-
 export async function getPublicFactoryById(id: number) {
   return prisma.factory.findUnique({
     where: { id, status: "approved" },

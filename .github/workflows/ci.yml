@@ -44,7 +44,7 @@ jobs:
         run: npm run lint --if-present
       - name: Typecheck
         if: ${{ hashFiles('package.json') != '' }}
-        run: npm run typecheck --if-present
+        run: npm run type-check --if-present
       - name: Test
         if: ${{ hashFiles('package.json') != '' }}
         run: npm test --if-present

@@ -103,6 +103,16 @@ export async function updateUserStatus(id: number, status: UserStatus) {
   return prisma.user.update({
     where: { id },
     data: { status },
+    select: {
+      id: true,
+      email: true,
+      fullName: true,
+      nickname: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 }
 
@@ -112,6 +122,18 @@ export async function updateUserAdminStatus(id: number, isAdmin: boolean) {
     data: {
       isAdmin,
       role: isAdmin ? "administrator" : "user",
+    },
+    select: {
+      id: true,
+      email: true,
+      fullName: true,
+      nickname: true,
+      isAdmin: true,
+      isSuperAdmin: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
     },
   });
 }

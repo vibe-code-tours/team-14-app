@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const SECRET = new TextEncoder().encode(process.env.AUTH_SECRET || "fallback-secret");
+if (!process.env.AUTH_SECRET) {
+  throw new Error("AUTH_SECRET environment variable is required for authentication");
+}
+
+const SECRET = new TextEncoder().encode(process.env.AUTH_SECRET);
 const ADMIN_COOKIE = "wv-admin-session";
 
 async function getAdminToken(req: NextRequest) {

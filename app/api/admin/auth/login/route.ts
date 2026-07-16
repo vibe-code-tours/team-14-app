@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminCredentials, createAdminSession, setAdminSessionCookie } from "@/lib/admin-auth";
+import { getClientIp, checkRateLimit } from "@/lib/rate-limit";
+
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 
 export async function POST(req: NextRequest) {
   try {
@@ -7,6 +11,18 @@ export async function POST(req: NextRequest) {
 
     if (!email || !password) {
       return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
+    }
+
+    // Rate limiting for admin login
+    const ip = getClientIp(req);
+    const rateKey = `admin:login:${email}:${ip}`;
+
+    const { allowed } = await checkRateLimit(rateKey, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many login attempts. Please try again later." },
+        { status: 429 }
+      );
     }
 
     const user = await verifyAdminCredentials(email, password);
