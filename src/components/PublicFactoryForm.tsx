@@ -134,18 +134,6 @@ export function PublicFactoryForm({
       return;
     }
 
-    // Validate required fields
-    if (!formData.regNumber.trim()) {
-      setError(t("factoryForm.regNumberRequired"));
-      setSubmitting(false);
-      return;
-    }
-    if (!formData.province) {
-      setError(t("factoryForm.provinceRequired"));
-      setSubmitting(false);
-      return;
-    }
-
     try {
       const payload = {
         ...formData,
