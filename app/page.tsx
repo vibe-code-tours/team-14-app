@@ -49,7 +49,7 @@ export default function Home() {
     try {
       const params = new URLSearchParams();
       if (search) params.set("search", search);
-      if (selectedRegion) params.set("region", selectedRegion);
+      if (selectedRegion) params.set("province", selectedRegion);
 
       const res = await fetch(`/api/factories?${params}`, {
         signal: controller.signal,

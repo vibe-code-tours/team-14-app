@@ -55,7 +55,7 @@ export default function FactoriesPage() {
     try {
       const params = new URLSearchParams();
       if (query) params.set("search", query);
-      if (selectedRegion) params.set("region", selectedRegion);
+      if (selectedRegion) params.set("province", selectedRegion);
       const range = WORKER_RANGES[selectedWorkerRange];
       if (range?.min !== undefined) params.set("workers_min", String(range.min));
       if (range?.max !== undefined) params.set("workers_max", String(range.max));

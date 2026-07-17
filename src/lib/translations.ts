@@ -264,7 +264,7 @@ export const translations: Record<string, TranslationEntry> = {
   "factoryDetail.location": { en: "Location", my: "တည်နေရာ" },
   "factoryDetail.workers": { en: "Workers", my: "အလုပ်သမားများ" },
   "factoryDetail.operator": { en: "Operator", my: "လုပ်ငန်းရှင်" },
-  "factoryDetail.type": { en: "Type", my: "အမျိုးအစား" },
+  "factoryDetail.type": { en: "Postal Code", my: "စာပို့ ကုဒ်" },
   "factoryDetail.workerReviews": {
     en: "🗣️ Worker Reviews",
     my: "🗣️ အလုပ်သမားများ၏ သုံးသပ်ချက်များ",
@@ -434,7 +434,7 @@ export const translations: Record<string, TranslationEntry> = {
   },
   "login.emailNotVerified": {
     en: "Email not verified. A verification link has been sent to your email.",
-    my: "အီးမေးလ် စစ်ဆေးခြင်း မပြုရသေးပါ။ စစ်ဆေးရန်လင့်ခ်ကို သင့်အီးမေးလ်သို့ ပေးပို့ပြီးပါပြီ။",
+    my: "အီးမေးလ် အတည်ပြုခြင်း မလုပ်ရသေးပါ။ အတည်ပြုရန်လင့်ခ်ကို သင့်အီးမေးလ်သို့ ပေးပို့ပြီးပါပြီ။",
   },
   "login.forgotPassword": {
     en: "Forgot your password?",
@@ -452,11 +452,11 @@ export const translations: Record<string, TranslationEntry> = {
   },
   "register.checkEmail": {
     en: "Check your email to verify your account before logging in.",
-    my: "ဝင်ရောက်မီး သင့်အကောင့်ကို စစ်ဆေးရန် သင့်အီးမေးလ်ကို စစ်ဆေးပါ။",
+    my: "မဝင်ရောက်မီ သင့်အကောင့်ကို အတည်ပြုရန် သင့်အီးမေးလ်ကို စစ်ဆေးပါ။",
   },
   "register.verificationResent": {
     en: "A new verification link has been sent to your email. Please verify your account.",
-    my: "စစ်ဆေးရန်လင့်ခ်အသစ်ကို သင့်အီးမေးလ်သို့ ပေးပို့ပြီးပါပြီ။ သင့်အကောင့်ကို စစ်ဆေးပါ။",
+    my: "အတည်ပြုရန်လင့်ခ်အသစ်ကို သင့်အီးမေးလ်သို့ ပေးပို့ပြီးပါပြီ။ သင့်အကောင့်ကို စစ်ဆေးပါ။",
   },
   "register.createAccount": { en: "Create account", my: "အကောင့်ဖန်တီးရန်" },
 
