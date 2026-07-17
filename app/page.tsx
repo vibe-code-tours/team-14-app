@@ -49,7 +49,7 @@ export default function Home() {
     try {
       const params = new URLSearchParams();
       if (search) params.set("search", search);
-      if (selectedRegion) params.set("region", selectedRegion);
+      if (selectedRegion) params.set("province", selectedRegion);
 
       const res = await fetch(`/api/factories?${params}`, {
         signal: controller.signal,
@@ -94,11 +94,6 @@ export default function Home() {
     fetchFactories(debouncedQuery);
   }, [fetchFactories, debouncedQuery]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchFactories(searchQuery);
-  };
-
   const handleClearFilters = () => {
     setSelectedRegion("");
     setSelectedWorkerRange("");
@@ -119,7 +114,7 @@ export default function Home() {
             {t("hero.title")}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mb-6">{t("hero.subtitle")}</p>
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+          <div className="max-w-2xl mx-auto">
             <div className="flex items-center bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl overflow-hidden focus-within:ring-2 focus:ring-emerald-500 transition shadow-inner">
               <span className="pl-4 text-slate-400">🔍</span>
               <input
@@ -129,14 +124,8 @@ export default function Home() {
                 placeholder={t("hero.placeholder")}
                 className="w-full min-w-0 p-4 bg-transparent outline-none text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
-              <button
-                type="submit"
-                className="bg-emerald-600 text-white px-4 py-4 sm:px-6 font-medium hover:bg-emerald-700 transition active:scale-95 shrink-0"
-              >
-                {t("hero.searchButton")}
-              </button>
             </div>
-          </form>
+          </div>
         </div>
 
         {/* Stats Bar */}

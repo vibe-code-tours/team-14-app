@@ -55,7 +55,7 @@ export default function FactoriesPage() {
     try {
       const params = new URLSearchParams();
       if (query) params.set("search", query);
-      if (selectedRegion) params.set("region", selectedRegion);
+      if (selectedRegion) params.set("province", selectedRegion);
       const range = WORKER_RANGES[selectedWorkerRange];
       if (range?.min !== undefined) params.set("workers_min", String(range.min));
       if (range?.max !== undefined) params.set("workers_max", String(range.max));
@@ -85,12 +85,6 @@ export default function FactoriesPage() {
     fetchFactories(debouncedQuery);
   }, [fetchFactories, debouncedQuery]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setPage(1);
-    fetchFactories(searchQuery);
-  };
-
   const totalPages = Math.ceil(total / limit);
 
   return (
@@ -116,7 +110,7 @@ export default function FactoriesPage() {
 
         {/* Search & Filters */}
         <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
-          <form onSubmit={handleSearch} className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3">
             {/* Search input */}
             <div className="flex items-center bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-lg overflow-hidden focus-within:ring-2 ring-emerald-500 transition">
               <span className="pl-3 text-slate-400">🔍</span>
@@ -150,14 +144,8 @@ export default function FactoriesPage() {
                   setPage(1);
                 }}
               />
-              <button
-                type="submit"
-                className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 transition text-sm"
-              >
-                {t("factoryList.search")}
-              </button>
             </div>
-          </form>
+          </div>
         </div>
 
         {/* Results Count */}

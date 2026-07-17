@@ -124,6 +124,18 @@ export function PublicFactoryForm({
     setError("");
     setSuccess(false);
 
+    // Validate required fields
+    if (!formData.regNumber.trim()) {
+      setError(t("factoryForm.regNumberRequired"));
+      setSubmitting(false);
+      return;
+    }
+    if (!formData.province) {
+      setError(t("factoryForm.provinceRequired"));
+      setSubmitting(false);
+      return;
+    }
+
     try {
       const payload = {
         ...formData,
@@ -236,6 +248,7 @@ export function PublicFactoryForm({
             name="regNumber"
             value={formData.regNumber}
             onChange={handleChange}
+            required
             placeholder={t("factoryForm.regNumberPlaceholder")}
           />
           <Input
@@ -322,6 +335,7 @@ export function PublicFactoryForm({
             value={formData.province}
             onChange={handleChange}
             options={provinceOptions}
+            required
             placeholder={t("factoryForm.provincePlaceholder")}
           />
           <Input

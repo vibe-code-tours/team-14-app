@@ -12,8 +12,9 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
   const isLoginPage = pathname === "/admin/login";
+  const isDemoPage = pathname === "/admin/demo";
 
-  if (isLoginPage) {
+  if (isLoginPage || isDemoPage) {
     return (
       <ThemeProvider>
         {children}
