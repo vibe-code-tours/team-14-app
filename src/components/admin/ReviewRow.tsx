@@ -13,6 +13,7 @@ interface ReviewRowProps {
   isVisible: boolean;
   createdAt: string;
   factoryName: string | null;
+  factoryOperator: string | null;
   organizationName: string | null;
   onRequestToggle: (id: number, isVisible: boolean, name: string) => void;
   index?: number;
@@ -34,6 +35,7 @@ export function ReviewRow({
   isVisible,
   createdAt,
   factoryName,
+  factoryOperator,
   organizationName,
   onRequestToggle,
   index = 0,
@@ -50,17 +52,25 @@ export function ReviewRow({
       <td className="p-4">
         <span className="text-sm text-slate-500 dark:text-slate-400">{id}</span>
       </td>
+      <td className="p-4 max-w-xs">
+        <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2">{reviewText}</p>
+      </td>
       <td className="p-4">
-        <div>
-          <p className="font-medium text-slate-800 dark:text-slate-200 text-sm">{workerRole}</p>
+        <p className="font-medium text-slate-800 dark:text-slate-100 text-sm">
+          {user?.nickname || user?.fullName || "—"}
+        </p>
+        {user?.nickname && (
           <p className="text-xs text-slate-400 dark:text-slate-500">
-            {factoryName || organizationName || "Unknown"}
+            {user.fullName}
           </p>
-        </div>
+        )}
+      </td>
+      <td className="p-4">
+        <p className="text-sm text-slate-600 dark:text-slate-300">{workerRole}</p>
       </td>
       <td className="p-4">
         <p className="text-sm text-slate-600 dark:text-slate-300">
-          {user?.nickname || user?.fullName || "—"}
+          {factoryOperator || "—"}
         </p>
       </td>
       <td className="p-4">
@@ -74,9 +84,6 @@ export function ReviewRow({
           <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{avgRating}</span>
           <span className="text-xs text-slate-400 dark:text-slate-500">/5</span>
         </div>
-      </td>
-      <td className="p-4 max-w-xs">
-        <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2">{reviewText}</p>
       </td>
       <td className="p-4">
         <Badge variant={isVisible ? "success" : "warning"}>

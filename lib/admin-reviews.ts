@@ -43,7 +43,7 @@ export async function getAdminReviews(params: AdminReviewSearchParams) {
         isVisible: true,
         createdAt: true,
         factory: {
-          select: { name: true },
+          select: { name: true, operator: true },
         },
         organization: {
           select: { name: true },
@@ -71,6 +71,7 @@ export async function getAdminReviews(params: AdminReviewSearchParams) {
     isVisible: r.isVisible,
     createdAt: r.createdAt,
     factoryName: r.factory?.name ?? null,
+    factoryOperator: r.factory?.operator ?? null,
     organizationName: r.organization?.name ?? null,
     user: r.user ?? null,
   }));

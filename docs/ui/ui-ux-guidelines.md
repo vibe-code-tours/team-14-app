@@ -49,7 +49,7 @@
 
 - Sticky positioning
 - Gradient background (emerald to teal)
-- Logo with globe emoji 🌏
+- Logo with custom logo
 - "Suggest" button as white pill
 
 ### Cards
