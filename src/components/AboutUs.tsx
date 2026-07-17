@@ -18,10 +18,12 @@ export function AboutUs() {
 
         <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700/30">
           <p className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2 flex items-center">
-            <img src="/images/logo.svg" alt="Logo" className="w-9 h-9" />Belief:
+            <img src="/images/logo.svg" alt="Logo" className="w-9 h-9" />
+            Belief: &nbsp;
+            <p>{t("about.belief")}</p>
           </p>
-          <p>{t("about.belief")}</p>
         </div>
+         <p className="text-emerald-700 text-xs">{t("about.disclaimer")}</p>
       </div>
     </div>
   );

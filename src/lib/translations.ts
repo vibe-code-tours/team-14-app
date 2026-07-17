@@ -305,6 +305,10 @@ export const translations: Record<string, TranslationEntry> = {
     en: '"Listen to every worker\'s voice, protect every worker\'s safety."',
     my: '"အလုပ်သမားတိုင်း၏ အသံကို နားထောင်ပါ၊ အလုပ်သမားတိုင်း၏ ဘေးကင်းရေးကို ကာကွယ်ပါ။"',
   },
+  "about.disclaimer": {
+    en: '"Disclaimer: In the event of any dispute, the decision of WorkerVoice shall be final"',
+    my: 'Disclaimer: အကယ်၍ အငြင်းပွားစရာတစ်စုံတစ်ရာရှိလာပါက workervoice အဖွဲ့အစည်း၏ ဆုံးဖြတ်ချက်သည်သာ အတည်ဖြစ်သည်။',
+  },
 
   // Contact Links
   "contact.title": { en: "Contact Us", my: "ဆက်သွယ်ရန်" },
