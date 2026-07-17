@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 
 interface AlertModalProps {
   isOpen: boolean;
@@ -43,49 +44,50 @@ export function AlertModal({
       ? "bg-gradient-to-r from-emerald-600 to-teal-600"
       : "bg-gradient-to-r from-amber-500 to-orange-500";
 
-  return (
-    <dialog
-      open={isOpen}
-      onClose={handleCancel}
-      className="fixed inset-0 z-50 bg-black/50 p-0 m-0 max-w-none w-full h-full rounded-none border-0 shadow-none backdrop:visible backdrop:bg-black/50"
+  return createPortal(
+    <div
+      className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center"
+      onClick={handleCancel}
     >
-      <div className="flex items-end sm:items-center justify-center min-h-full">
-        <div className="relative bg-white dark:bg-slate-800 w-full max-w-sm sm:rounded-2xl rounded-t-2xl shadow-2xl border border-slate-100 dark:border-slate-700 overflow-hidden animate-slide-up">
-          {/* Header */}
-          <div className={`${headerClass} text-white p-5 text-center`}>
-            <div className="text-3xl mb-2">
-              {variant === "success" ? "✅" : "🔒"}
-            </div>
-            <h2 className="text-lg font-bold">{title}</h2>
+      <div
+        className="relative bg-white dark:bg-slate-800 w-full max-w-sm sm:rounded-2xl rounded-t-2xl shadow-2xl border border-slate-100 dark:border-slate-700 overflow-hidden animate-slide-up"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className={`${headerClass} text-white p-5 text-center`}>
+          <div className="text-3xl mb-2">
+            {variant === "success" ? "✅" : "🔒"}
           </div>
+          <h2 className="text-lg font-bold">{title}</h2>
+        </div>
 
-          {/* Body */}
-          <div className="p-6 text-center space-y-5">
-            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-              {message}
-            </p>
+        {/* Body */}
+        <div className="p-6 text-center space-y-5">
+          <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+            {message}
+          </p>
 
-            <div className="flex gap-3 justify-center">
-              {!hideCancel && (
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="px-5 py-2.5 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition"
-                >
-                  {cancelLabel}
-                </button>
-              )}
+          <div className="flex gap-3 justify-center">
+            {!hideCancel && (
               <button
                 type="button"
-                onClick={handleConfirm}
-                className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow transition"
+                onClick={handleCancel}
+                className="px-5 py-2.5 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition"
               >
-                {confirmLabel}
+                {cancelLabel}
               </button>
-            </div>
+            )}
+            <button
+              type="button"
+              onClick={handleConfirm}
+              className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow transition"
+            >
+              {confirmLabel}
+            </button>
           </div>
         </div>
       </div>
-    </dialog>
+    </div>,
+    document.body
   );
 }
