@@ -214,6 +214,14 @@ export default function Home() {
                   )}
                 </Link>
               ))}
+              <div className="flex items-end">
+                <Link
+                  href="/factories"
+                  className="text-emerald-600 dark:text-emerald-400 text-sm font-medium hover:underline"
+                >
+                  {t("factories.viewAll")}
+                </Link>
+              </div>
             </div>
           )}
         </div>
