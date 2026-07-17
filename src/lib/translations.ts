@@ -307,7 +307,7 @@ export const translations: Record<string, TranslationEntry> = {
   },
   "about.disclaimer": {
     en: '"Disclaimer: In the event of any dispute, the decision of WorkerVoice shall be final"',
-    my: 'Disclaimer: အကယ်၍ အငြင်းပွားစရာတစ်စုံတစ်ရာရှိလာပါက workervoice အဖွဲ့အစည်း၏ ဆုံးဖြတ်ချက်သည်သာ အတည်ဖြစ်သည်။',
+    my: 'Disclaimer: အကယ်၍ အငြင်းပွားစရာတစ်စုံတစ်ရာရှိလာပါက WorkerVoice အဖွဲ့အစည်း၏ ဆုံးဖြတ်ချက်သည်သာ အတည်ဖြစ်သည်။',
   },
 
   // Contact Links
