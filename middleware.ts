@@ -31,6 +31,11 @@ export default async function middleware(req: NextRequest) {
       return NextResponse.next();
     }
 
+    // Allow admin demo page without auth (public demo info)
+    if (pathname === "/admin/demo") {
+      return NextResponse.next();
+    }
+
     // Allow admin auth API routes without auth check
     if (pathname.startsWith("/api/admin/auth")) {
       return NextResponse.next();

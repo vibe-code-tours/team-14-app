@@ -150,13 +150,16 @@ export default function AdminReviewsPage() {
                     Reviewer
                   </th>
                   <th className="text-left p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="text-left p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    Operator
+                  </th>
+                  <th className="text-left p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     Country
                   </th>
                   <th className="text-left p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     Rating
-                  </th>
-                  <th className="text-left p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    Review
                   </th>
                   <th className="text-left p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     Status
@@ -180,6 +183,7 @@ export default function AdminReviewsPage() {
                     isVisible={review.isVisible}
                     createdAt={review.createdAt.toString()}
                     factoryName={review.factoryName}
+                    factoryOperator={review.factoryOperator}
                     organizationName={review.organizationName}
                     onRequestToggle={handleRequestToggle}
                     index={index}

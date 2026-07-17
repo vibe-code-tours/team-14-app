@@ -44,6 +44,10 @@ interface Review {
   ratingHousing: number;
   reviewText: string;
   createdAt: string;
+  user: {
+    fullName: string;
+    nickname: string | null;
+  } | null;
 }
 
 interface ReviewStats {
@@ -382,11 +386,11 @@ export default function FactoryDetailPage({
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-3">
                           <div className="bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/40 dark:to-teal-900/40 text-emerald-800 dark:text-emerald-200 font-bold w-10 h-10 rounded-full flex items-center justify-center shadow-inner">
-                            {review.workerRole.charAt(0).toUpperCase()}
+                            {review.user?.nickname?.charAt(0).toUpperCase() || review.user?.fullName?.charAt(0).toUpperCase() || review.workerRole.charAt(0).toUpperCase()}
                           </div>
                           <div>
                             <h4 className="font-bold text-slate-800 dark:text-slate-100 text-sm flex items-center gap-1">
-                              {review.workerRole}{" "}
+                              {review.user?.nickname || review.user?.fullName || review.workerRole}{" "}
                               {getCountryFlag(review.countryFrom)}
                             </h4>
                             <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">

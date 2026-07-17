@@ -79,7 +79,7 @@ const translations = {
 
     regionPrompt: (region: string) =>
       `━━━━━━━━━━━━━━━━━━━━━━━\n` +
-      `🌏 <b>${region}</b>\n` +
+      `🇹🇭 <b>${region}</b>\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
       `Search for companies in this region.\n\n` +
       `Enter a company name or location:`,
@@ -164,7 +164,7 @@ const translations = {
 
     regionPrompt: (region: string) =>
       `━━━━━━━━━━━━━━━━━━━━━━━\n` +
-      `🌏 <b>${region}</b>\n` +
+      `🇹🇭 <b>${region}</b>\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
       `ဒီဒေသထဲက ကုမ္ပဏီတွေကို ရှာဖွေပါ။\n\n` +
       `ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပါ:`,

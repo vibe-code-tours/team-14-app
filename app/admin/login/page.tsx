@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { PasswordInput } from "@/src/components/PasswordInput";
 
 export default function AdminLoginPage() {
@@ -146,6 +147,12 @@ export default function AdminLoginPage() {
               )}
             </button>
           </form>
+
+          <div className="mt-4 text-center">
+            <Link href="/admin/demo" className="text-sm text-emerald-600 hover:underline">
+              Try demo accounts →
+            </Link>
+          </div>
         </div>
       </div>
     </div>
