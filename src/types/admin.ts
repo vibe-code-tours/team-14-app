@@ -43,6 +43,7 @@ export interface AdminReview {
   isVisible: boolean;
   createdAt: Date;
   factoryName: string | null;
+  factoryOperator: string | null;
   organizationName: string | null;
   user: {
     id: string;

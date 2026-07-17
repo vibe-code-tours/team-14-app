@@ -41,12 +41,15 @@ export function FactoryFilters({
               className={selectClass}
             >
               <option value="">{t("filters.allRegions")}</option>
-              <option value="Bangkok_and_Central">Bangkok & Central</option>
-              <option value="Eastern">Eastern</option>
-              <option value="Northern">Northern</option>
-              <option value="Northeastern">Northeastern</option>
-              <option value="Western">Western</option>
-              <option value="Southern">Southern</option>
+              <option value="Bangkok">Bangkok</option>
+              <option value="Chonburi">Chonburi</option>
+              <option value="Rayong">Rayong</option>
+              <option value="Samut Prakan">Samut Prakan</option>
+              <option value="Pathum Thani">Pathum Thani</option>
+              <option value="Nakhon Ratchasima">Nakhon Ratchasima</option>
+              <option value="Chiang Mai">Chiang Mai</option>
+              <option value="Khon Kaen">Khon Kaen</option>
+              <option value="Hat Yai">Hat Yai (Songkhla)</option>
             </select>
           </div>
         </div>

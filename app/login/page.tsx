@@ -28,6 +28,11 @@ export default function LoginPage() {
                 {t("login.createOne")}
               </Link>
             </p>
+            <p className="text-sm text-gray-500 text-center mt-2">
+              <Link href="/demo" className="text-emerald-600 hover:underline">
+                {t("demo.tryDemo")}
+              </Link>
+            </p>
           </CardContent>
         </Card>
       </main>

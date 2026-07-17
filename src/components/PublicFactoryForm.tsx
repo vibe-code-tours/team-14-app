@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { Input } from "@/src/components/Input";
 import { Select } from "@/src/components/Select";
 import { Button } from "@/src/components/Button";
-import { SuccessModal } from "@/src/components/SuccessModal";
+import { AlertModal } from "@/src/components/AlertModal";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
 
@@ -76,8 +76,7 @@ export function PublicFactoryForm({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [image, setImage] = useState<string | null>(initialData?.image || null);
   const [showLightbox, setShowLightbox] = useState(false);
   const [formData, setFormData] = useState<PublicFactoryFormData>({
@@ -122,7 +121,18 @@ export function PublicFactoryForm({
     e.preventDefault();
     setSubmitting(true);
     setError("");
-    setSuccess(false);
+
+    // Validate required fields
+    if (!formData.regNumber.trim()) {
+      setError(t("factoryForm.regNumberRequired"));
+      setSubmitting(false);
+      return;
+    }
+    if (!formData.province) {
+      setError(t("factoryForm.provinceRequired"));
+      setSubmitting(false);
+      return;
+    }
 
     try {
       const payload = {
@@ -146,10 +156,9 @@ export function PublicFactoryForm({
         throw new Error(data.error || "Failed to submit factory");
       }
 
-      setSuccess(true);
       if (mode === "create") {
         setFormData(initialFormData);
-        setShowSuccessModal(true);
+        setShowSuccessAlert(true);
       } else {
         onSuccess?.();
       }
@@ -236,6 +245,7 @@ export function PublicFactoryForm({
             name="regNumber"
             value={formData.regNumber}
             onChange={handleChange}
+            required
             placeholder={t("factoryForm.regNumberPlaceholder")}
           />
           <Input
@@ -322,6 +332,7 @@ export function PublicFactoryForm({
             value={formData.province}
             onChange={handleChange}
             options={provinceOptions}
+            required
             placeholder={t("factoryForm.provincePlaceholder")}
           />
           <Input
@@ -340,14 +351,6 @@ export function PublicFactoryForm({
         </div>
       )}
 
-      {success && (
-        <div className="bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 p-4 rounded-xl text-sm">
-          ✅ {mode === "edit"
-            ? t("editFactory.success")
-            : t("factorySubmitted.message")}
-        </div>
-      )}
-
       <div className="flex justify-end">
         <Button type="submit" isLoading={submitting}>
           {mode === "edit" ? t("factoryForm.saveChanges") : t("factoryForm.submitFactory")}
@@ -355,15 +358,17 @@ export function PublicFactoryForm({
       </div>
     </form>
 
-    <SuccessModal
-      isOpen={showSuccessModal}
-      onClose={() => {
-        setShowSuccessModal(false);
-        onSuccess?.();
+    <AlertModal
+      isOpen={showSuccessAlert}
+      onClose={(confirmed) => {
+        setShowSuccessAlert(false);
+        if (confirmed) onSuccess?.();
       }}
       title={t("factorySubmitted.title")}
       message={t("factorySubmitted.message")}
-      buttonText={t("factorySubmitted.ok")}
+      confirmLabel={t("factorySubmitted.ok")}
+      variant="success"
+      hideCancel
     />
 
     {showLightbox &&
