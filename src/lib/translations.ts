@@ -101,7 +101,7 @@ export const translations: Record<string, TranslationEntry> = {
   "factoryForm.address": { en: "📍 Address", my: "📍 လိပ်စာ" },
   "factoryForm.factoryName": { en: "Factory Name *", my: "စက်ရုံ အမည် *" },
   "factoryForm.factoryNamePlaceholder": { en: "Enter factory name", my: "စက်ရုံ အမည်ထည့်ပါ" },
-  "factoryForm.regNumber": { en: "Registration Number", my: "မှတ်ပုံတင် အမှတ်" },
+  "factoryForm.regNumber": { en: "Registration Number *", my: "မှတ်ပုံတင် အမှတ် *" },
   "factoryForm.regNumberPlaceholder": { en: "e.g. 0105519000001", my: "ဥပမာ။ 0105519000001" },
   "factoryForm.operator": { en: "Operator", my: "လုပ်ငန်းရှင်" },
   "factoryForm.operatorPlaceholder": { en: "Company operator name", my: "ကုမ္ပဏီ လုပ်ငန်းရှင် အမည်" },
@@ -123,8 +123,16 @@ export const translations: Record<string, TranslationEntry> = {
   "factoryForm.subdistrictPlaceholder": { en: "Subdistrict (Tambon)", my: "ရပ်ကွက် (တံတား)" },
   "factoryForm.district": { en: "District", my: "မြို့နယ်" },
   "factoryForm.districtPlaceholder": { en: "District (Amphoe)", my: "မြို့နယ် (အမ်ဖို့)" },
-  "factoryForm.province": { en: "Province", my: "ပြည်နယ်" },
-  "factoryForm.provincePlaceholder": { en: "Select province", my: "ပြည်နယ် ရွေးပါ" },
+  "factoryForm.province": { en: "Province *", my: "ဒေသ *" },
+  "factoryForm.provincePlaceholder": { en: "Select province", my: "ဒေသ ရွေးပါ" },
+  "factoryForm.regNumberRequired": {
+    en: "Registration number is required",
+    my: "မှတ်ပုံတင် အမှတ် ဖြည့်သွင်းရန် လိုအပ်ပါသည်",
+  },
+  "factoryForm.provinceRequired": {
+    en: "Province is required",
+    my: "ဒေသ ဖြည့်သွင်းရန် လိုအပ်ပါသည်",
+  },
   "factoryForm.postalCode": { en: "Postal Code", my: "စာပို့ ကုဒ်" },
   "factoryForm.postalCodePlaceholder": { en: "e.g. 10110", my: "ဥပမာ။ 10110" },
   "factoryForm.submitFactory": { en: "Submit Factory", my: "စက်ရုံ တင်သွင်းရန်" },
@@ -171,7 +179,7 @@ export const translations: Record<string, TranslationEntry> = {
   // Factory Filters
   "filters.region": { en: "Region:", my: "ဒေသ:" },
   "filters.workers": { en: "Workers:", my: "အလုပ်သမားများ:" },
-  "filters.allRegions": { en: "All Regions", my: "ဒေသအားလုံး" },
+  "filters.allRegions": { en: "All Provinces", my: "ဒေသအားလုံး" },
   "filters.anySize": { en: "Any Size", my: "အရွယ်အစားအားလုံး" },
   "filters.small": { en: "1 - 100 workers", my: "အလုပ်သမား ၁ - ၁၀၀" },
   "filters.medium": { en: "101 - 500 workers", my: "အလုပ်သမား ၁၀၁ - ၅၀၀" },
@@ -197,7 +205,7 @@ export const translations: Record<string, TranslationEntry> = {
     en: "Search by factory name...",
     my: "စက်ရုံအမည်ဖြင့် ရှာဖွေပါ...",
   },
-  "factoryList.allRegions": { en: "All Regions", my: "ဒေသအားလုံး" },
+  "factoryList.allRegions": { en: "All Provinces", my: "ဒေသအားလုံး" },
   "factoryList.search": { en: "Search", my: "ရှာဖွေရန်" },
   "factoryList.loading": { en: "Loading...", my: "ဆွဲနေသည်..." },
   "factoryList.showing": {
@@ -281,7 +289,7 @@ export const translations: Record<string, TranslationEntry> = {
   "factoryDetail.address.road": { en: "Road", my: "လမ်း" },
   "factoryDetail.address.subdistrict": { en: "Subdistrict", my: "မြို့နယ်" },
   "factoryDetail.address.district": { en: "District", my: "ခရိုင်" },
-  "factoryDetail.address.province": { en: "Province", my: "ပြည်နယ်" },
+  "factoryDetail.address.province": { en: "Province", my: "ဒေသ" },
 
   // About Us
   "about.title": { en: "About WorkerVoice", my: "WorkerVoice အကြောင်း" },
@@ -451,6 +459,47 @@ export const translations: Record<string, TranslationEntry> = {
     my: "စစ်ဆေးရန်လင့်ခ်အသစ်ကို သင့်အီးမေးလ်သို့ ပေးပို့ပြီးပါပြီ။ သင့်အကောင့်ကို စစ်ဆေးပါ။",
   },
   "register.createAccount": { en: "Create account", my: "အကောင့်ဖန်တီးရန်" },
+
+  // Demo Guide
+  "demo.title": { en: "Demo Guide", my: "Demo လမ်းညွှန်" },
+  "demo.subtitle": {
+    en: "Try WorkerVoice with demo accounts",
+    my: "Demo အကောင့်များဖြင့် WorkerVoice ကို စမ်းသုံးကြည့်ပါ",
+  },
+  "demo.quickAccess": { en: "Quick Access", my: "အမြန်ဝင်ရောက်ရန်" },
+  "demo.loginCredentials": { en: "Login Credentials", my: "ဝင်ရောက်ရန် အချက်အလက်များ" },
+  "demo.userRole": { en: "User Demo", my: "User Demo" },
+  "demo.adminRole": { en: "Admin Demo", my: "Admin Demo" },
+  "demo.telegramBot": { en: "Telegram Bot", my: "Telegram Bot" },
+  "demo.userAccount": { en: "User Account", my: "အသုံးပြုသူ အကောင့်" },
+  "demo.adminAccount": { en: "Admin Account", my: "Admin အကောင့်" },
+  "demo.superAdminAccount": { en: "Super Admin Account", my: "Super Admin အကောင့်" },
+  "demo.email": { en: "Email", my: "အီးမေးလ်" },
+  "demo.password": { en: "Password", my: "စကားဝှက်" },
+  "demo.features": { en: "Features", my: "လုပ်ဆောင်ချက်များ" },
+  "demo.instructions": { en: "How to use", my: "အသုံးပြုပုံ" },
+  "demo.backToLogin": { en: "Back to Login", my: "ဝင်ရောက်ရန် ပြန်သွားရန်" },
+  "demo.userFeatures": {
+    en: "Browse factories, write reviews, write contact messages",
+    my: "စက်ရုံများကြည့်ရှုရန်၊ သုံးသပ်ချက်ရေးရန်၊ ဆက်သွယ်ရန် မက်ဆေ့ချ်များရေးရန်",
+  },
+  "demo.adminFeatures": {
+    en: "View dashboard and manage factories, reviews, messages, users",
+    my: "Dashboard ကြည့်ရှုရန်၊ စက်ရုံများ၊ သုံးသပ်ချက်များ၊ မက်ဆေ့ချ်များ၊ အသုံးပြုသူများကို စီမံခန့်ခွဲရန်",
+  },
+  "demo.superAdminFeatures": {
+    en: "Full access: View dashboard and manage factories, reviews, messages, users and admins",
+    my: "အပြည့်အစုံ ဝင်ရောက်ခွင့်: Dashboard ကြည့်ရှုရန်၊ စက်ရုံများ၊ သုံးသပ်ချက်များ၊ မက်ဆေ့ချ်များ၊ အသုံးပြုသူများနှင့် adminများကို စီမံခန့်ခွဲရန်",
+  },
+  "demo.telegramFeatures": {
+    en: "Search factories, get instant info via Telegram",
+    my: "Telegram မှတဆင့် စက်ရုံများ ရှာဖွေရန်၊ ချက်ချင်း အချက်အလက် ရရှိရန်",
+  },
+  "demo.howToUseLinks": {
+    en: "Click the links above to try each demo directly, or use the login credentials.",
+    my: "အပေါ်ပါ လင့်ခ်များကို နှိပ်၍ တိုက်ရိုက် စမ်းသုံးနိုင်ပါသည်၊ သို့မဟုတ် ဝင်ရောက်ရန် အချက်အလက်များကို အသုံးပြုနိုင်ပါသည်။",
+  },
+  "demo.tryDemo": { en: "Try demo accounts →", my: "Demo အကောင့်များ စမ်းသုံးကြည့်ပါ →" },
 };
 
 export type TranslationKey = keyof typeof translations;
