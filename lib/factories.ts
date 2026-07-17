@@ -209,6 +209,12 @@ export async function getFactoryReviews(factoryId: number) {
         ratingHousing: true,
         reviewText: true,
         createdAt: true,
+        user: {
+          select: {
+            fullName: true,
+            nickname: true,
+          },
+        },
       },
     }),
     prisma.review.aggregate({
