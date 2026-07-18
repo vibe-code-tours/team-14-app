@@ -65,9 +65,9 @@ export function setAdminSessionCookie(token: string) {
     value: token,
     options: {
       httpOnly: true,
-      secure: true,
-      sameSite: "strict" as const,
-      path: "/admin",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax" as const,
+      path: "/",
       maxAge: 8 * 60 * 60, // 8 hours
     },
   };
