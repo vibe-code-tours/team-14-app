@@ -31,10 +31,8 @@ export default function RootLayout({
       <head>
         <Script
           id="theme-init"
+          src="/scripts/theme-init.js"
           strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var k=location.pathname.indexOf('/admin')===0?'admin-theme':'user-theme';var t=localStorage.getItem(k);if(t!=='light'){document.documentElement.classList.add('dark')}}catch(e){}})()`,
-          }}
         />
       </head>
       <body className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans antialiased transition-colors">

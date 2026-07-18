@@ -11,7 +11,7 @@ export function AboutUs() {
         <span>ℹ️</span> {t("about.title")}
       </h3>
 
-      <div className="space-y-3 text-sm text-emerald-700 dark:text-emerald-300 leading-relaxed">
+      <div className="space-y-3 text-sm text-emerald-700 dark:text-emerald-300 leading-relaxed text-justify">
         <p>{t("about.p1")}</p>
 
         <p>{t("about.p2")}</p>
