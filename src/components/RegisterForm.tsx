@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Input } from "./Input";
 import { PasswordInput } from "./PasswordInput";
 import { Button } from "./Button";
@@ -14,6 +15,7 @@ export function RegisterForm() {
     email: "",
     password: "",
   });
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [verificationResent, setVerificationResent] = useState(false);
@@ -77,6 +79,7 @@ export function RegisterForm() {
       <Input
         label={t("register.fullName")}
         required
+        placeholder={t("register.fullNamePlaceholder")}
         value={formData.fullName}
         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
       />
@@ -84,6 +87,7 @@ export function RegisterForm() {
       <div>
         <Input
           label={t("register.nickname")}
+          placeholder={t("register.nicknamePlaceholder")}
           value={formData.nickname}
           onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
         />
@@ -96,6 +100,7 @@ export function RegisterForm() {
         label={t("login.email")}
         type="email"
         required
+        placeholder={t("login.emailPlaceholder")}
         value={formData.email}
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
       />
@@ -104,6 +109,7 @@ export function RegisterForm() {
         label={t("login.password")}
         required
         minLength={8}
+        placeholder={t("login.passwordPlaceholder")}
         value={formData.password}
         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
       />
@@ -112,7 +118,27 @@ export function RegisterForm() {
         <div className="bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-300 p-3 rounded-lg text-sm">{error}</div>
       )}
 
-      <Button type="submit" isLoading={submitting} className="w-full">
+      <label className="flex items-start gap-3 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={agreedToTerms}
+          onChange={(e) => setAgreedToTerms(e.target.checked)}
+          className="mt-1 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+        />
+        <span className="text-sm text-slate-600 dark:text-slate-400">
+          {t("register.agreeToTerms")}{" "}
+          <Link
+            href="/terms"
+            rel="noopener noreferrer"
+            className="text-emerald-600 dark:text-emerald-400 hover:underline"
+          >
+            {t("register.agreeToTermsLink")}
+          </Link>
+          {t("register.agreeToTermsEnd")}
+        </span>
+      </label>
+
+      <Button type="submit" isLoading={submitting} className="w-full" disabled={!agreedToTerms}>
         {t("register.createAccount")}
       </Button>
     </form>
