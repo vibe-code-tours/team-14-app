@@ -168,9 +168,9 @@ export function ReviewModal({
           <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-5 sm:p-6 shrink-0">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg sm:text-xl font-bold">Write a Worker Review</h2>
+                <h2 className="text-lg sm:text-xl font-bold">{t("review.title")}</h2>
                 <p className="text-white/80 text-xs mt-1">
-                  Help others make informed, safe career choices.
+                  {t("review.subtitle")}
                 </p>
               </div>
               <button
@@ -193,9 +193,9 @@ export function ReviewModal({
               <span className="text-lg shrink-0">🔒</span>
               <div>
                 <strong className="block">
-                  ၁၀၀% လူမည်မဖော်ပြဘဲ လျှို့ဝှက်ပေးထားပါသည်
+                  {t("privacy.title")}
                 </strong>
-                Your name and identity are completely safe. We never share them.
+                {t("privacy.description")}
               </div>
             </div>
 
@@ -204,7 +204,7 @@ export function ReviewModal({
             {!isFactoryPreselected && (
               <div className="relative" ref={dropdownRef}>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                  Factory / Company (စက်ရုံ / ကုမ္ပဏီ)
+                  {t("review.factoryLabel")}
                 </label>
                 <input
                   type="text"
@@ -216,19 +216,24 @@ export function ReviewModal({
                     setFactorySearch(e.target.value);
                     setShowFactoryDropdown(true);
                   }}
-                  onFocus={() => setShowFactoryDropdown(true)}
-                  placeholder="Search for a factory..."
+                  onFocus={() => {
+                    setShowFactoryDropdown(true);
+                    if (factories.length === 0) {
+                      fetchFactories(factorySearch);
+                    }
+                  }}
+                  placeholder={t("review.factoryPlaceholder")}
                   className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3.5 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition"
                 />
                 {showFactoryDropdown && (
                   <div className="absolute z-10 mt-1 w-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl shadow-lg max-h-48 overflow-y-auto">
                     {factoriesLoading ? (
                       <div className="px-3.5 py-2.5 text-sm text-slate-400">
-                        Searching...
+                        {t("review.searching")}
                       </div>
                     ) : factories.length === 0 ? (
                       <div className="px-3.5 py-2.5 text-sm text-slate-400">
-                        No factories found
+                        {t("review.noFactories")}
                       </div>
                     ) : (
                       factories.map((f) => (
@@ -261,7 +266,7 @@ export function ReviewModal({
 
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                Your Role in Factory (အလုပ်အကိုင်)
+                {t("review.roleLabel")}
               </label>
               <input
                 type="text"
@@ -270,14 +275,14 @@ export function ReviewModal({
                 onChange={(e) =>
                   setFormData({ ...formData, workerRole: e.target.value })
                 }
-                placeholder="e.g. Production Operator, Packer, QC"
+                placeholder={t("review.rolePlaceholder")}
                 className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3.5 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition"
               />
             </div>
 
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                Home Country (နေရပ်မိခင်နိုင်ငံ)
+                {t("review.countryLabel")}
               </label>
               <select
                 value={formData.countryFrom}
@@ -296,7 +301,7 @@ export function ReviewModal({
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
-                  💰 Salary
+                  💰 {t("review.salary")}
                 </label>
                 <select
                   value={formData.ratingSalary}
@@ -317,7 +322,7 @@ export function ReviewModal({
               </div>
               <div>
                 <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
-                  ⏱️ OT Fairness
+                  ⏱️ {t("review.otFairness")}
                 </label>
                 <select
                   value={formData.ratingOt}
@@ -338,7 +343,7 @@ export function ReviewModal({
               </div>
               <div>
                 <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
-                  🏠 Housing
+                  🏠 {t("review.housing")}
                 </label>
                 <select
                   value={formData.ratingHousing}
@@ -361,7 +366,7 @@ export function ReviewModal({
 
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                Your Review (သုံးသပ်ချက်)
+                {t("review.reviewLabel")}
               </label>
               <textarea
                 required
@@ -370,7 +375,7 @@ export function ReviewModal({
                 onChange={(e) =>
                   setFormData({ ...formData, reviewText: e.target.value })
                 }
-                placeholder="Describe the working conditions, management, food, and facilities..."
+                placeholder={t("review.reviewPlaceholder")}
                 className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3.5 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition"
               ></textarea>
             </div>
@@ -387,14 +392,14 @@ export function ReviewModal({
                 onClick={handleClose}
                 className="px-5 py-2.5 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition"
               >
-                Cancel
+                {t("review.cancel")}
               </button>
               <button
                 type="submit"
                 disabled={submitting}
                 className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow transition disabled:opacity-50"
               >
-                {submitting ? "Submitting..." : "Submit Review"}
+                {submitting ? t("review.submitting") : t("review.submit")}
               </button>
             </div>
           </form>
