@@ -76,12 +76,14 @@ export function LoginForm() {
         label={t("login.email")}
         type="email"
         required
+        placeholder={t("login.emailPlaceholder")}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <PasswordInput
         label={t("login.password")}
         required
+        placeholder={t("login.passwordPlaceholder")}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
@@ -90,9 +92,21 @@ export function LoginForm() {
         <div className="bg-red-50 text-red-800 p-3 rounded-lg text-sm">{error}</div>
       )}
 
-      <Button type="submit" isLoading={submitting} className="w-full">
+      <Button type="submit" isLoading={submitting} className="w-full mt-3">
         {t("nav.login")}
       </Button>
+
+      <p className="text-xs text-slate-400 dark:text-slate-500 text-center leading-relaxed">
+        {t("login.legalNotice")}{" "}
+        <Link
+          href="/terms"
+          rel="noopener noreferrer"
+          className="text-emerald-600 dark:text-emerald-400 hover:underline"
+        >
+          {t("login.legalNoticeLink")}
+        </Link>
+        {t("login.legalNoticeEnd")}
+      </p>
 
       <p className="text-sm text-gray-500 text-center">
         <Link href="/reset-password" className="text-emerald-600 hover:underline">

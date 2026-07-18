@@ -5,9 +5,11 @@ import Link from "next/link";
 import { Input } from "./Input";
 import { PasswordInput } from "./PasswordInput";
 import { Button } from "./Button";
+import { useLanguage } from "@/src/contexts/LanguageContext";
 
 // Request form: worker enters their email to receive a reset link.
 export function RequestResetForm() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -74,7 +76,7 @@ export function RequestResetForm() {
   if (submitted) {
     return (
       <p className="text-emerald-600 dark:text-emerald-400 text-sm">
-        If an account with that email exists, a password reset link has been sent.
+        {t("resetPassword.successMessage")}
       </p>
     );
   }
@@ -84,7 +86,7 @@ export function RequestResetForm() {
       <div className="space-y-4">
         <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg p-4">
           <p className="text-amber-800 dark:text-amber-200 text-sm">
-            Your email is not verified. Please verify your email first before resetting your password.
+            {t("resetPassword.emailNotVerified")}
           </p>
         </div>
         <Button
@@ -92,14 +94,14 @@ export function RequestResetForm() {
           isLoading={sendingVerification}
           className="w-full"
         >
-          Send verification email
+          {t("resetPassword.sendVerificationEmail")}
         </Button>
         <button
           type="button"
           onClick={() => setEmailNotVerified(false)}
           className="w-full text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
         >
-          Cancel
+          {t("resetPassword.cancel")}
         </button>
       </div>
     );
@@ -108,9 +110,10 @@ export function RequestResetForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Email"
+        label={t("resetPassword.email")}
         type="email"
         required
+        placeholder={t("resetPassword.emailPlaceholder")}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
@@ -118,7 +121,7 @@ export function RequestResetForm() {
         <div className="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-3 rounded-lg text-sm">{error}</div>
       )}
       <Button type="submit" isLoading={submitting} className="w-full">
-        Send reset link
+        {t("resetPassword.sendResetLink")}
       </Button>
     </form>
   );
@@ -126,6 +129,7 @@ export function RequestResetForm() {
 
 // Confirm form: worker arrived via the emailed link containing a token, sets a new password.
 export function ConfirmResetForm({ token }: { token: string }) {
+  const { t } = useLanguage();
   const [newPassword, setNewPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -159,9 +163,9 @@ export function ConfirmResetForm({ token }: { token: string }) {
   if (success) {
     return (
       <p className="text-emerald-600 dark:text-emerald-400 text-sm">
-        Your password has been reset.{" "}
+        {t("resetPassword.successReset")}{" "}
         <Link href="/login" className="underline">
-          Log in
+          {t("resetPassword.logIn")}
         </Link>
         .
       </p>
@@ -171,9 +175,10 @@ export function ConfirmResetForm({ token }: { token: string }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <PasswordInput
-        label="New password"
+        label={t("resetPassword.newPassword")}
         required
         minLength={8}
+        placeholder={t("resetPassword.newPasswordPlaceholder")}
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
       />
@@ -181,7 +186,7 @@ export function ConfirmResetForm({ token }: { token: string }) {
         <div className="bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-300 p-3 rounded-lg text-sm">{error}</div>
       )}
       <Button type="submit" isLoading={submitting} className="w-full">
-        Reset password
+        {t("resetPassword.resetPassword")}
       </Button>
     </form>
   );

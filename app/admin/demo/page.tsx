@@ -1,56 +1,52 @@
 "use client";
 
 import Link from "next/link";
-import { Footer } from "@/src/components/Footer";
 import { Card, CardContent } from "@/src/components/Card";
-import { useLanguage } from "@/src/contexts/LanguageContext";
 
 const demoAccounts = [
   {
-    roleKey: "demo.userAccount",
+    role: "User Account",
     url: "https://workervoice.help/",
     email: "demo@workervoice.org",
     password: "Demo1234!",
-    featuresKey: "demo.userFeatures",
+    features: "Browse factories, write reviews, vote on reviews",
     color: "emerald",
   },
   {
-    roleKey: "demo.superAdminAccount",
+    role: "Super Admin Account",
     url: "https://workervoice.help/admin",
     email: "demo-superadmin@workervoice.org",
     password: "Demo1234!",
-    featuresKey: "demo.superAdminFeatures",
+    features: "Full admin access — manage users, factories, reviews, settings",
     color: "purple",
   },
   {
-    roleKey: "demo.adminAccount",
+    role: "Admin Account",
     url: "https://workervoice.help/admin",
     email: "demo-admin@workervoice.org",
     password: "Demo1234!",
-    featuresKey: "demo.adminFeatures",
+    features: "Manage factories and reviews, approve/reject content",
     color: "blue",
   },
   {
-    roleKey: "demo.telegramBot",
+    role: "Telegram Bot",
     url: "https://t.me/workervoice69_bot",
-    featuresKey: "demo.telegramFeatures",
+    features: "Search factories and read reviews via Telegram",
     color: "sky",
   },
 ];
 
 export default function AdminDemoPage() {
-  const { t } = useLanguage();
-
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
       <main className="flex-grow max-w-2xl mx-auto p-4 mt-12 w-full">
         <Card>
           <CardContent>
             <h1 className="text-2xl font-bold mb-2 text-center">
-              {t("demo.title")}
+              Demo Guide
             </h1>
             <p className="text-gray-600 dark:text-gray-400 text-center mb-8">
-              {t("demo.subtitle")}
+              Use the accounts below to explore WorkerVoice features
             </p>
 
             {/* Demo Accounts */}
@@ -79,7 +75,7 @@ export default function AdminDemoPage() {
                             : "text-sky-700 dark:text-sky-300"
                     }`}
                   >
-                    {t(account.roleKey)}
+                    {account.role}
                   </h3>
                   <div className="space-y-1 text-sm">
                     <a
@@ -100,7 +96,7 @@ export default function AdminDemoPage() {
                     </a>
                     {account.email && (
                       <p>
-                        <span className="font-medium">{t("demo.email")}:</span>{" "}
+                        <span className="font-medium">Email:</span>{" "}
                         <code className="bg-white dark:bg-slate-800 px-2 py-0.5 rounded">
                           {account.email}
                         </code>
@@ -108,15 +104,15 @@ export default function AdminDemoPage() {
                     )}
                     {account.password && (
                       <p>
-                        <span className="font-medium">{t("demo.password")}:</span>{" "}
+                        <span className="font-medium">Password:</span>{" "}
                         <code className="bg-white dark:bg-slate-800 px-2 py-0.5 rounded">
                           {account.password}
                         </code>
                       </p>
                     )}
                     <p className="text-gray-600 dark:text-gray-400 mt-2">
-                      <span className="font-medium">{t("demo.features")}:</span>{" "}
-                      {t(account.featuresKey)}
+                      <span className="font-medium">Features:</span>{" "}
+                      {account.features}
                     </p>
                   </div>
                 </div>
@@ -125,9 +121,9 @@ export default function AdminDemoPage() {
 
             {/* Instructions */}
             <div className="bg-gray-50 dark:bg-slate-800 p-4 rounded-xl mb-6">
-              <h3 className="font-semibold mb-2">{t("demo.instructions")}</h3>
+              <h3 className="font-semibold mb-2">How to use</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {t("demo.howToUseLinks")}
+                Click any URL above to open the demo. Use the email and password shown to log in. All accounts share the same password.
               </p>
             </div>
 
@@ -137,14 +133,12 @@ export default function AdminDemoPage() {
                 href="/admin/login"
                 className="text-emerald-600 hover:underline font-medium"
               >
-                {t("demo.backToLogin")}
+                Back to Login
               </Link>
             </div>
           </CardContent>
         </Card>
       </main>
-
-      <Footer />
     </div>
   );
 }
