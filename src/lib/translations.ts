@@ -302,8 +302,12 @@ export const translations: Record<string, TranslationEntry> = {
     my: "ကျွန်တော်တို့၏ ရည်မှန်းချက်မှာ ရွှေ့ပြောင်းအလုပ်သမားများအားလုံး ဘေးကင်းပြီး ယုံကြည်စိတ်ချရသော အလုပ်များကို ရှာဖွေနိုင်စေရန်ဖြစ်ပါသည်။ လုပ်ခလစာ၊ အချိန်ပို၊ နေထိုင်ရေးအခြေအနေများကို လူမည်မဖော်ပြဘဲ ပြန်လည်သုံးသပ်ချက်များဖြင့် ကြိုတင်သိရှိနိုင်ပါသည်။",
   },
   "about.belief": {
-    en: '"Listen to every worker\'s voice, protect every worker\'s safety."',
-    my: '"အလုပ်သမားတိုင်း၏ အသံကို နားထောင်ပါ၊ အလုပ်သမားတိုင်း၏ ဘေးကင်းရေးကို ကာကွယ်ပါ။"',
+    en: 'Belief: "Listen to every worker\'s voice, protect every worker\'s safety."',
+    my: 'Belief: "အလုပ်သမားတိုင်း၏ အသံကို နားထောင်ပါ၊ အလုပ်သမားတိုင်း၏ ဘေးကင်းရေးကို ကာကွယ်ပါ။"',
+  },
+  "about.disclaimer": {
+    en: '"Disclaimer: In the event of any dispute, the decision of WorkerVoice shall be final"',
+    my: 'Disclaimer: အကယ်၍ အငြင်းပွားစရာတစ်စုံတစ်ရာရှိလာပါက WorkerVoice အဖွဲ့အစည်း၏ ဆုံးဖြတ်ချက်သည်သာ အတည်ဖြစ်သည်။',
   },
 
   // Contact Links
