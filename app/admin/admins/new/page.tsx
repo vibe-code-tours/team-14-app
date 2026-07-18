@@ -129,7 +129,7 @@ export default function NewAdminPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="admin@example.com"
-                className="mt-1 w-full text-sm text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-700 p-3 rounded-lg border border-slate-200 dark:border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition"
+                className="mt-1 w-full text-sm text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-700 p-3 rounded-lg border border-slate-200 dark:border-slate-600 focus:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none transition"
               />
             </div>
             <div>
@@ -146,7 +146,7 @@ export default function NewAdminPage() {
                 onChange={(e) => setFullName(e.target.value)}
                 required
                 placeholder="Enter full name"
-                className="mt-1 w-full text-sm text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-700 p-3 rounded-lg border border-slate-200 dark:border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition"
+                className="mt-1 w-full text-sm text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-700 p-3 rounded-lg border border-slate-200 dark:border-slate-600 focus:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none transition"
               />
             </div>
             <div>
