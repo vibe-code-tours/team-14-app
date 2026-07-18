@@ -26,6 +26,56 @@ export const translations: Record<string, TranslationEntry> = {
     en: "Review Submitted",
     my: "သုံးသပ်ချက် တင်သွင်းပြီးပါပြီ",
   },
+  "review.title": {
+    en: "Write a Worker Review",
+    my: "အလုပ်သမား သုံးသပ်ချက် ရေးရန်",
+  },
+  "review.subtitle": {
+    en: "Help others make informed, safe career choices.",
+    my: "အခြားသူများအား သတင်းအချက်အလက်ပြည့်စုံပြီး ဘေကင်းသည့် အလုပ်အကိုင်ရွေးချယ်မှုများ ပြုလုပ်နိုင်အောင် ကူညီပါ။",
+  },
+  "review.factoryLabel": {
+    en: "Factory / Company",
+    my: "စက်ရုံ / ကုမ္ပဏီ",
+  },
+  "review.factoryPlaceholder": {
+    en: "Search for a factory...",
+    my: "စက်ရုံ ရှာဖွေပါ...",
+  },
+  "review.searching": { en: "Searching...", my: "ရှာဖွေနေသည်..." },
+  "review.noFactories": {
+    en: "No factories found",
+    my: "စက်ရုံ ရှာမတွေ့ပါ",
+  },
+  "review.roleLabel": {
+    en: "Your Role in Factory",
+    my: "စက်ရုံတွင် သင့်အလုပ်အကိုင်",
+  },
+  "review.rolePlaceholder": {
+    en: "e.g. Production Operator, Packer, QC",
+    my: "ဥပမာ - ထုတ်လုပ်ရေး အလုပ်သမား, ထုပ်ပိုးရေး, QC",
+  },
+  "review.countryLabel": {
+    en: "Home Country",
+    my: "နေရပ်မိခင်နိုင်ငံ",
+  },
+  "review.salary": { en: "Salary", my: "လုပ်ခ" },
+  "review.otFairness": { en: "OT Fairness", my: "OT တရားမျှတမှု" },
+  "review.housing": { en: "Housing", my: "နေထိုင်ရေး" },
+  "review.reviewLabel": { en: "Your Review", my: "သင့်သုံးသပ်ချက်" },
+  "review.reviewPlaceholder": {
+    en: "Describe the working conditions, management, food, and facilities...",
+    my: "အလုပ်လုပ်ခွင့်အခြေအနေ၊ စီမံခန့်ခွဲမှု၊ အစားအစာနှင့် အဆင်ပြေပြေနေထိုင်ရေး အဆင့်အတန်းများကို ဖော်ပြပါ...",
+  },
+  "review.selectFactoryError": {
+    en: "Please select a factory before submitting.",
+    my: "တင်သွင်းမီ စက်ရုံတစ်ခု ရွေးချယ်ပါ။",
+  },
+  "review.cancel": { en: "Cancel", my: "ပယ်ဖျက်ရန်" },
+  "review.submitting": { en: "Submitting...", my: "တင်သွင်းနေသည်..." },
+  "review.submit": { en: "Submit Review", my: "သုံးသပ်ချက် တင်သွင်းရန်" },
+  "review.good": { en: "Good", my: "ကောင်း" },
+  "review.bad": { en: "Bad", my: "ဆိုး" },
   "review.successMessage": {
     en: "Your review has been submitted successfully. It will be visible after admin approval.",
     my: "သင့်သုံးသပ်ချက်ကို အောင်မြင်စွာ တင်သွင်းပြီးပါပြီ။ စီမံခန့်ခွဲသူ အတည်ပြုပြီးနောက်မှ မြင်ရမည်ဖြစ်ပါသည်။",
@@ -153,6 +203,10 @@ export const translations: Record<string, TranslationEntry> = {
   "privacy.subtitle": {
     en: "Your name and identity are completely safe. Reviews are anonymous.",
     my: "သင့်အမည်နှင့် သင်၏ လုံခြုံရေးကို အပြည့်အဝ ကာကွယ်ထားပါသည်။ ပြန်လည်သုံးသပ်ချက်များကို လူမည်မဖော်ပြဘဲ ရေးသားထားပါသည်။",
+  },
+  "privacy.description": {
+    en: "Your name and identity are completely safe. We never share them.",
+    my: "သင့်အမည်နှင့် သင်၏ လုံခြုံရေးကို အပြည့်အဝ ကာကွယ်ထားပါသည်။",
   },
 
   // Hero Section
