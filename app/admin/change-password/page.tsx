@@ -90,6 +90,7 @@ export default function AdminChangePasswordPage() {
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             required
+            placeholder="Enter current password"
           />
           <PasswordInput
             label="New Password"
@@ -98,7 +99,7 @@ export default function AdminChangePasswordPage() {
             onChange={(e) => setNewPassword(e.target.value)}
             required
             minLength={8}
-            placeholder="At least 8 characters"
+            placeholder="Enter new password (at least 8 characters)"
           />
           <PasswordInput
             label="Confirm New Password"
@@ -107,6 +108,7 @@ export default function AdminChangePasswordPage() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             minLength={8}
+            placeholder="Confirm new password"
           />
 
           {message && isError && (

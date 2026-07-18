@@ -302,8 +302,12 @@ export const translations: Record<string, TranslationEntry> = {
     my: "ကျွန်တော်တို့၏ ရည်မှန်းချက်မှာ ရွှေ့ပြောင်းအလုပ်သမားများအားလုံး ဘေးကင်းပြီး ယုံကြည်စိတ်ချရသော အလုပ်များကို ရှာဖွေနိုင်စေရန်ဖြစ်ပါသည်။ လုပ်ခလစာ၊ အချိန်ပို၊ နေထိုင်ရေးအခြေအနေများကို လူမည်မဖော်ပြဘဲ ပြန်လည်သုံးသပ်ချက်များဖြင့် ကြိုတင်သိရှိနိုင်ပါသည်။",
   },
   "about.belief": {
-    en: '"Listen to every worker\'s voice, protect every worker\'s safety."',
-    my: '"အလုပ်သမားတိုင်း၏ အသံကို နားထောင်ပါ၊ အလုပ်သမားတိုင်း၏ ဘေးကင်းရေးကို ကာကွယ်ပါ။"',
+    en: 'Belief: "Listen to every worker\'s voice, protect every worker\'s safety."',
+    my: 'Belief: "အလုပ်သမားတိုင်း၏ အသံကို နားထောင်ပါ၊ အလုပ်သမားတိုင်း၏ ဘေးကင်းရေးကို ကာကွယ်ပါ။"',
+  },
+  "about.disclaimer": {
+    en: '"Disclaimer: In the event of any dispute, the decision of WorkerVoice shall be final"',
+    my: 'Disclaimer: အကယ်၍ အငြင်းပွားစရာတစ်စုံတစ်ရာရှိလာပါက WorkerVoice အဖွဲ့အစည်း၏ ဆုံးဖြတ်ချက်သည်သာ အတည်ဖြစ်သည်။',
   },
 
   // Contact Links
@@ -421,13 +425,39 @@ export const translations: Record<string, TranslationEntry> = {
     en: "© 2026 WorkerVoice. All rights reserved.",
     my: "© 2026 WorkerVoice. မူပိုင်ခွင့် အားလုံး ထိန်းသိမ်းထားပါသည်။",
   },
+  "footer.terms": {
+    en: "Terms & Conditions",
+    my: "စည်းကမ်းသတ်မှတ်ချက်များ",
+  },
+
+  // Terms Page
+  "terms.title": {
+    en: "Terms and Conditions",
+    my: "စည်းကမ်းသတ်မှတ်ချက်များ",
+  },
+  "terms.backHome": {
+    en: "← Back to Home",
+    my: "← ပင်မသို့ ပြန်ရန်",
+  },
+  "terms.back": {
+    en: "← Back",
+    my: "← နောက်သို့",
+  },
 
   // Login Page
   "login.title": { en: "Log in", my: "ဝင်ရောက်ရန်" },
   "login.noAccount": { en: "Don't have an account?", my: "အကောင့်မရှိဘူးလား?" },
   "login.createOne": { en: "Create one", my: "ဖန်တီးရန်" },
-  "login.email": { en: "Email", my: "အီးမေးလ်" },
-  "login.password": { en: "Password", my: "စကားဝှက်" },
+  "login.email": { en: "Email *", my: "အီးမေးလ် *" },
+  "login.emailPlaceholder": {
+    en: "Enter your email",
+    my: "သင့်အီးမေးလ်ထည့်ပါ",
+  },
+  "login.password": { en: "Password *", my: "စကားဝှက် *" },
+  "login.passwordPlaceholder": {
+    en: "Enter your password",
+    my: "သင့်စကားဝှက်ထည့်ပါ",
+  },
   "login.invalidCredentials": {
     en: "Invalid email or password.",
     my: "အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားနေပါသည်။",
@@ -440,15 +470,100 @@ export const translations: Record<string, TranslationEntry> = {
     en: "Forgot your password?",
     my: "စကားဝှက် မေ့နေပါသလား?",
   },
+  "login.legalNotice": {
+    en: "By logging in, you agree to our",
+    my: "ဝင်ရောက်ခြင်းဖြင့် သင်သည် ကျွန်ုပ်တို့၏",
+  },
+  "login.legalNoticeLink": {
+    en: "Terms and Conditions",
+    my: "စည်းကမ်းသတ်မှတ်ချက်များ",
+  },
+  "login.legalNoticeEnd": {
+    en: ".",
+    my: "ကို သဘောတူပါသည်။",
+  },
+
+  // Reset Password Page
+  "resetPassword.title": {
+    en: "Reset your password",
+    my: "စကားဝှက် ပြန်လည်သတ်မှတ်ရန်",
+  },
+  "resetPassword.chooseNewPassword": {
+    en: "Choose a new password",
+    my: "စကားဝှက်အသစ် သတ်မှတ်ပါ",
+  },
+  "resetPassword.email": { en: "Email *", my: "အီးမေးလ် *" },
+  "resetPassword.emailPlaceholder": {
+    en: "Enter your email",
+    my: "သင့်အီးမေးလ်ထည့်ပါ",
+  },
+  "resetPassword.sendResetLink": {
+    en: "Send reset link",
+    my: "ပြန်လည်သတ်မှတ်ရန် လင့်ခ် ပေးပို့ရန်",
+  },
+  "resetPassword.successMessage": {
+    en: "If an account with that email exists, a password reset link has been sent.",
+    my: "ထိုအီးမေးလ်ဖြင့် အကောင့်ရှိပါက စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို ပေးပို့ပြီးပါပြီ။",
+  },
+  "resetPassword.emailNotVerified": {
+    en: "Your email is not verified. Please verify your email first before resetting your password.",
+    my: "သင့်အီးမေးလ်ကို အတည်ပြုခြင်း မလုပ်ရသေးပါ။ စကားဝှက် ပြန်လည်သတ်မှတ်မီ အီးမေးလ်ကို အရင် အတည်ပြုပါ။",
+  },
+  "resetPassword.sendVerificationEmail": {
+    en: "Send verification email",
+    my: "အတည်ပြုရန် အီးမေးလ် ပေးပို့ရန်",
+  },
+  "resetPassword.cancel": { en: "Cancel", my: "ပယ်ဖျက်ရန်" },
+  "resetPassword.newPassword": {
+    en: "New password *",
+    my: "စကားဝှက်အသစ် *",
+  },
+  "resetPassword.newPasswordPlaceholder": {
+    en: "Enter new password",
+    my: "စကားဝှက်အသစ်ထည့်ပါ",
+  },
+  "resetPassword.resetPassword": {
+    en: "Reset password",
+    my: "စကားဝှက် ပြန်လည်သတ်မှတ်ရန်",
+  },
+  "resetPassword.successReset": {
+    en: "Your password has been reset.",
+    my: "သင့်စကားဝှက်ကို ပြန်လည်သတ်မှတ်ပြီးပါပြီ။",
+  },
+  "resetPassword.logIn": { en: "Log in", my: "ဝင်ရောက်ရန်" },
+  "resetPassword.tryDemo": {
+    en: "Try demo accounts →",
+    my: "-demo အကောင့်များ စမ်းကြည့်ရန် →",
+  },
 
   // Register Page
+  "register.agreeToTerms": {
+    en: "I agree to the",
+    my: "ကျွန်ုပ်သည်",
+  },
+  "register.agreeToTermsLink": {
+    en: "Terms & Conditions",
+    my: "စည်းကမ်းသတ်မှတ်ချက်များ",
+  },
+  "register.agreeToTermsEnd": {
+    en: ".",
+    my: "ကို သဘောတူပါသည်။",
+  },
   "register.title": { en: "Create an account", my: "အကောင့်ဖန်တီးရန်" },
   "register.hasAccount": { en: "Already have an account?", my: "အကောင့်ရှိပြီးသားလား?" },
-  "register.fullName": { en: "Full name", my: "အပြည့်အစုံ အမည်" },
-  "register.nickname": { en: "Nickname (optional)", my: "နာမည်ခေါ်စဉ် (ရွေးချယ်စရာ)" },
+  "register.fullName": { en: "Full name *", my: "အပြည့်အစုံ အမည် *" },
+  "register.fullNamePlaceholder": {
+    en: "Enter your full name",
+    my: "သင့်အပြည့်အစုံအမည်ထည့်ပါ",
+  },
+  "register.nickname": { en: "Nickname (optional)", my: "လျှို့ဝှက်နာမည် (ရွေးချယ်စရာ)" },
+  "register.nicknamePlaceholder": {
+    en: "Enter your nickname",
+    my: "လျှို့ဝှက်နာမည်ထည့်ပါ",
+  },
   "register.nicknameHint": {
     en: "Add a nickname to keep your real name private on reviews. If you skip this, your full name will be shown publicly.",
-    my: "ပြန်လည်သုံးသပ်ချက်များတွင် သင့်အမည်ကို လျှို့ဝှက်ထားရန် နာမည်ခေါ်စဉ် ထည့်ပါ။ ဒီဟာကို ข้ามလွှားပါက သင့်အပြည့်အစုံ အမည်ကို အများပြည်သူသို့ ပြသပါမည်။",
+    my: "ပြန်လည်သုံးသပ်ချက်များတွင် သင့်အမည်ကို လျှို့ဝှက်ထားရန် လျှို့ဝှက်နာမည် ထည့်ပါ။ ဒီဟာကို ข้ามလွှားပါက သင့်အပြည့်အစုံ အမည်ကို အများပြည်သူသို့ ပြသပါမည်။",
   },
   "register.checkEmail": {
     en: "Check your email to verify your account before logging in.",

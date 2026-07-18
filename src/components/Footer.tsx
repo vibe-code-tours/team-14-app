@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useLanguage } from "@/src/contexts/LanguageContext";
 
 export function Footer() {
@@ -10,7 +11,12 @@ export function Footer() {
       <div className="max-w-5xl mx-auto px-4 h-full flex flex-col items-center justify-center">
         <p className="flex items-center justify-center">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/images/logo.png" alt="WorkerVoice" className="h-8 w-auto inline-block" /> {t("footer.brand")}</p>
         <p className="mt-1">{t("footer.tagline")}</p>
-        <p className="mt-2">{t("footer.copyright")}</p>
+        <p className="mt-2">
+          {t("footer.copyright")}{" "}
+          <Link href="/terms" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+            {t("footer.terms")}
+          </Link>
+        </p>
       </div>
     </footer>
   );
