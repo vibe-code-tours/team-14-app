@@ -185,7 +185,7 @@ export default function AdminProfilePage() {
             </div>
             <div>
               <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                Full Name <span className="text-red-500">*</span>
+                Full Name
               </label>
               <input
                 type="text"
