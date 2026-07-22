@@ -34,7 +34,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.0.0",
+    "@eslint/eslintrc": "^3.3.6",
     "@playwright/test": "1.61.1",
     "@prisma/config": "^7.8.0",
     "@tailwindcss/postcss": "^4.3.2",
@@ -47,9 +47,9 @@
     "eslint-config-next": "16.2.10",
     "husky": "9.1.7",
     "lint-staged": "17.0.8",
-    "postcss": "8.5.16",
-    "prettier": "3.9.4",
-    "prettier-plugin-tailwindcss": "^0.8.0",
+    "postcss": "8.5.19",
+    "prettier": "3.9.5",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "prisma": "7.8.0",
     "tailwindcss": "^4.3.2",
     "typescript": "6.0.3",
