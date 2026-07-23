@@ -1,483 +1,410 @@
-# WorkerVoice — Migrant Review Platform
+<div align="center">
 
-A workplace review platform that helps Myanmar migrant workers make safer employment decisions before joining a company or recruitment agency.
+# 🗣️ WorkerVoice
 
-## Features
+### *Empowering Myanmar Migrant Workers Through Shared Experience*
 
-- **Company Search** — Search factories and agencies by location, size, and activity
-- **Company Detail** — View detailed information about factories and agencies
-- **Anonymous Reviews** — Submit anonymous workplace reviews
-- **Useful / Not Useful Voting** — Vote on review helpfulness
-- **Agency Detail** — View recruitment agency information
-- **Telegram Bot Integration** — Search via Telegram bot
+[![Next.js](https://img.shields.io/badge/Next.js-16.2-000000?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-7.8-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.3-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql)](https://www.postgresql.org/)
 
-## Technology Stack
+---
 
-| Component | Version | Purpose |
-|-----------|---------|---------|
-| Node.js | 24.16.x | Runtime |
-| Next.js | 16.2.x | Web framework |
-| React | 19.2.x | UI library |
-| TypeScript | 5.9.x | Type safety |
-| Prisma | 7.8.x | ORM |
-| Tailwind CSS | 4.3.x | Styling |
-| ESLint | 9.x | Linting |
-| PostgreSQL | 16 | Database |
+**WorkerVoice** is a workplace review platform that helps Myanmar migrant workers make **safer employment decisions** before joining a company or recruitment agency.
 
-## Folder Structure
+Workers can anonymously review factories, companies, and recruitment agencies — sharing real experiences to protect their community.
 
-```
-migrant-review-platform/
-├── app/                    # Next.js App Router
-│   ├── api/               # Route handlers
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Home page
-├── src/
-│   ├── components/        # Reusable UI components
-│   ├── types/             # TypeScript type definitions
-│   └── generated/         # Prisma generated client
-├── lib/
-│   ├── prisma.ts          # Prisma client singleton
-│   ├── factories.ts       # Factory service
-│   ├── reviews.ts         # Review service
-│   ├── suggestions.ts     # Suggestion service
-│   └── admin.ts           # Admin authentication
-├── prisma/
-│   ├── schema.prisma      # Database schema
-│   └── migrations/        # Database migrations
-├── docs/                  # Documentation
-└── public/                # Static assets
-```
+[✨ Features](#-features) • [🚀 Quick Start](#-quick-start) • [📖 Documentation](#-documentation) • [🛠️ Tech Stack](#️-technology-stack)
 
-## Local Development
+---
 
-You can run the app either **fully in Docker** (recommended — no local Node.js setup required) or **on your host** with only PostgreSQL in Docker.
+</div>
 
-### Quick Start (5 minutes)
+## 🌟 Features
 
-**Prerequisites:**
-- Docker Desktop installed and running
+<div align="center">
 
-**Setup:**
+| Feature | Description |
+|:---------|:------------|
+| 🔍 **Company Search** | Search factories and agencies by location, size, and activity |
+| 📋 **Company Detail** | View detailed information, ratings, and reviews |
+| ✍️ **Anonymous Reviews** | Submit workplace reviews — your identity stays safe |
+| 👍 **Voting System** | Vote reviews as **Useful** or **Not Useful** |
+| 🏢 **Agency Detail** | Research recruitment agencies before signing up |
+| 🤖 **Telegram Bot** | [Search and browse directly from Telegram](https://t.me/workervoice69_bot) |
+
+</div>
+
+---
+
+## 👀 Preview
+
+<div align="center">
+  <table>
+    <tr>
+      <td colspan="3" align="center"><strong>🌐 Public Pages</strong></td>
+    </tr>
+    <tr>
+      <td align="center">
+        <strong>🏠 Homepage</strong><br />
+        <img src="public/screenshots/homepage.png" alt="Homepage" width="280" />
+      </td>
+      <td align="center">
+        <strong>🔑 User Login</strong><br />
+        <img src="public/screenshots/user-login.png" alt="User Login" width="280" />
+      </td>
+      <td align="center">
+        <strong>👤 User Profile</strong><br />
+        <img src="public/screenshots/user-profile.png" alt="User Profile" width="280" />
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <strong>🏭 Factory Detail</strong><br />
+        <img src="public/screenshots/factory-detail.png" alt="Factory Detail" width="280" />
+      </td>
+      <td align="center">
+        <strong>🏭 My Factories</strong><br />
+        <img src="public/screenshots/my-factories.png" alt="My Factories" width="280" />
+      </td>
+      <td align="center">
+        <strong>✍️ Write a Review</strong><br />
+        <img src="public/screenshots/write-review.png" alt="Write a Review Modal" width="280" />
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" align="center"><strong>🔐 Admin Panel</strong></td>
+    </tr>
+    <tr>
+      <td align="center">
+        <strong>🔑 Login</strong><br />
+        <img src="public/screenshots/admin-login.png" alt="Admin Login" width="280" />
+      </td>
+      <td align="center">
+        <strong>📊 Dashboard</strong><br />
+        <img src="public/screenshots/admin-dashboard.png" alt="Admin Dashboard" width="280" />
+      </td>
+      <td align="center">
+        <strong>🏭 Factories</strong><br />
+        <img src="public/screenshots/admin-factories.png" alt="Admin Factories" width="280" />
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <strong>📝 Reviews</strong><br />
+        <img src="public/screenshots/admin-reviews.png" alt="Admin Reviews" width="280" />
+      </td>
+      <td align="center">
+        <strong>👥 Users</strong><br />
+        <img src="public/screenshots/admin-users.png" alt="Admin Users" width="280" />
+      </td>
+      <td align="center">
+        <strong>📬 Contacts</strong><br />
+        <img src="public/screenshots/admin-contacts.png" alt="Admin Contacts" width="280" />
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <strong>👤 Profile</strong><br />
+        <img src="public/screenshots/admin-profile.png" alt="Admin Profile" width="280" />
+      </td>
+      <td align="center">
+        <strong>🔐 Admins</strong><br />
+        <img src="public/screenshots/admin-admins.png" alt="Admin Admins" width="280" />
+      </td>
+      <td align="center">
+        <strong>🔄 Change Password</strong><br />
+        <img src="public/screenshots/admin-change-password.png" alt="Admin Change Password" width="280" />
+      </td>
+    </tr>
+  </table>
+</div>
+
+---
+
+## 🧪 Demo
+
+Explore WorkerVoice without signing up — use our demo accounts to test all features.
+
+| Demo Page | Description |
+|:----------|:------------|
+| 🏠 [Public Demo](/demo) — [workervoice.help](https://workervoice.help) | Browse factories, read reviews, try the user experience |
+| 🔐 [Admin Demo](/admin/demo) — [workervoice.help/admin](https://workervoice.help/admin) | Explore the admin dashboard, manage content and users |
+
+> 📖 **Full demo guide available** — See [DEMO.md](DEMO.md) for detailed walkthroughs, testing scenarios, and account information for all roles.
+
+**Demo credentials:** All accounts use password `Demo1234!`
+
+| Account | Email / Link | Role |
+|:--------|:-------------|:-----|
+| 👤 User | `demo@workervoice.org` | Browse & review |
+| 🟣 Super Admin | `demo-superadmin@workervoice.org` | Full admin access |
+| 🔵 Admin | `demo-admin@workervoice.org` | Content management |
+| 🤖 Telegram Bot | [t.me/workervoice69_bot](https://t.me/workervoice69_bot) | Search & browse on Telegram |
+
+---
+
+## 🚀 Quick Start
+
+### 📋 Prerequisites
+
+| Option | Requirements |
+|:-------|:-------------|
+| **🐳 Docker (Recommended)** | [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running |
+| **💻 Host + Docker DB** | Node.js 24.x, npm 11.x, Docker Desktop |
+
+### 🐳 One-Click Setup (Docker)
+
 ```bash
-# 1. Clone repository
+# 1. Clone & enter
 git clone <repository-url>
 cd team-14-app
 
-# 2. Create environment file
+# 2. Configure environment
 cp .env.example .env
 
-# 3. Start Docker containers
+# 3. Launch everything
 docker compose up -d
 
-# 4. Generate Prisma client (first time only)
-docker compose exec app npx prisma generate
-
-# 5. Open in browser
+# 4. Open in browser
 open http://localhost:3000
 ```
 
-**Verify it's working:**
+**That's it!** The stack starts three containers automatically:
+
+| Container | Role |
+|:----------|:-----|
+| `migrant-review-app` | Next.js dev server with hot reload |
+| `migrant-review-postgres` | PostgreSQL 16 database |
+| `migrant-review-migrate` | Applies schema migrations, then exits |
+
+### 💻 Host + Docker Setup
+
 ```bash
-# Check all services are running
+# 1. Clone & install
+git clone <repository-url>
+cd team-14-app
+npm install
+
+# 2. Configure environment
+cp .env.example .env
+
+# 3. Start database only
+docker compose up -d postgres
+
+# 4. Prepare database
+npx prisma generate
+npx prisma migrate dev
+
+# 5. Start dev server
+npm run dev
+
+# 6. Open in browser
+open http://localhost:3000
+```
+
+### ✅ Verify It's Working
+
+```bash
+# All services should be Up
 docker compose ps
 
-# Expected output:
-# migrant-review-app      Up      0.0.0.0:3000->3000/tcp
-# migrant-review-postgres Up      0.0.0.0:5432->5432/tcp
+# Or check the app responds
+curl -I http://localhost:3000
+# → HTTP/1.1 200 OK
 ```
 
-**Common Commands:**
-```bash
-docker compose logs -f          # View live logs
-docker compose restart          # Restart all services
-docker compose down             # Stop all services
-docker compose up -d --build    # Rebuild after changes
+---
+
+## 🛠️ Technology Stack
+
+<div align="center">
+
+| Component | Version | Purpose |
+|:----------|:--------|:--------|
+| <img src="https://img.shields.io/badge/-Node.js-339933?logo=node.js&logoColor=white" height="20"> | 24.16.x | Runtime |
+| <img src="https://img.shields.io/badge/-Next.js-000000?logo=next.js&logoColor=white" height="20"> | 16.2.x | Web framework |
+| <img src="https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=black" height="20"> | 19.2.x | UI library |
+| <img src="https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white" height="20"> | 5.9.x | Type safety |
+| <img src="https://img.shields.io/badge/-Prisma-2D3748?logo=prisma&logoColor=white" height="20"> | 7.8.x | ORM |
+| <img src="https://img.shields.io/badge/-Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white" height="20"> | 4.3.x | Styling |
+| <img src="https://img.shields.io/badge/-PostgreSQL-4169E1?logo=postgresql&logoColor=white" height="20"> | 16 | Database |
+| <img src="https://img.shields.io/badge/-ESLint-4B32C3?logo=eslint&logoColor=white" height="20"> | 9.x | Linting |
+| <img src="https://img.shields.io/badge/-Vitest-6E9F18?logo=vitest&logoColor=white" height="20"> | 4.1.x | Unit testing |
+| <img src="https://img.shields.io/badge/-Playwright-45BA4B?logo=playwright&logoColor=white" height="20"> | 1.61.x | E2E testing |
+
+</div>
+
+---
+
+## 📁 Project Structure
+
+```
+📦 team-14-app
+├── 📄 app/                    # Next.js App Router
+│   ├── 🌐 api/               # Route handlers
+│   ├── 📄 layout.tsx         # Root layout
+│   └── 📄 page.tsx           # Home page
+├── 📦 src/
+│   ├── 🧩 components/        # Reusable UI components
+│   ├── 🏷️ types/             # TypeScript type definitions
+│   └── ⚙️ generated/         # Prisma generated client
+├── 📚 lib/
+│   ├── 🔗 prisma.ts          # Prisma client singleton
+│   ├── 🏭 factories.ts       # Factory service
+│   ├── 📝 reviews.ts         # Review service
+│   ├── 💡 suggestions.ts     # Suggestion service
+│   └── 🔐 admin.ts           # Admin authentication
+├── 🗄️ prisma/
+│   ├── 📐 schema.prisma      # Database schema
+│   └── 📁 migrations/        # Database migrations
+├── 📖 docs/                  # Documentation
+└── 🖼️ public/                # Static assets
 ```
 
-**What You Get:**
-- ✅ Homepage with factory search
-- ✅ 5,137 factories in database
-- ✅ Factory detail pages with reviews
-- ✅ Suggest new workplace feature
-- ✅ Hot reload for development
+---
 
-### Option A: Run everything with Docker Desktop (recommended)
-
-Use this if you don't want to install Node.js, npm, or PostgreSQL locally — Docker Desktop is the only requirement. It builds the app image and runs the database, migrations, and Next.js dev server as three containers that talk to each other over an internal Docker network.
-
-#### Prerequisites
-
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and **running** (check the whale icon in your system tray/menu bar)
-
-#### Setup
-
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd migrant-review-platform
-   ```
-
-2. **Set up environment variables**
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   `.env` holds the PostgreSQL credentials and connection string used by the containers. Edit it if you want different local credentials — the defaults work out of the box and are for local development only, never for staging/production.
-
-3. **Start the stack**
-
-   ```bash
-   docker compose up -d
-   ```
-
-   `-d` runs containers in the background ("detached"). The first run will take a minute or two while Docker pulls the `postgres:16` image and builds the app image from the `Dockerfile`. This command starts three containers, in dependency order:
-
-   | Container | Image/Build | Role |
-   |-----------|--------------|------|
-   | `migrant-review-postgres` | `postgres:16` | Database. Compose waits until its healthcheck (`pg_isready`) passes before starting `migrate`. |
-   | `migrant-review-migrate` | built from `Dockerfile` | Runs `npx prisma migrate dev --name auto` once against `postgres`, applies any pending schema migrations, then exits (exit code 0 is expected — it's a one-shot job, not a long-running service). |
-   | `migrant-review-app` | built from `Dockerfile` | Runs `npm run dev` (Next.js + Turbopack). Starts only after `migrate` exits successfully. Your project folder is bind-mounted into the container so edits on your host are reflected live. |
-
-4. **Verify it's running**
-
-   ```bash
-   docker compose ps
-   ```
-
-   You should see `postgres` and `app` with status `Up` (or `Up (healthy)` for postgres), and `migrate` with status `Exited (0)` — that's correct, not a failure.
-
-   Then confirm the app responds:
-
-   ```bash
-   curl -I http://localhost:3000
-   ```
-
-   Expect `HTTP/1.1 200 OK`. Or just open it in a browser.
-
-5. **Open in browser**
-
-   [http://localhost:3000](http://localhost:3000)
-
-6. **Follow logs (optional)**
-
-   ```bash
-   docker compose logs -f app
-   ```
-
-   Look for `✓ Ready in <ms>` — that confirms the Next.js dev server booted. Press `Ctrl+C` to stop following (this does not stop the container).
-
-7. **Stop the stack**
-
-   ```bash
-   docker compose down
-   ```
-
-   This stops and removes the containers but keeps the database volume (your data persists). Add `-v` to also delete the volume and start fresh next time (`docker compose down -v`).
-
-**Editing code:** changes under `app/`, `src/`, `lib/`, or `prisma/` on your host reload automatically inside the container — no rebuild needed for source changes. Only rebuild (`docker compose up -d --build`) when you change `package.json`, the `Dockerfile`, or `docker-compose.yml`.
-
-**Running Prisma commands from the host:** since `postgres` also publishes port `5432` to `localhost`, you can run `npx prisma studio`, `npx prisma migrate status`, etc. directly from your host machine (no Node.js install on the container needed) as long as your host `.env` has a matching `DATABASE_URL` pointing at `localhost:5432`.
-
-### Option B: Run Next.js on host, PostgreSQL in Docker
-
-Use this if you already have Node.js installed and prefer running the dev server directly on your machine (e.g. for using host-native debuggers, or if the polling-based file watching in Option A feels slower than native). Docker is only used for the database here.
-
-#### Prerequisites
-
-- Node.js 24.x or later (`node -v` to check)
-- npm 11.x or later (`npm -v` to check)
-- Docker Desktop installed and running (for PostgreSQL only)
-
-#### Setup
-
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd migrant-review-platform
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-   This also runs the `prepare` script (Husky), which sets up git hooks for linting.
-
-3. **Set up environment variables**
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Here `DATABASE_URL` must point at `localhost:5432` (not `postgres:5432` — that hostname only resolves inside the Docker network), which is already the default in `.env.example`.
-
-4. **Start PostgreSQL only**
-
-   ```bash
-   docker compose up -d postgres
-   ```
-
-   This intentionally skips the `migrate` and `app` containers (Compose won't start services that aren't explicitly named unless another running service depends on them). Only the database container starts.
-
-5. **Verify PostgreSQL is healthy**
-
-   ```bash
-   docker compose ps postgres
-   ```
-
-   Status should show `Up (healthy)`. If it says `starting`, wait a few seconds and check again.
-
-6. **Generate the Prisma client**
-
-   ```bash
-   npx prisma generate
-   ```
-
-   Regenerates `src/generated/prisma` from `prisma/schema.prisma`. Required after a fresh clone/install, and any time the schema changes.
-
-7. **Run Prisma migrations**
-
-   ```bash
-   npx prisma migrate dev
-   ```
-
-   Applies all pending migrations from `prisma/migrations/` to your local database. If the schema hasn't changed since the last migration, it reports "Already in sync" and exits.
-
-8. **Start development server**
-
-   ```bash
-   npm run dev
-   ```
-
-   Wait for `✓ Ready in <ms>` in the terminal.
-
-9. **Verify it's running**
-
-   In a separate terminal:
-
-   ```bash
-   curl -I http://localhost:3000
-   ```
-
-   Expect `HTTP/1.1 200 OK`.
-
-10. **Open in browser**
-
-    [http://localhost:3000](http://localhost:3000)
-
-**Stopping:** `Ctrl+C` stops the dev server. `docker compose stop postgres` stops the database container without removing it; `docker compose down` removes it (data persists in the volume unless you add `-v`).
-
-### Troubleshooting
-
-**`docker compose up` fails with "port is already allocated" (3000 or 5432)**
-
-Another process is already using that port.
-
-```bash
-# Windows PowerShell — find what's using port 3000 or 5432
-Get-NetTCPConnection -LocalPort 3000
-Get-NetTCPConnection -LocalPort 5432
-```
-
-Stop the conflicting process, or change the host-side port in `docker-compose.yml` (e.g. `"3001:3000"`) or in your host `npm run dev` setup.
-
-**`migrate` container exits with an error instead of `Exited (0)`**
-
-```bash
-docker compose logs migrate
-```
-
-Common causes: `postgres` wasn't actually healthy yet (rare — Compose should wait), or `prisma/schema.prisma` has an invalid change. Fix the schema/migration issue, then retry with:
-
-```bash
-docker compose up -d migrate
-```
-
-**App container keeps restarting or shows connection errors to the database**
-
-```bash
-docker compose logs app
-docker compose ps
-```
-
-Confirm `postgres` shows `Up (healthy)`. If it's still starting, `app` may briefly fail to connect on the first attempt — the `restart: unless-stopped` policy retries automatically. If it doesn't recover after ~30s, check that `DATABASE_URL` in `docker-compose.yml` uses the hostname `postgres` (the Docker service name), not `localhost`.
-
-**Editing code doesn't trigger a reload (Option A)**
-
-1. Confirm the container sees your file: `docker exec migrant-review-app cat /app/app/page.tsx` (or the file you edited) and check it matches what's on disk.
-2. If the file is correct but the browser is stale, restart the app container: `docker compose restart app`.
-3. `WATCHPACK_POLLING`/`CHOKIDAR_USEPOLLING` are already enabled in `docker-compose.yml` to work around Docker Desktop's bind-mount file-watching limitations on Windows/macOS — don't remove them.
-
-**`npx prisma migrate dev` fails with "Can't reach database server" (Option B)**
-
-- Check `docker compose ps postgres` shows `Up (healthy)`.
-- Check `.env`'s `DATABASE_URL` uses `localhost:5432`, not `postgres:5432`.
-- Check nothing else on your machine (a native PostgreSQL install, another project's container) is already bound to port 5432.
-
-**Need a completely clean slate**
-
-```bash
-docker compose down -v
-docker compose up -d --build
-```
-
-This removes the database volume (all local data is lost) and rebuilds images from scratch.
-
-## Environment Variables
+## 📋 Environment Variables
 
 Copy `.env.example` to `.env` and adjust as needed.
 
 | Variable | Description | Required |
-|----------|-------------|----------|
-| `POSTGRES_USER` | PostgreSQL username (used by the `postgres` container) | Yes |
-| `POSTGRES_PASSWORD` | PostgreSQL password (used by the `postgres` container) | Yes |
-| `POSTGRES_DB` | PostgreSQL database name (used by the `postgres` container) | Yes |
-| `DATABASE_URL` | PostgreSQL connection string used by Prisma on the host | Yes |
-| `NEXT_PUBLIC_API_URL` | Base URL the frontend uses to call the API | Yes |
-| `ADMIN_KEY` | Admin authentication key | Yes |
+|:---------|:------------|:--------:|
+| `POSTGRES_USER` | PostgreSQL username | ✅ |
+| `POSTGRES_PASSWORD` | PostgreSQL password | ✅ |
+| `POSTGRES_DB` | PostgreSQL database name | ✅ |
+| `DATABASE_URL` | Prisma connection string | ✅ |
+| `NEXT_PUBLIC_API_URL` | Frontend API base URL | ✅ |
+| `ADMIN_KEY` | Admin authentication key | ✅ |
 
-Never commit `.env` — it's git-ignored. Only `.env.example` (with placeholder values) is committed.
+> ⚠️ Never commit `.env` — it's git-ignored. Only `.env.example` (with placeholder values) is committed.
 
-## Docker
+---
 
-### Start the full stack (Postgres + migrations + app)
+## 🐳 Docker Commands
 
-```bash
-docker compose up -d
-```
+| Command | What It Does |
+|:--------|:-------------|
+| `docker compose up -d` | Start full stack (app + DB) |
+| `docker compose up -d postgres` | Start database only |
+| `docker compose up -d --build` | Rebuild images & start |
+| `docker compose down` | Stop & remove containers |
+| `docker compose down -v` | Full reset (wipes data) |
+| `docker compose logs -f app` | Follow app logs |
+| `docker compose logs -f postgres` | Follow database logs |
+| `docker compose ps` | Check service status |
 
-### Start PostgreSQL only
+---
 
-```bash
-docker compose up -d postgres
-```
+## 🗄️ Prisma Commands
 
-### Rebuild after dependency or Dockerfile changes
+| Command | What It Does |
+|:--------|:-------------|
+| `npx prisma generate` | Regenerate Prisma client |
+| `npx prisma migrate dev` | Apply pending migrations |
+| `npx prisma migrate status` | Check migration status |
+| `npx prisma studio` | Open database browser GUI |
 
-```bash
-docker compose up -d --build
-```
+---
 
-### Stop everything
-
-```bash
-docker compose down
-```
-
-### View logs
-
-```bash
-docker compose logs -f app
-docker compose logs -f postgres
-docker compose logs -f migrate
-```
-
-## Prisma
-
-### Generate Client
+## 🧪 Testing
 
 ```bash
-npx prisma generate
+# Unit & integration tests
+npm run test          # Watch mode
+npm run test:run      # Single run
+npm run test:coverage # With coverage report
+
+# End-to-end tests
+npm run test:e2e      # Playwright E2E
 ```
 
-### Run Migrations
+---
 
-```bash
-npx prisma migrate dev
-```
+## 💻 Development Commands
 
-### Check Migration Status
-
-```bash
-npx prisma migrate status
-```
-
-### Open Prisma Studio
-
-```bash
-npx prisma studio
-```
-
-## Testing
-
-### Unit Tests
-
-```bash
-npm run test
-npm run test:run
-npm run test:coverage
-```
-
-### E2E Tests
-
-```bash
-npm run test:e2e
-```
-
-## Development Commands
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
+| Command | What It Does |
+|:--------|:-------------|
+| `npm run dev` | Start development server (Turbopack) |
 | `npm run build` | Build for production |
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
 | `npm run format` | Format code with Prettier |
 | `npm run type-check` | Run TypeScript type checking |
 
-## Deployment
+---
 
-### Vercel (Recommended)
+## 🚢 Deployment
+
+### ▲ Vercel (Recommended)
 
 1. Push to GitHub
-2. Import project in Vercel
+2. Import project in [Vercel](https://vercel.com/)
 3. Configure environment variables
-4. Deploy
+4. Deploy ✨
 
-### Docker
+### 🐳 Docker
 
-1. Build Docker image
+1. Build the Docker image
 2. Configure environment variables
-3. Run with Docker Compose
-
-## Roadmap
-
-### Sprint 1
-
-- [ ] Add security headers
-- [ ] Add input validation
-- [ ] Add test suite
-- [ ] Set up CI/CD
-
-### Sprint 2
-
-- [ ] User authentication
-- [ ] Review moderation
-- [ ] Admin dashboard
-
-### Future
-
-- [ ] Telegram bot integration
-- [ ] Multi-country support
-- [ ] Mobile application
-
-## Documentation
-
-- [Architecture](docs/architecture/system-architecture.md)
-- [API Specification](docs/architecture/api-specification.md)
-- [Database Design](docs/architecture/database-design.md)
-- [Security](docs/operations/security.md)
-- [Deployment](docs/operations/deployment.md)
-
-## License
-
-MIT License
+3. Run with Docker Compose on your server
 
 ---
 
-**Project Status:** Ready for Sprint 1 development.
+## 🗺️ Roadmap
+
+<div align="center">
+
+| Sprint 1 | Sprint 2 | Future |
+|:---------|:---------|:-------|
+| 🔒 Security headers | 👤 User authentication | 🌏 Multi-country |
+| ✅ Input validation | 📋 Review moderation | 📱 Mobile app |
+| 🧪 Test suite | 📊 Admin dashboard | 🧠 AI Review Moderation |
+| 🔄 CI/CD pipeline | 🤖 Telegram bot | |
+
+</div>
+
+---
+
+## 📖 Documentation
+
+<div align="center">
+
+| 📘 [System Architecture](docs/architecture/system-architecture.md) | 📗 [API Specification](docs/architecture/api-specification.md) | 📙 [Database Design](docs/architecture/database-design.md) |
+|:---:|:---:|:---:|
+| 🔒 [Security](docs/operations/security.md) | 🚀 [Deployment](docs/operations/deployment.md) | 🎨 [UI/UX Guidelines](docs/ui/ui-ux-guidelines.md) |
+
+</div>
+
+---
+
+## 🤝 Contributing
+
+1. Create a feature branch from `dev`
+2. Make your changes
+3. Run `npm run lint` and `npm run build`
+4. Update documentation if needed
+5. Open a Pull Request
+
+> 💡 See [CLAUDE.md](CLAUDE.md) for detailed engineering guidelines.
+
+---
+
+## 📄 License
+
+**MIT License** — feel free to use, modify, and distribute.
+
+---
+
+<div align="center">
+
+### 🛡️ *Your Voice. Your Safety. Your Future.*
+
+Made with ❤️ for Myanmar migrant workers
+
+**Project Status:** 🟢 Active Development (MVP)
+
+</div>
