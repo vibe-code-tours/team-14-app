@@ -3,7 +3,41 @@ marp: true
 paginate: true
 transition: fade
 auto-advance: 20
-backgroundColor: "#f8faf0"
+backgroundColor: "#0f172a"
+color: "#ffffff"
+style: |
+  table {
+    background-color: #0f172a;
+    color: #ffffff;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    background-color: #0f172a;
+    color: #ffffff;
+    border: 1px solid #334155;
+    padding: 8px 12px;
+  }
+  th {
+    background-color: #1e293b;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+  a {
+    color: #34d399;
+  }
+  blockquote {
+    background-color: #1e293b;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid #059669;
+  }
+  code {
+    background-color: #1e293b;
+    color: #34d399;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
 ---
 
 <!-- Slide 1 — Team & Project -->
@@ -176,14 +210,14 @@ Workers have **no way to check** before they commit — putting thousands at ris
 
 | Tool | What We Used It For |
 |:-----|:--------------------|
-| 🔍 **WebSearch** | Researching migrant worker problems, existing solutions |
-| 🖼️ **Playwright MCP** | Capturing screenshots for README and documentation |
+| 🔍 **WebSearch** | Researching migrant worker problems and solutions |
+| 🖼️ **Playwright MCP** | Capturing screenshots for docs |
 | 📖 **Context7 / Docs** | Looking up Next.js, Prisma API patterns |
 | 📝 **Sequential Thinking** | Planning complex architecture decisions |
 | 🎨 **21st Magic (UI)** | Generating component inspiration |
-| 🧩 **Claude Agent** | Scaffolding admin routes, Prisma schemas, API endpoints |
+| 🧩 **Claude Agent** | Scaffolding admin routes, Prisma schemas, APIs |
 
-> **Result:** What would have taken days was completed in hours — consistent, type-safe code across the full stack.
+> **Result:** Days of work in hours — consistent, type-safe code across the full stack.
 
 ---
 
@@ -201,8 +235,8 @@ Workers have **no way to check** before they commit — putting thousands at ris
 | 4️⃣ | **Write a Review** — Anonymous review form |
 | 5️⃣ | **Vote** — Useful / Not Useful on reviews |
 
-> 🔗 **Try it:** [https://workervoice.help](https://workervoice.help) · Email: `demo@workervoice.org` · Password: `Demo1234!`
-> 🤖 **Telegram Bot:** [https://t.me/workervoice69_bot](https://t.me/workervoice69_bot) — search factories on Telegram
+> 🔗 [workervoice.help](https://workervoice.help) · `demo@workervoice.org` / `Demo1234!`
+> 🤖 [t.me/workervoice69_bot](https://t.me/workervoice69_bot)
 
 ---
 
@@ -221,7 +255,7 @@ Workers have **no way to check** before they commit — putting thousands at ris
 | 5️⃣ | **User Management** — Manage accounts |
 | 6️⃣ | **Admin Management** — Role-based access control |
 
-> 🔗 **Admin:** [https://workervoice.help/admin](https://workervoice.help/admin) · Super Admin: `demo-superadmin@workervoice.org` · Password: `Demo1234!`
+> 🔗 [workervoice.help/admin](https://workervoice.help/admin) · `demo-superadmin@workervoice.org` / `Demo1234!`
 
 ---
 
@@ -294,16 +328,14 @@ Sprint 1 (Done)     Sprint 2 (Next)      Future
 
 | Role | Team Member |
 |:-----|:------------|
-| 🏗️ **Tech Lead / Architecture** | [Name] |
-| 🎨 **Frontend Lead** | [Name] |
-| 🗄️ **Backend / Database** | [Name] |
-| 🤖 **AI Integration / MCP** | [Name] |
-| 📱 **Telegram Bot** | [Name] |
-| 🧪 **QA / Testing** | [Name] |
-| 📝 **Documentation** | [Name] |
-| 🎥 **Demo & Presentation** | [Name] |
-
-> *Fill in team member names before presenting.*
+| 🤖 **Product Owner** | Nan Aung Oo |
+| 📱 **AI Integration / Telegram Bot** | Aung Kyaw Myint |
+| 🐳 **Docker Compose** | Htet Aung Kyaw |
+| 🎨 **Frontend** | Zin Mar |
+| 🗄️ **Backend / Database** | Kay Khaing Myint |
+| 📝 **Documentation** | Soe Yee Mon Htet |
+| 🎥 **Demo & Presentation** | Yee Mon Mon Tin |
+| 🧪 **QA / Testing** | Team 14 |
 
 ---
 
@@ -336,7 +368,7 @@ Sprint 1 (Done)     Sprint 2 (Next)      Future
 🌐 [https://workervoice.help](https://workervoice.help)
 🌐 [https://workervoice.help/admin](https://workervoice.help/admin)
 🌐 [https://t.me/workervoice69_bot](https://t.me/workervoice69_bot)
-📂 [github.com/team-14/workervoice](https://github.com/team-14/workervoice)
+📂 [https://github.com/vibe-code-tours/team-14-app](https://github.com/vibe-code-tours/team-14-app)
 
 ---
 
