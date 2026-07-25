@@ -17,7 +17,7 @@ import {
   langCommand,
   languageCallback,
 } from "@/lib/telegram";
-import { t, tParams, getUserLocale } from "@/lib/telegram/i18n";
+import { t, tParams, getUserLocale, setUserProvince, clearUserProvince } from "@/lib/telegram/i18n";
 
 // ============================================================
 // Register bot commands and handlers (called lazily, not at import)
@@ -41,52 +41,74 @@ function registerHandlers() {
   // Callback queries (inline keyboard buttons)
   bot.callbackQuery("search_company", async (ctx) => {
     await ctx.answerCallbackQuery();
-    getUserLocale(ctx.chat?.id || 0);
+    const chatId = ctx.chat?.id;
+    const locale = getUserLocale(chatId || 0);
 
-    const regionKeyboard = {
+    // Match the same provinces as the web UI FactoryFilters component
+    const provinceKeyboard = {
       inline_keyboard: [
-        [{ text: "🇹🇭 အားလုံး", callback_data: "region_all" }],
-        [
-          { text: "🏙️ Bangkok & Central", callback_data: "region_Bangkok_and_Central" },
-        ],
-        [{ text: "🌅 Eastern", callback_data: "region_Eastern" }],
-        [{ text: "🌿 Northern", callback_data: "region_Northern" }],
-        [{ text: "🌾 Northeastern", callback_data: "region_Northeastern" }],
-        [{ text: "🌊 Western", callback_data: "region_Western" }],
-        [{ text: "🏝️ Southern", callback_data: "region_Southern" }],
+        [{ text: t(locale, "allRegions"), callback_data: "province_all" }],
+        [{ text: "🏙️ Bangkok", callback_data: "province_Bangkok" }],
+        [{ text: "🏙️ Chonburi", callback_data: "province_Chonburi" }],
+        [{ text: "🏙️ Rayong", callback_data: "province_Rayong" }],
+        [{ text: "🏙️ Samut Prakan", callback_data: "province_Samut Prakan" }],
+        [{ text: "🏙️ Pathum Thani", callback_data: "province_Pathum Thani" }],
+        [{ text: "🏙️ Nakhon Ratchasima", callback_data: "province_Nakhon Ratchasima" }],
+        [{ text: "🏙️ Chiang Mai", callback_data: "province_Chiang Mai" }],
+        [{ text: "🏙️ Khon Kaen", callback_data: "province_Khon Kaen" }],
+        [{ text: "🏙️ Hat Yai (Songkhla)", callback_data: "province_Hat Yai (Songkhla)" }],
+        [{ text: t(locale, "backButton"), callback_data: "back_main" }],
       ],
     };
 
-    const regionPrompt =
+    const provincePrompt =
       `━━━━━━━━━━━━━━━━━━━━━━━\n` +
-      `🇹🇭 <b>ဒေသရွေးချယ်ပါ</b>\n` +
+      `<b>${t(locale, "selectRegionPrompt")}</b>\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-      `ဘယ်ဒေသက ကုမ္ပဏီတွေကို ရှာဖွေချင်ပါသလဲ?`;
+      `${t(locale, "whichRegionPrompt")}`;
 
-    await ctx.reply(regionPrompt, {
+    await ctx.reply(provincePrompt, {
       parse_mode: "HTML",
-      reply_markup: regionKeyboard,
+      reply_markup: provinceKeyboard,
     });
   });
 
-  // Region selection handlers
-  const regionNames: Record<string, string> = {
-    region_all: "အားလုံး",
-    region_Bangkok_and_Central: "Bangkok & Central",
-    region_Eastern: "Eastern",
-    region_Northern: "Northern",
-    region_Northeastern: "Northeastern",
-    region_Western: "Western",
-    region_Southern: "Southern",
-  };
-
-  bot.callbackQuery(/^region_(.+)$/, async (ctx) => {
+  // Province selection handler — store province and show region search prompt
+  bot.callbackQuery(/^province_(.+)$/, async (ctx) => {
     await ctx.answerCallbackQuery();
-    const region = ctx.match?.[1];
-    const regionName = regionNames[`region_${region}`] || region;
-    const locale = getUserLocale(ctx.chat?.id || 0);
+    const province = ctx.match?.[1];
+    const chatId = ctx.chat?.id;
+    if (!province || !chatId) return;
 
-    await ctx.reply(tParams(locale, "regionPrompt", regionName), { parse_mode: "HTML" });
+    const locale = getUserLocale(chatId);
+
+    if (province === "all") {
+      clearUserProvince(chatId);
+      await ctx.reply(tParams(locale, "searchPrompt"), { parse_mode: "HTML" });
+      return;
+    }
+
+    // Store the selected province so subsequent text searches filter by region
+    setUserProvince(chatId, province);
+
+    // Show the region search prompt instead of directly listing companies
+    await ctx.reply(tParams(locale, "regionPrompt", province), {
+      parse_mode: "HTML",
+    });
+  });
+
+  bot.callbackQuery("back_main", async (ctx: any) => {
+    await ctx.answerCallbackQuery();
+    const chatId = ctx.chat?.id;
+    const locale = getUserLocale(chatId || 0);
+    if (chatId) clearUserProvince(chatId);
+    const { getMainMenuKeyboard } = await import("@/lib/telegram/keyboards/main-menu");
+    const firstName = ctx.from?.first_name || "User";
+    const welcomeText = tParams(locale, "welcome", firstName);
+    await ctx.reply(welcomeText, {
+      parse_mode: "HTML",
+      reply_markup: getMainMenuKeyboard(locale),
+    });
   });
 
   bot.callbackQuery("search_agency", async (ctx) => {
