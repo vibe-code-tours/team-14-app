@@ -3,7 +3,7 @@
  */
 
 import { Context } from "grammy";
-import { t, tParams, getUserLocale } from "../i18n";
+import { t, tParams, getUserLocale, getUserProvince } from "../i18n";
 import { getCompanyUrl, escapeHtml } from "../bot";
 import { prisma } from "@/lib/prisma";
 
@@ -17,9 +17,14 @@ export async function companyCommand(ctx: Context): Promise<void> {
   const locale = getUserLocale(chatId);
   const query = ctx.match;
 
-  // If no query, show search prompt using i18n
+  // If no query, show search prompt (or region prompt if province is set)
   if (!query || typeof query !== "string") {
-    await ctx.reply(t(locale, "searchPrompt"), { parse_mode: "HTML" });
+    const storedProvince = getUserProvince(chatId);
+    if (storedProvince) {
+      await ctx.reply(tParams(locale, "regionPrompt", storedProvince), { parse_mode: "HTML" });
+    } else {
+      await ctx.reply(t(locale, "searchPrompt"), { parse_mode: "HTML" });
+    }
     return;
   }
 
@@ -50,17 +55,28 @@ async function searchCompanies(
   locale: "en" | "my"
 ): Promise<void> {
   try {
+    const chatId = ctx.chat?.id;
+
+    // Check if user has a province scope set
+    const storedProvince = chatId ? getUserProvince(chatId) : undefined;
+
+    // Build the where clause
+    const whereBase = {
+      status: "approved" as const,
+      OR: [
+        { name: { contains: query, mode: "insensitive" as const } },
+        { province: { contains: query, mode: "insensitive" as const } },
+        { district: { contains: query, mode: "insensitive" as const } },
+        { operator: { contains: query, mode: "insensitive" as const } },
+      ],
+    };
+
+    // If user selected a province, scope the search to that region
+    const where = storedProvince ? { ...whereBase, province: storedProvince } : whereBase;
+
     // Search companies in database
     const companies = await prisma.factory.findMany({
-      where: {
-        status: "approved",
-        OR: [
-          { name: { contains: query, mode: "insensitive" } },
-          { province: { contains: query, mode: "insensitive" } },
-          { district: { contains: query, mode: "insensitive" } },
-          { operator: { contains: query, mode: "insensitive" } },
-        ],
-      },
+      where,
       take: 5,
       select: {
         id: true,
@@ -108,25 +124,25 @@ async function searchCompanies(
       message += `🏭 <b>${escapeHtml(company.name)}</b>\n`;
       message += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
       if (location) {
-        message += `📍 နေရာ: ${escapeHtml(location)}\n`;
+        message += `${t(locale, "locationLabel")} ${escapeHtml(location)}\n`;
       }
       if (company.workers) {
-        message += `👥 လုပ်သား: ${company.workers.toLocaleString()} ယောက်\n`;
+        message += `${t(locale, "workersLabel")} ${company.workers.toLocaleString()} ${t(locale, "unitsPeople")}\n`;
       }
 
       if (stats._count > 0) {
-        message += `📊 သုံးသပ်ချက်: ${stats._count} ခု\n`;
+        message += `${t(locale, "reviewsLabel")} ${stats._count} ${t(locale, "unitsReviews")}\n`;
         if (avgOverall !== null) {
-          message += `⭐ အဆင့်: ${avgOverall}/5\n`;
+          message += `⭐ ${avgOverall}/5\n`;
         }
       } else {
-        message += `📊 သုံးသပ်ချက်: မရှိသေးပါ\n`;
+        message += `${t(locale, "noReviewsYet")}\n`;
       }
 
       await ctx.reply(message, {
         parse_mode: "HTML",
         reply_markup: {
-          inline_keyboard: [[{ text: "🔗 အသေးစိတ်ကြည့်ရန်", url: websiteUrl }]],
+          inline_keyboard: [[{ text: t(locale, "viewDetailsButton"), url: websiteUrl }]],
         },
       });
       return;
@@ -134,7 +150,10 @@ async function searchCompanies(
 
     // Multiple results - send header then individual cards
     let header = `━━━━━━━━━━━━━━━━━━━━━━━\n`;
-    header += `🔍 <b>"${escapeHtml(query)}" ရှာဖွေမှု ရလဒ် ${companies.length} ခု</b>\n`;
+    header += `🔍 <b>"${escapeHtml(query)}" ${t(locale, "searchResultsLabel")} ${companies.length} ${t(locale, "unitsReviews")}</b>\n`;
+    if (storedProvince) {
+      header += `${t(locale, "regionLabel")} <b>${escapeHtml(storedProvince)}</b>\n`;
+    }
     header += `━━━━━━━━━━━━━━━━━━━━━━━`;
     await ctx.reply(header, { parse_mode: "HTML" });
 
@@ -147,16 +166,16 @@ async function searchCompanies(
       result += `🏭 <b>${escapeHtml(company.name)}</b>\n`;
       result += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
       if (location) {
-        result += `📍 နေရာ: ${escapeHtml(location)}\n`;
+        result += `${t(locale, "locationLabel")} ${escapeHtml(location)}\n`;
       }
       if (company.workers) {
-        result += `👥 လုပ်သား: ${company.workers.toLocaleString()} ယောက်`;
+        result += `${t(locale, "workersLabel")} ${company.workers.toLocaleString()} ${t(locale, "unitsPeople")}`;
       }
 
       await ctx.reply(result, {
         parse_mode: "HTML",
         reply_markup: {
-          inline_keyboard: [[{ text: "🔗 အသေးစိတ်ကြည့်ရန်", url: getCompanyUrl(company.id) }]],
+          inline_keyboard: [[{ text: t(locale, "viewDetailsButton"), url: getCompanyUrl(company.id) }]],
         },
       });
     }
