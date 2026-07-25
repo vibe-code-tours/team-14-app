@@ -199,6 +199,10 @@ const translations = {
     viewDetailsButton: "🔗 အသေးစိတ်ကြည့်ရန်",
     unitsPeople: "ယောက်",
     unitsReviews: "ခု",
+    backButton: "◀️ ပြန်သွားရန်",
+    allRegions: "🇹🇭 အားလုံး",
+    selectRegionPrompt: "🇹🇭 ဒေသရွေးချယ်ပါ",
+    whichRegionPrompt: "ဘယ်ဒေသက ကုမ္ပဏီတွေကို ရှာဖွေချင်ပါသလဲ?",
   },
 } as const;
 
