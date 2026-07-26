@@ -17,7 +17,7 @@ async function getAdminToken(req: NextRequest) {
   }
 }
 
-export default async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Admin routes protection

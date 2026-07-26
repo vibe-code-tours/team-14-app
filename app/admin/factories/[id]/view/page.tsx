@@ -155,8 +155,8 @@ export default function ViewFactoryPage({
             <p className="mt-1 text-sm text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-700 p-3 rounded-lg">{factory.operator || "—"}</p>
           </div>
           <div>
-            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Business Activity</label>
-            <p className="mt-1 text-sm text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-700 p-3 rounded-lg">{factory.businessActivity || "—"}</p>
+            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Industry Type</label>
+            <p className="mt-1 text-sm text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-700 p-3 rounded-lg">{factory.type || "—"}</p>
           </div>
           <div>
             <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Phone</label>
@@ -165,6 +165,10 @@ export default function ViewFactoryPage({
           <div>
             <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Number of Workers</label>
             <p className="mt-1 text-sm text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-700 p-3 rounded-lg">{factory.workers?.toLocaleString() || "—"}</p>
+          </div>
+          <div className="md:col-span-2">
+            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Business Activity</label>
+            <p className="mt-1 text-sm text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-700 p-3 rounded-lg">{factory.businessActivity || "—"}</p>
           </div>
           <div>
             <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Creator</label>
