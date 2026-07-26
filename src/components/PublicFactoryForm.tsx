@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Input } from "@/src/components/Input";
+import { TextArea } from "@/src/components/TextArea";
 import { Select } from "@/src/components/Select";
 import { Button } from "@/src/components/Button";
 import { AlertModal } from "@/src/components/AlertModal";
@@ -85,7 +86,7 @@ export function PublicFactoryForm({
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -256,11 +257,11 @@ export function PublicFactoryForm({
             placeholder={t("factoryForm.operatorPlaceholder")}
           />
           <Input
-            label={t("factoryForm.businessActivity")}
-            name="businessActivity"
-            value={formData.businessActivity}
+            label={t("factoryForm.type")}
+            name="type"
+            value={formData.type}
             onChange={handleChange}
-            placeholder={t("factoryForm.businessActivityPlaceholder")}
+            placeholder={t("factoryForm.typePlaceholder")}
           />
           <Input
             label={t("factoryForm.phone")}
@@ -276,6 +277,13 @@ export function PublicFactoryForm({
             value={formData.workers}
             onChange={handleChange}
             placeholder={t("factoryForm.workersPlaceholder")}
+          />
+          <TextArea
+            label={t("factoryForm.businessActivity")}
+            name="businessActivity"
+            value={formData.businessActivity}
+            onChange={handleChange}
+            placeholder={t("factoryForm.businessActivityPlaceholder")}
           />
         </div>
       </div>

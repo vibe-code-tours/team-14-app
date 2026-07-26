@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { Input } from "@/src/components/Input";
+import { TextArea } from "@/src/components/TextArea";
 import { Select } from "@/src/components/Select";
 import { Button } from "@/src/components/Button";
 import { DEFAULT_FACTORY_IMAGE } from "@/src/lib/constants";
@@ -207,11 +208,11 @@ export function FactoryForm({ mode, initialData, factoryId }: FactoryFormProps) 
             placeholder="Company operator name"
           />
           <Input
-            label="Business Activity"
-            name="businessActivity"
-            value={formData.businessActivity}
+            label="Industry Type"
+            name="type"
+            value={formData.type}
             onChange={handleChange}
-            placeholder="e.g. Textile manufacturing"
+            placeholder="e.g. 1 (Manufacturing)"
           />
           <Input
             label="Phone"
@@ -227,6 +228,13 @@ export function FactoryForm({ mode, initialData, factoryId }: FactoryFormProps) 
             value={formData.workers}
             onChange={handleChange}
             placeholder="e.g. 500"
+          />
+          <TextArea
+            label="Business Activity"
+            name="businessActivity"
+            value={formData.businessActivity}
+            onChange={handleChange}
+            placeholder="e.g. Textile manufacturing"
           />
         </div>
       </div>
