@@ -17,4 +17,14 @@ export { getMainMenuKeyboard } from "./keyboards/main-menu";
 export { getLanguageKeyboard } from "./keyboards/language";
 
 // i18n
-export { type Locale, t, tParams, getUserLocale, setUserLocale, detectLocale } from "./i18n";
+export {
+  type Locale,
+  t,
+  tParams,
+  getUserLocale,
+  setUserLocale,
+  detectLocale,
+  getUserProvince,
+  setUserProvince,
+  clearUserProvince,
+} from "./i18n";
