@@ -10,7 +10,7 @@
 [![Prisma](https://img.shields.io/badge/Prisma-7.8-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.3-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql)](https://www.postgresql.org/)
-[![WorkerVoice Banner](./public/screenshots/homepage.png)](https://workervoice.help/)
+[![WorkerVoice Banner](./public/screenshots/github-image.png)](https://workervoice.help/)
 
 ---
 
