@@ -82,16 +82,29 @@ const translations = {
       `🇹🇭 <b>${region}</b>\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
       `Search for companies in this region.\n\n` +
-      `Enter a company name or location:`,
+      `Enter a company name or location.`,
 
     agencyComingSoon: "🚧 Agency search coming soon!",
 
     location: "📍",
+    locationLabel: "📍 Location:",
     workers: "👥",
+    workersLabel: "👥 Workers:",
     reviews: "📊",
+    reviewsLabel: "📊 Reviews:",
+    noReviewsYet: "📊 Reviews: None yet",
     salary: "💰",
     overtime: "⏰",
     housing: "🏠",
+    searchResultsLabel: "🔍 Search results:",
+    regionLabel: "📍 Region:",
+    viewDetailsButton: "🔗 View Details",
+    unitsPeople: "people",
+    unitsReviews: "reviews",
+    backButton: "◀️ Back",
+    allRegions: "🇹🇭 All",
+    selectRegionPrompt: "🇹🇭 Select Region",
+    whichRegionPrompt: "Which region's companies do you want to search?",
   },
 
   my: {
@@ -148,7 +161,7 @@ const translations = {
       '━━━━━━━━━━━━━━━━━━━━━━━\n' +
       '🌐 <b>ဘာသာစကား ရွေးချယ်ပါ</b>\n' +
       '━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
-      'ဘာသာစကား ရွေးချယ်ပါ:',
+      'ဘာသာစကား ရွေးချယ်ပါ။',
 
     languageSet: "✅ ဘာသာစကားကို မြန်မာ သို့ ပြောင်းလဲပြီးပါပြီ",
 
@@ -167,16 +180,29 @@ const translations = {
       `🇹🇭 <b>${region}</b>\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
       `ဒီဒေသထဲက ကုမ္ပဏီတွေကို ရှာဖွေပါ။\n\n` +
-      `ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပါ:`,
+      `ကုမ္ပဏီ အမည် သို့မဟုတ် နေရာ ရိုက်ထည့်ပါ။`,
 
     agencyComingSoon: "🚧 Agency search coming soon!",
 
     location: "📍",
+    locationLabel: "📍 နေရာ:",
     workers: "👥",
+    workersLabel: "👥 လုပ်သား:",
     reviews: "📊",
+    reviewsLabel: "📊 သုံးသပ်ချက်:",
+    noReviewsYet: "📊 သုံးသပ်ချက်: မရှိသေးပါ။",
     salary: "💰",
     overtime: "⏰",
     housing: "🏠",
+    searchResultsLabel: "🔍 ရှာဖွေမှု ရလဒ်:",
+    regionLabel: "📍 ဒေသ:",
+    viewDetailsButton: "🔗 အသေးစိတ်ကြည့်ရန်",
+    unitsPeople: "ယောက်",
+    unitsReviews: "ခု",
+    backButton: "◀️ ပြန်သွားရန်",
+    allRegions: "🇹🇭 အားလုံး",
+    selectRegionPrompt: "🇹🇭 ဒေသရွေးချယ်ပါ",
+    whichRegionPrompt: "ဘယ်ဒေသက ကုမ္ပဏီတွေကို ရှာဖွေချင်ပါသလဲ?",
   },
 } as const;
 
@@ -248,4 +274,33 @@ export function detectLocale(languageCode?: string): Locale {
   }
   // Default to Myanmar for this project (Myanmar migrant workers)
   return "my";
+}
+
+// ============================================================
+// User Province Context (in-memory)
+// Stores the province a user selected so text searches filter by region
+// ============================================================
+
+const userProvinces = new Map<number, string>();
+
+/**
+ * Get the province a user has selected for scoped search
+ * Returns undefined if no province is set (search all)
+ */
+export function getUserProvince(chatId: number): string | undefined {
+  return userProvinces.get(chatId);
+}
+
+/**
+ * Set the province scope for a user's search
+ */
+export function setUserProvince(chatId: number, province: string): void {
+  userProvinces.set(chatId, province);
+}
+
+/**
+ * Clear the province scope for a user (back to global search)
+ */
+export function clearUserProvince(chatId: number): void {
+  userProvinces.delete(chatId);
 }
