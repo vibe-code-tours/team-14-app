@@ -42,7 +42,7 @@ export async function createReview(input: CreateReviewInput) {
       factoryId: input.factoryId || null,
       organizationId: input.organizationId || null,
       userId: input.userId || null,
-      isVisible: false,
+      isVisible: true,
       workerRole: input.workerRole.trim(),
       countryFrom: input.countryFrom.trim(),
       ratingSalary: input.ratingSalary,
