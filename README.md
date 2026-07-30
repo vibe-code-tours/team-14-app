@@ -1,10 +1,10 @@
 <div align="center">
 
 <a href="https://workervoice.help/">
-  <img src="public/images/logo.png" alt="WorkerVoice Logo" width="200" />
+  <img src="public/images/logo.png" alt="WorkerVoice Logo" width="500" />
 </a>
 
-### *Empowering Myanmar Migrant Workers Through Shared Experience*
+# *WorkerVoice Review Platform*
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.2-000000?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react)](https://react.dev/)
@@ -35,6 +35,7 @@ Workers can anonymously review factories, companies, and recruitment agencies �
 | 🔍 **Company Search** | Search factories and agencies by location, size, and activity |
 | 📋 **Company Detail** | View detailed information, ratings, and reviews |
 | ✍️ **Anonymous Reviews** | Submit workplace reviews — your identity stays safe |
+| 👍 **Voting System** | Vote reviews as **Useful** or **Not Useful** |
 | 🏢 **Agency Detail** | Research recruitment agencies before signing up |
 | 🤖 **Telegram Bot** | [Search and browse directly from Telegram](https://t.me/workervoice69_bot) |
 
