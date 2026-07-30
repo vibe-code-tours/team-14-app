@@ -64,14 +64,14 @@ export function Navbar() {
         aria-hidden="true"
       />
 
-      <nav className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-slate-800 dark:to-slate-900 text-white px-4 sm:px-6 sticky top-0 z-50 shadow-md dark:shadow-slate-900/50">
-        <div className="max-w-5xl mx-auto flex justify-between items-center">
+      <nav className="bg-linear-to-r from-emerald-600 to-teal-600 dark:from-slate-800 dark:to-slate-900 text-white h-14 sticky top-0 z-10 shadow-md dark:shadow-slate-900/50">
+      <div className="max-w-6xl mx-auto px-4 h-full flex items-center justify-between">
           <Link
             href="/"
             className="font-bold text-xl flex items-center gap-2 hover:opacity-90 transition"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo.png" alt="WorkerVoice" className="h-16 w-auto" />
+            <img src="/images/logo.png" alt="WorkerVoice" className="h-10 w-auto" />
           </Link>
 
           {/* Desktop links — visible at md (768px+) and up */}
