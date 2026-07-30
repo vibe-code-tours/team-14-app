@@ -1,8 +1,10 @@
 <div align="center">
 
-# 🗣️ WorkerVoice
+<a href="https://workervoice.help/">
+  <img src="public/images/logo.png" alt="WorkerVoice Logo" width="500" />
+</a>
 
-### *Empowering Myanmar Migrant Workers Through Shared Experience*
+# *WorkerVoice Review Platform*
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.2-000000?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react)](https://react.dev/)
@@ -10,7 +12,6 @@
 [![Prisma](https://img.shields.io/badge/Prisma-7.8-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.3-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql)](https://www.postgresql.org/)
-[![WorkerVoice Banner](./public/screenshots/github-image.png)](https://workervoice.help/)
 
 ---
 
