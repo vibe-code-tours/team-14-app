@@ -7,7 +7,8 @@ import { Footer } from "@/src/components/Footer";
 import { SuggestModal } from "@/src/components/SuggestModal";
 import { PrivacyBanner } from "@/src/components/PrivacyBanner";
 import { StatsBar } from "@/src/components/StatsBar";
-import { FactoryFilters } from "@/src/components/FactoryFilters";
+import CombinedSearch3 from "@/src/components/CombinedSearch3";
+import { getThaiProvince } from "@/src/lib/selectionMappings";
 import { AboutUs } from "@/src/components/AboutUs";
 import { ContactLinks } from "@/src/components/ContactLinks";
 import { useLanguage } from "@/src/contexts/LanguageContext";
@@ -37,7 +38,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [showSuggestModal, setShowSuggestModal] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState("");
-  const [selectedWorkerRange, setSelectedWorkerRange] = useState("");
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
   const debouncedQuery = useDebounce(searchQuery, 300);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -49,7 +51,11 @@ export default function Home() {
     try {
       const params = new URLSearchParams();
       if (search) params.set("search", search);
-      if (selectedRegion) params.set("province", selectedRegion);
+      if (selectedRegion) params.set("region", selectedRegion);
+      if (selectedProvince) {
+        params.set("province", selectedProvince);
+      }
+      if (selectedDistrict) params.set("district", selectedDistrict);
 
       const res = await fetch(`/api/factories?${params}`, {
         signal: controller.signal,
@@ -60,24 +66,7 @@ export default function Home() {
       }
       const data: FactoryResponse = await res.json();
 
-      let filtered = data?.data ?? [];
-
-      // Apply worker range filter client-side
-      if (selectedWorkerRange) {
-        filtered = filtered.filter((factory) => {
-          const workers = factory.workers || 0;
-          switch (selectedWorkerRange) {
-            case "small":
-              return workers >= 1 && workers <= 100;
-            case "medium":
-              return workers >= 101 && workers <= 500;
-            case "large":
-              return workers > 500;
-            default:
-              return true;
-          }
-        });
-      }
+      const filtered = data?.data ?? [];
 
       // Limit to 10 factories for landing page
       setFactories(filtered.slice(0, 10));
@@ -87,7 +76,7 @@ export default function Home() {
     } finally {
       if (!controller.signal.aborted) setLoading(false);
     }
-  }, [selectedRegion, selectedWorkerRange]);
+  }, [selectedRegion, selectedProvince, selectedDistrict]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -96,7 +85,8 @@ export default function Home() {
 
   const handleClearFilters = () => {
     setSelectedRegion("");
-    setSelectedWorkerRange("");
+    setSelectedProvince("");
+    setSelectedDistrict("");
     setSearchQuery("");
   };
 
@@ -114,18 +104,17 @@ export default function Home() {
             {t("hero.title")}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mb-6">{t("hero.subtitle")}</p>
-          <div className="max-w-2xl mx-auto">
-            <div className="flex items-center bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl overflow-hidden focus-within:ring-2 focus:ring-emerald-500 transition shadow-inner">
-              <span className="pl-4 text-slate-400">🔍</span>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t("hero.placeholder")}
-                className="w-full min-w-0 p-4 bg-transparent outline-none text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
-              />
-            </div>
-          </div>
+          <CombinedSearch3
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
+            selectedRegion={selectedRegion}
+            onRegionChange={setSelectedRegion}
+            selectedProvince={selectedProvince}
+            onProvinceChange={setSelectedProvince}
+            selectedDistrict={selectedDistrict}
+            onDistrictChange={setSelectedDistrict}
+            placeholder={t("hero.placeholder")}
+          />
         </div>
 
         {/* Stats Bar */}
@@ -145,16 +134,35 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Filters */}
-          <div className="mb-4">
-            <FactoryFilters
-              selectedRegion={selectedRegion}
-              selectedWorkerRange={selectedWorkerRange}
-              onRegionChange={setSelectedRegion}
-              onWorkerRangeChange={setSelectedWorkerRange}
-              onClear={handleClearFilters}
-            />
-          </div>
+          {/* Active Filter Display */}
+          {(selectedRegion || selectedProvince || selectedDistrict) && (
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              {selectedRegion && (
+                <span className="text-sm font-medium text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-md flex items-center gap-1">
+                  {selectedRegion}
+                  <button onClick={() => { setSelectedRegion(""); setSelectedProvince(""); setSelectedDistrict(""); }} className="text-xs hover:underline">✕</button>
+                </span>
+              )}
+              {selectedProvince && (
+                <span className="text-sm font-medium text-slate-800 dark:text-slate-200 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-md flex items-center gap-1 text-emerald-700 dark:text-emerald-300">
+                  {selectedProvince}
+                  <button onClick={() => { setSelectedProvince(""); setSelectedDistrict(""); }} className="text-xs hover:underline">✕</button>
+                </span>
+              )}
+              {selectedDistrict && (
+                <span className="text-sm font-medium text-slate-800 dark:text-slate-200 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-md flex items-center gap-1 text-blue-700 dark:text-blue-300">
+                  {selectedDistrict}
+                  <button onClick={() => setSelectedDistrict("")} className="text-xs hover:underline">✕</button>
+                </span>
+              )}
+              <button
+                onClick={handleClearFilters}
+                className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 underline transition"
+              >
+                {t("filters.clear")}
+              </button>
+            </div>
+          )}
 
           {loading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">

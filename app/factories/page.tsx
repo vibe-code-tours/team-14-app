@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Navbar } from "@/src/components/Navbar";
 import { Footer } from "@/src/components/Footer";
@@ -33,12 +34,15 @@ const WORKER_RANGES: Record<string, { min?: number; max?: number }> = {
   large: { min: 501 },
 };
 
-export default function FactoriesPage() {
+function FactoriesContent() {
   const { t } = useLanguage();
+  const searchParams = useSearchParams();
   const [factories, setFactories] = useState<Factory[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+  const [selectedRegion, setSelectedRegion] = useState(searchParams.get('region') || '');
+  const [selectedProvince, setSelectedProvince] = useState(searchParams.get('province') || '');
+  const [selectedDistrict, setSelectedDistrict] = useState(searchParams.get('district') || '');
   const [selectedWorkerRange, setSelectedWorkerRange] = useState("");
   const [showSuggestModal, setShowSuggestModal] = useState(false);
   const [page, setPage] = useState(1);
@@ -55,7 +59,9 @@ export default function FactoriesPage() {
     try {
       const params = new URLSearchParams();
       if (query) params.set("search", query);
-      if (selectedRegion) params.set("province", selectedRegion);
+      if (selectedRegion) params.set("region", selectedRegion);
+      if (selectedProvince) params.set("province", selectedProvince);
+      if (selectedDistrict) params.set("district", selectedDistrict);
       const range = WORKER_RANGES[selectedWorkerRange];
       if (range?.min !== undefined) params.set("workers_min", String(range.min));
       if (range?.max !== undefined) params.set("workers_max", String(range.max));
@@ -78,7 +84,7 @@ export default function FactoriesPage() {
     } finally {
       if (!controller.signal.aborted) setLoading(false);
     }
-  }, [selectedRegion, selectedWorkerRange, page, limit]);
+  }, [selectedRegion, selectedProvince, selectedDistrict, selectedWorkerRange, page, limit]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -253,5 +259,24 @@ export default function FactoriesPage() {
         onClose={() => setShowSuggestModal(false)}
       />
     </div>
+  );
+}
+
+export default function FactoriesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
+        <Navbar />
+        <main className="flex-grow max-w-5xl mx-auto p-4 mt-6 w-full">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    }>
+      <FactoriesContent />
+    </Suspense>
   );
 }

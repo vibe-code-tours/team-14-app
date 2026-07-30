@@ -2,6 +2,15 @@
 
 import { useLanguage } from "@/src/contexts/LanguageContext";
 
+const REGIONS = [
+  { id: "Bangkok_and_Central", name: "Bangkok & Central" },
+  { id: "Northern", name: "Northern" },
+  { id: "Northeastern", name: "Northeastern" },
+  { id: "Eastern", name: "Eastern" },
+  { id: "Western", name: "Western" },
+  { id: "Southern", name: "Southern" },
+];
+
 interface FactoryFiltersProps {
   selectedRegion: string;
   selectedWorkerRange: string;
@@ -41,15 +50,11 @@ export function FactoryFilters({
               className={selectClass}
             >
               <option value="">{t("filters.allRegions")}</option>
-              <option value="Bangkok">Bangkok</option>
-              <option value="Chonburi">Chonburi</option>
-              <option value="Rayong">Rayong</option>
-              <option value="Samut Prakan">Samut Prakan</option>
-              <option value="Pathum Thani">Pathum Thani</option>
-              <option value="Nakhon Ratchasima">Nakhon Ratchasima</option>
-              <option value="Chiang Mai">Chiang Mai</option>
-              <option value="Khon Kaen">Khon Kaen</option>
-              <option value="Hat Yai">Hat Yai (Songkhla)</option>
+              {REGIONS.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
+              ))}
             </select>
           </div>
         </div>
