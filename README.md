@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🗣️ WorkerVoice
+<a href="https://workervoice.help/">
+  <img src="public/images/logo.png" alt="WorkerVoice Logo" width="200" />
+</a>
 
 ### *Empowering Myanmar Migrant Workers Through Shared Experience*
 
@@ -33,7 +35,6 @@ Workers can anonymously review factories, companies, and recruitment agencies �
 | 🔍 **Company Search** | Search factories and agencies by location, size, and activity |
 | 📋 **Company Detail** | View detailed information, ratings, and reviews |
 | ✍️ **Anonymous Reviews** | Submit workplace reviews — your identity stays safe |
-| 👍 **Voting System** | Vote reviews as **Useful** or **Not Useful** |
 | 🏢 **Agency Detail** | Research recruitment agencies before signing up |
 | 🤖 **Telegram Bot** | [Search and browse directly from Telegram](https://t.me/workervoice69_bot) |
 
