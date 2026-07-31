@@ -1,7 +1,7 @@
 <div align="center">
 
 <a href="https://workervoice.help/">
-  <img src="public/images/logo.png" alt="WorkerVoice Logo" width="500" />
+  <img src="public/images/logo.png" alt="WorkerVoice Logo" width="450" />
 </a>
 
 # *WorkerVoice Review Platform*
