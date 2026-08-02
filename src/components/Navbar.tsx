@@ -64,8 +64,8 @@ export function Navbar() {
         aria-hidden="true"
       />
 
-      <nav className="bg-linear-to-r from-emerald-600 to-teal-600 dark:from-slate-800 dark:to-slate-900 text-white h-14 sticky top-0 z-10 shadow-md dark:shadow-slate-900/50">
-      <div className="max-w-6xl mx-auto px-4 h-full flex items-center justify-between">
+      <nav className="bg-linear-to-r from-emerald-600 to-teal-600 dark:from-slate-800 dark:to-slate-900 text-white sticky top-0 z-50 shadow-md dark:shadow-slate-900/50">
+      <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link
             href="/"
             className="font-bold text-xl flex items-center gap-2 hover:opacity-90 transition"
@@ -139,13 +139,10 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile dropdown — smooth slide-down via max-height transition */}
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            menuOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
-          }`}
-        >
-          <div className="flex flex-col w-full gap-1 mt-3 pb-1 border-t border-white/20 pt-3">
+        {/* Mobile dropdown */}
+        {menuOpen && (
+          <div className="md:hidden relative z-50">
+          <div className="flex flex-col w-full gap-1 mt-3 pb-4 border-t border-white/20 pt-3">
             <Link
               href="/"
               onClick={() => setMenuOpen(false)}
@@ -236,7 +233,8 @@ export function Navbar() {
               </Link>
             ) : null}
           </div>
-        </div>
+          </div>
+        )}
       </nav>
 
       <ReviewModal
