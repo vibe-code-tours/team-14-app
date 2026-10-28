@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { PasswordInput } from "@/src/components/PasswordInput";
 
 export default function AdminLoginPage() {
@@ -82,7 +83,7 @@ export default function AdminLoginPage() {
         {/* Logo */}
         <div className="text-center mb-8 opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]">
           <div className="inline-flex items-center justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}<img src="/images/logo.png" alt="WorkerVoice" className="h-20 sm:h-20 md:h-23 w-auto" />
+            <Image src="/images/logo.png" alt="WorkerVoice" width={1280} height={427} className="h-20 sm:h-20 md:h-23 w-auto" />
           </div>
           <p className="text-emerald-100 -mt-2 sm:-mt-6 md:-mt-1">Admin Portal</p>
         </div>
