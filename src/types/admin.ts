@@ -45,11 +45,6 @@ export interface AdminReview {
   factoryName: string | null;
   factoryOperator: string | null;
   organizationName: string | null;
-  user: {
-    id: string;
-    fullName: string;
-    nickname: string | null;
-  } | null;
 }
 
 export interface FactoryFormData {

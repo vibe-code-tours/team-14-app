@@ -7,8 +7,8 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getAdminSession();
-  if (!session?.isAdmin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session?.isSuperAdmin) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const { id } = await params;

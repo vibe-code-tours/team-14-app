@@ -2,7 +2,6 @@ export { prisma } from "./prisma";
 
 export {
   searchFactories,
-  getFactoryById,
   getFactoryReviews,
   getProvinces,
   getRegions,

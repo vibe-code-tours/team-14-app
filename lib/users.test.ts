@@ -73,7 +73,7 @@ describe("registerUser", () => {
       fullName: "Aye Aye",
     });
 
-    expect(result.nickname).toBeNull();
+    expect(result).toEqual(expect.objectContaining({ nickname: null }));
     expect(prisma.user.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({ nickname: null }),
