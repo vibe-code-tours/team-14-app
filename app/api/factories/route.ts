@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchFactories, createPublicFactory } from "@/lib/factories";
 import { auth } from "@/auth";
+import { getClientIp, checkRateLimit } from "@/lib/rate-limit";
+
+const RATE_LIMIT_MAX = 3;
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -32,6 +36,25 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Require authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    }
+
+    // Rate limiting
+    const ip = getClientIp(request);
+    const userId = session.user.id;
+    const rateKey = `factory:create:${userId}:${ip}`;
+
+    const { allowed } = await checkRateLimit(rateKey, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many factory submissions. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
 
     if (!body.name) {
@@ -40,10 +63,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    // Get current user (optional - anonymous submissions allowed)
-    const session = await auth();
-    const userId = session?.user?.id ? parseInt(session.user.id) : undefined;
 
     const factory = await createPublicFactory({
       name: body.name,
@@ -63,7 +82,7 @@ export async function POST(request: NextRequest) {
       workers: body.workers,
       country: body.country,
       image: body.image,
-      userId,
+      userId: parseInt(userId),
     });
 
     return NextResponse.json(factory, { status: 201 });

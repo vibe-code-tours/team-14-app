@@ -26,6 +26,18 @@ export async function PUT(
     const user = await prisma.user.update({
       where: { id: parseInt(id) },
       data: { isSuperAdmin },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        nickname: true,
+        isAdmin: true,
+        isSuperAdmin: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     return NextResponse.json(user);
