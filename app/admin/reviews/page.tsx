@@ -187,7 +187,6 @@ export default function AdminReviewsPage() {
                     organizationName={review.organizationName}
                     onRequestToggle={handleRequestToggle}
                     index={index}
-                    user={review.user}
                   />
                 ))}
               </tbody>
