@@ -18,6 +18,7 @@ function escapeHtml(input: string): string {
 export async function POST(request: NextRequest) {
   try {
     const ip = getClientIp(request);
+    if (!ip) return NextResponse.json({ error: "Unable to identify client address." }, { status: 503 });
     const rateKey = `contact:${ip}`;
 
     const { allowed } = await checkRateLimit(

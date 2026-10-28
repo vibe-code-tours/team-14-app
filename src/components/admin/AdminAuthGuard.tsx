@@ -19,31 +19,52 @@ export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [session, setSession] = useState<AdminSession | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [checkedPath, setCheckedPath] = useState<string | null>(null);
 
   const isLoginPage = pathname === "/admin/login";
   const isDemoPage = pathname === "/admin/demo";
 
   useEffect(() => {
-    if (isLoginPage || isDemoPage) return;
+    if (isLoginPage || isDemoPage) {
+      return;
+    }
 
-    fetch("/api/admin/auth/session")
-      .then((res) => res.json())
+    let active = true;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 10_000);
+    fetch("/api/admin/auth/session", { signal: controller.signal })
+      .then(async (res) => {
+        if (!res.ok) throw new Error("Unable to load admin session");
+        return res.json();
+      })
       .then((data) => {
-        setSession(data);
-        setLoading(false);
+        if (active) {
+          setSession(data);
+          setCheckedPath(pathname);
+        }
       })
       .catch(() => {
-        setSession(null);
-        setLoading(false);
+        if (active) {
+          setSession(null);
+          setCheckedPath(pathname);
+        }
+      })
+      .finally(() => {
+        window.clearTimeout(timeout);
       });
-  }, [isLoginPage]);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [pathname, isLoginPage, isDemoPage]);
 
   // Derive loading: login page never shows loading spinner
-  const isLoading = (isLoginPage || isDemoPage) ? false : loading;
+  const isLoading = !isLoginPage && !isDemoPage && checkedPath !== pathname;
 
   useEffect(() => {
-    if (loading) return;
+    if (isLoading) return;
     if (isLoginPage || isDemoPage) return;
 
     if (!session?.user) {
@@ -55,7 +76,7 @@ export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
       router.push("/");
       return;
     }
-  }, [session, loading, router, isLoginPage]);
+  }, [session, isLoading, router, isLoginPage, isDemoPage]);
 
   if (isLoading) {
     return (

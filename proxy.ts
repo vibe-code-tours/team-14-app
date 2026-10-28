@@ -2,19 +2,22 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-if (!process.env.AUTH_SECRET) {
-  throw new Error("AUTH_SECRET environment variable is required for authentication");
-}
-
-const SECRET = new TextEncoder().encode(process.env.AUTH_SECRET);
 const ADMIN_COOKIE = "wv-admin-session";
+
+function getSecret() {
+  const secret = process.env.AUTH_SECRET;
+  return secret && new TextEncoder().encode(secret).byteLength >= 32
+    ? new TextEncoder().encode(secret)
+    : null;
+}
 
 async function getAdminToken(req: NextRequest) {
   const token = req.cookies.get(ADMIN_COOKIE)?.value;
-  if (!token) return null;
+  const secret = getSecret();
+  if (!token || !secret) return null;
 
   try {
-    const { payload } = await jwtVerify(token, SECRET);
+    const { payload } = await jwtVerify(token, secret);
     return payload as { isAdmin?: boolean };
   } catch {
     return null;
@@ -23,6 +26,20 @@ async function getAdminToken(req: NextRequest) {
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  if (pathname.startsWith("/api/admin/")) {
+    if (req.method === "OPTIONS" || pathname.startsWith("/api/admin/auth/")) {
+      return NextResponse.next();
+    }
+    if (!getSecret()) {
+      return NextResponse.json({ error: "Authentication is unavailable" }, { status: 503 });
+    }
+    const adminToken = await getAdminToken(req);
+    if (!adminToken?.isAdmin) {
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    }
+    return NextResponse.next();
+  }
 
   // Admin routes protection
   if (pathname.startsWith("/admin")) {
@@ -58,5 +75,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/auth/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
 };

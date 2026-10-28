@@ -24,6 +24,12 @@ export async function PUT(
     }
 
     const user = await updateUserAdminStatus(parseInt(id), isAdmin);
+    console.info("Admin privilege changed", JSON.stringify({
+      actorId: session.id,
+      targetUserId: user.id,
+      action: "admin_status_changed",
+      isAdmin: user.isAdmin,
+    }));
     return NextResponse.json(user);
   } catch (error) {
     console.error("Error updating admin status:", error);

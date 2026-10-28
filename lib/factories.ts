@@ -228,7 +228,10 @@ export async function getFactoryReviews(factoryId: number) {
       : null;
 
   return {
-    data: reviews,
+    data: reviews.map(({ user, ...review }) => ({
+      ...review,
+      displayName: user?.nickname?.trim() || "Anonymous worker",
+    })),
     stats: {
       count: stats._count,
       avgSalary: stats._avg.ratingSalary,

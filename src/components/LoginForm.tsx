@@ -67,7 +67,18 @@ export function LoginForm() {
       return;
     }
 
-    router.push(callbackUrl);
+    const safeCallbackUrl = (() => {
+      if (!callbackUrl.startsWith("/") || callbackUrl.startsWith("//") || callbackUrl.includes("\\")) return "/";
+      try {
+        const target = new URL(callbackUrl, "https://same-origin.invalid");
+        return target.origin === "https://same-origin.invalid"
+          ? `${target.pathname}${target.search}${target.hash}`
+          : "/";
+      } catch {
+        return "/";
+      }
+    })();
+    router.push(safeCallbackUrl);
   };
 
   return (

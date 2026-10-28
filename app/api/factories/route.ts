@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
 
     // Rate limiting
     const ip = getClientIp(request);
+    if (!ip) return NextResponse.json({ error: "Unable to identify client address" }, { status: 503 });
     const userId = session.user.id;
     const rateKey = `factory:create:${userId}:${ip}`;
 

@@ -16,6 +16,9 @@ export async function POST(req: NextRequest) {
 
     // Rate limiting for admin login
     const ip = getClientIp(req);
+    if (!ip) {
+      return NextResponse.json({ error: "Unable to identify client address" }, { status: 503 });
+    }
     const normalizedEmail = email.trim().toLowerCase();
     const ipRateKey = `admin:login:ip:${ip}`;
     const accountRateKey = `admin:login:account:${normalizedEmail}`;
