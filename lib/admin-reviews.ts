@@ -48,13 +48,7 @@ export async function getAdminReviews(params: AdminReviewSearchParams) {
         organization: {
           select: { name: true },
         },
-        user: {
-          select: {
-            id: true,
-            fullName: true,
-            nickname: true,
-          },
-        },
+        // Don't include user PII - reviews are anonymous
       },
     }),
     prisma.review.count({ where }),
@@ -73,7 +67,6 @@ export async function getAdminReviews(params: AdminReviewSearchParams) {
     factoryName: r.factory?.name ?? null,
     factoryOperator: r.factory?.operator ?? null,
     organizationName: r.organization?.name ?? null,
-    user: r.user ?? null,
   }));
 
   return { data, total, limit, offset };

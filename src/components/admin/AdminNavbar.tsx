@@ -1,6 +1,6 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
@@ -87,7 +87,7 @@ export function AdminNavbar() {
             href="/admin/dashboard"
             className="font-bold text-lg flex items-center gap-2 hover:opacity-90 transition shrink-0"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}<img src="/images/logo.png" alt="WorkerVoice" className="h-10 w-auto" />
+            <Image src="/images/logo.png" alt="WorkerVoice" width={1280} height={427} className="h-10 w-auto" />
             <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full font-medium">
               {session?.user?.isSuperAdmin ? "Super Admin" : "Admin"}
             </span>
@@ -124,7 +124,7 @@ export function AdminNavbar() {
             className="w-8 h-8 rounded-full overflow-hidden bg-white/20 flex items-center justify-center hover:bg-white/30 transition cursor-pointer"
           >
             {profileImage ? (
-              <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+              <Image src={profileImage} alt="Profile" width={32} height={32} unoptimized className="w-full h-full object-cover" />
             ) : (
               <span className="text-lg">👤</span>
             )}
@@ -138,7 +138,7 @@ export function AdminNavbar() {
                 className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
               >
                 {profileImage ? (
-                  <img src={profileImage} alt="Profile" className="w-5 h-5 rounded-full object-cover" />
+                  <Image src={profileImage} alt="Profile" width={20} height={20} unoptimized className="w-5 h-5 rounded-full object-cover" />
                 ) : (
                   <span>👤</span>
                 )}
@@ -211,7 +211,7 @@ export function AdminNavbar() {
               }`}
             >
               {profileImage ? (
-                <img src={profileImage} alt="Profile" className="w-5 h-5 rounded-full object-cover" />
+                <Image src={profileImage} alt="Profile" width={20} height={20} unoptimized className="w-5 h-5 rounded-full object-cover" />
               ) : (
                 <span>👤</span>
               )}
