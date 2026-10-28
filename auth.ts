@@ -57,20 +57,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
-        session.user.isAdmin = token.isAdmin as boolean;
-        session.user.isSuperAdmin = token.isSuperAdmin as boolean;
-
-        // Fetch image from database (too large for JWT)
+        // Check if user is still active (not blocked)
         try {
           const user = await prisma.user.findUnique({
             where: { id: parseInt(token.id as string) },
-            select: { image: true },
+            select: { image: true, status: true, role: true, isAdmin: true, isSuperAdmin: true },
           });
+
+          // If user is blocked, invalidate the session
+          if (!user || user.status === "blocked") {
+            return { ...session, user: undefined };
+          }
+
+          session.user.id = token.id as string;
+          session.user.role = user.role;
+          session.user.isAdmin = user.isAdmin;
+          session.user.isSuperAdmin = user.isSuperAdmin;
           session.user.image = user?.image ?? null;
         } catch {
-          session.user.image = null;
+          // Fail closed when the account status cannot be verified.
+          return { ...session, user: undefined };
         }
       }
       return session;
