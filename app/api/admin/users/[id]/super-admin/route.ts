@@ -40,6 +40,12 @@ export async function PUT(
       },
     });
 
+    console.info("Super admin privilege changed", JSON.stringify({
+      actorId: session.id,
+      targetUserId: user.id,
+      action: "super_admin_status_changed",
+      isSuperAdmin: user.isSuperAdmin,
+    }));
     return NextResponse.json(user);
   } catch (error) {
     console.error("Error updating super admin status:", error);

@@ -9,10 +9,11 @@ const EXPIRY = "8h";
 
 function getSecret() {
   const secret = process.env.AUTH_SECRET;
-  if (!secret) {
-    throw new Error("AUTH_SECRET environment variable is required for admin authentication");
+  const encodedSecret = secret ? new TextEncoder().encode(secret) : null;
+  if (!encodedSecret || encodedSecret.byteLength < 32) {
+    throw new Error("AUTH_SECRET must be set to at least 32 bytes for admin authentication");
   }
-  return new TextEncoder().encode(secret);
+  return encodedSecret;
 }
 
 export interface AdminSessionPayload {

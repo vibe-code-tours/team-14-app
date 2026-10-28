@@ -8,6 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqual } from "node:crypto";
 import { getBot, ensureBotInitialized } from "@/lib/telegram/bot";
 import {
   startCommand,
@@ -136,10 +137,13 @@ function registerHandlers() {
 
 function verifyWebhookSecret(req: NextRequest): boolean {
   const secretToken = process.env.TELEGRAM_WEBHOOK_SECRET;
-  if (!secretToken) return true; // Skip verification if no secret configured
+  if (!secretToken) return process.env.NODE_ENV !== "production";
 
   const receivedSecret = req.headers.get("X-Telegram-Bot-Api-Secret-Token");
-  return receivedSecret === secretToken;
+  if (!receivedSecret) return false;
+  const expected = Buffer.from(secretToken);
+  const received = Buffer.from(receivedSecret);
+  return expected.length === received.length && timingSafeEqual(expected, received);
 }
 
 // ============================================================

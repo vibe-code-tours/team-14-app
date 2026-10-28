@@ -5,6 +5,7 @@ import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 export async function POST(request: NextRequest) {
   try {
     const ip = getClientIp(request);
+    if (!ip) return NextResponse.json({ error: "Unable to identify client address" }, { status: 503 });
     const { allowed } = await checkRateLimit(`register:${ip}`, 10, 60 * 1000);
     if (!allowed) {
       return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });

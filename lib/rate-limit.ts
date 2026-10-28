@@ -1,13 +1,18 @@
 import type { NextRequest } from "next/server";
+import { isIP } from "node:net";
 import { Prisma } from "../src/generated/prisma/client";
 import { prisma } from "./prisma";
 
-export function getClientIp(request: NextRequest): string {
-  const realIp = request.headers.get("x-real-ip")?.trim();
-  if (realIp) return realIp;
-
-  const forwarded = request.headers.get("x-forwarded-for");
-  return forwarded?.split(",").pop()?.trim() || "unknown";
+export function getClientIp(request: NextRequest): string | null {
+  const candidates = [
+    request.headers.get("x-real-ip"),
+    request.headers.get("x-forwarded-for")?.split(",")[0],
+  ];
+  for (const candidate of candidates) {
+    const ip = candidate?.trim();
+    if (ip && isIP(ip)) return ip;
+  }
+  return null;
 }
 
 // Fixed-window rate limiter backed by Postgres so limits hold correctly

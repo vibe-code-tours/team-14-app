@@ -58,7 +58,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       message: "Admin created successfully",
       user: result.user,
-      password: result.password,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Server error";
